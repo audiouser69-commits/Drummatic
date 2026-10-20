@@ -9,6 +9,7 @@
  * Collegamenti: righe GP0-GP6, colonne GP7-GP14, LED GP15, 74HC165 LOAD GP16 / CLK GP17 / DATA GP18, volume GP26.
  */
 #include <string.h>
+#include <stdlib.h>
 #include "pico/stdlib.h"
 #include "hardware/pio.h"
 #include "hardware/adc.h"
@@ -24,7 +25,7 @@
 #define PIN_SR_CLK   17
 #define PIN_SR_DATA  18
 #define PIN_POT      26
-#define MAX_LEVEL    77          /* 30 % del massimo: limita la corrente dei 46 LED a circa 0,5 A */
+#define MAX_LEVEL    51          /* 20 % del massimo: 46 LED bianchi ~0,35 A, così LED + display restano sotto 1 A dall'USB */
 
 static uint8_t led_color[NUM_LEDS];   /* per LED: indice tavolozza */
 static uint8_t key_color[NUM_KEYS];   /* per tasto, come ricevuto dal Pi */
@@ -81,7 +82,7 @@ static void matrix_scan(void) {
     for (int r = 0; r < 7; r++) {
         /* riga attiva = uscita bassa, le altre in alta impedenza; i diodi vanno da colonna a riga */
         gpio_set_dir(PIN_ROW0 + r, GPIO_OUT); gpio_put(PIN_ROW0 + r, 0);
-        busy_wait_us_32(4);
+        busy_wait_us_32(10);
         uint32_t cols = gpio_get_all();
         gpio_set_dir(PIN_ROW0 + r, GPIO_IN);
         for (int c = 0; c < 8; c++) {
@@ -159,8 +160,8 @@ static bool midi_in(void) {
     bool changed = false;
     uint8_t pkt[4];
     while (tud_midi_available() && tud_midi_packet_read(pkt)) {
-        uint8_t st = pkt[1] & 0xF0, ch = pkt[1] & 0x0F, d1 = pkt[2], d2 = pkt[3];
-        if (ch != MIDI_CH) continue;
+        uint8_t cin = pkt[0] & 0x0F, st = pkt[1] & 0xF0, ch = pkt[1] & 0x0F, d1 = pkt[2], d2 = pkt[3];
+        if ((cin != 0x8 && cin != 0x9 && cin != 0xB) || ch != MIDI_CH) continue;
         if ((st == 0x90 || st == 0x80) && d1 < NUM_KEYS) {
             key_color[d1] = st == 0x90 ? (d2 & 31) : 0; host_drives_leds = true; changed = true;
         } else if (st == 0xB0 && d1 == 119) { brightness = d2; changed = true; }
@@ -170,7 +171,6 @@ static bool midi_in(void) {
 }
 
 int main(void) {
-    board_init();
     tusb_init();
     matrix_init(); sr_init();
     adc_init(); adc_gpio_init(PIN_POT); adc_select_input(0);

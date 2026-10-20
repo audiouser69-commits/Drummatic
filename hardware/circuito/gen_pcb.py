@@ -113,7 +113,7 @@ def build():
         din = "LED_DIN0" if i == 0 else f"LED_D{i}"
         dout = f"LED_D{i+1}" if i < 45 else ""
         place(MYLIB, "SK6812MINI-E_Reverse", f"LED{i+1}", "SK6812MINI-E", x, y + 4.7, 0, True,
-              {"1": "+5V", "2": dout, "3": "GND", "4": din}, "SK6812MINI-E (Opsco)", "splitkb / LCSC")
+              {"1": "+5V", "2": dout, "3": din, "4": "GND"}, "SK6812MINI-E (Opsco)", "splitkb / LCSC")
         keepout(x - 2.0, y + 4.7 - 1.95, x + 2.0, y + 4.7 + 1.95)
         place(KLIB + "Capacitor_SMD.pretty", "C_0603_1608Metric", f"C{i+1}", "100nF", x + 5.9, y + 4.7, 90, True,
               {"1": "+5V", "2": "GND"}, "GRM188R71H104KA93D", "TME")
@@ -142,22 +142,31 @@ def build():
               {"1": "+3V3", "2": f"{name}_A"}, "RC0603FR-0710KL", "TME")
         place(KLIB + "Resistor_SMD.pretty", "R_0603_1608Metric", f"R{11+2*i}", "10k", *rb, 0, True,
               {"1": "+3V3", "2": f"{name}_B"}, "RC0603FR-0710KL", "TME")
+        # filtro RC consigliato da Alps: 10 nF verso massa su A e B
+        if rot == 0:
+            ca, cb = (x - 11.5, y - 6.0), (x - 11.5, y + 6.0)
+        else:
+            ca, cb = (x - 3.0, y + 14.0), (x + 3.0, y + 14.0)
+        place(KLIB + "Capacitor_SMD.pretty", "C_0603_1608Metric", f"C{80+2*i}", "10nF", *ca, 0, True,
+              {"1": f"{name}_A", "2": "GND"}, "GRM188R71H103KA01D", "TME")
+        place(KLIB + "Capacitor_SMD.pretty", "C_0603_1608Metric", f"C{81+2*i}", "10nF", *cb, 0, True,
+              {"1": f"{name}_B", "2": "GND"}, "GRM188R71H103KA01D", "TME")
     # --- potenziometro volume (lato superiore)
     vx, vy = VOLUME
     place(KLIB + "Potentiometer_THT.pretty", "Potentiometer_Alps_RK09K_Single_Vertical", "RV1", "10k lin VOLUME",
-          vx - 7.5, vy - 2.5, 0, False, {"1": "AGND", "2": "POT_W", "3": "ADC_VREF", "MP": "GND"},
+          vx - 7.5, vy - 2.5, 0, False, {"1": "GND", "2": "POT_W", "3": "ADC_VREF", "MP": "GND"},
           "Alps RK09K1130A5R (10k B)", "TME")
     place(KLIB + "Resistor_SMD.pretty", "R_0603_1608Metric", "R1", "1k", vx - 7.5, vy + 9.0, 0, True,
           {"1": "POT_W", "2": "ADC0"}, "RC0603FR-071KL", "TME")
     place(KLIB + "Capacitor_SMD.pretty", "C_0603_1608Metric", "C60", "100nF", vx - 3.0, vy + 9.0, 0, True,
-          {"1": "ADC0", "2": "AGND"}, "GRM188R71H104KA93D", "TME")
+          {"1": "ADC0", "2": "GND"}, "GRM188R71H104KA93D", "TME")
 
     # --- Raspberry Pi Pico 2 sul lato inferiore, fra i tasti VOICE e TRIG (lontano dal Raspberry Pi), USB verso destra
     px, py = 145.0, 185.0
     pico = {1: "ROW0", 2: "ROW1", 3: "GND", 4: "ROW2", 5: "ROW3", 6: "ROW4", 7: "ROW5", 8: "GND", 9: "ROW6",
             10: "COL0", 11: "COL1", 12: "COL2", 13: "GND", 14: "COL3", 15: "COL4", 16: "COL5", 17: "COL6",
             18: "GND", 19: "COL7", 20: "LED_3V3", 21: "SR_LOAD", 22: "SR_CLK", 23: "GND", 24: "SR_DATA",
-            28: "GND", 31: "ADC0", 33: "AGND", 35: "ADC_VREF", 36: "+3V3", 38: "GND", 40: "VBUS"}
+            28: "GND", 31: "ADC0", 33: "GND", 35: "ADC_VREF", 36: "+3V3", 38: "GND", 40: "VBUS"}
     bl = pcbnew.LSET(); bl.AddLayer(pcbnew.B_Cu)
     keepout(px - 26.0, py - 6.9, px + 26.0, py + 6.9, bl)      # sotto il Pico: niente piste sul lato inferiore
     keepout(px + 19.5, py - 4.0, px + 25.5, py + 4.0)          # fori di fissaggio del connettore USB del Pico
@@ -194,9 +203,11 @@ def build():
     # --- connettore alimentazione display (cavo in dotazione al Touch Display 2)
     place(KLIB + "Connector_PinHeader_2.54mm.pretty", "PinHeader_1x02_P2.54mm_Vertical", "J1", "DISPLAY 5V",
           205.0, 112.0, 90, True, {"1": "+5V", "2": "GND"}, "Header 2 pin 2,54 mm", "TME")
-    # --- massa analogica unita alla massa vicino al Pico (net tie con ponticello 0 ohm)
-    place(KLIB + "Resistor_SMD.pretty", "R_0603_1608Metric", "R3", "0R", 113.0, 194.0, 0, True,
-          {"1": "AGND", "2": "GND"}, "RC0603JR-070RL", "TME")
+    # --- 3 fiduciali sul lato inferiore (montaggio automatico)
+    for i, (x, y) in enumerate([(6.0, 14.0), (334.0, 14.0), (6.0, 218.0)]):
+        place(KLIB + "Fiducial.pretty", "Fiducial_1mm_Mask2mm", f"FID{i+1}", "Fiducial", x, y, 0, True, {})
+    # --- origine per il file di piazzamento: angolo in basso a sinistra del circuito
+    board.GetDesignSettings().SetAuxOrigin(P(PCB_RECT[0], PCB_RECT[3]))
     # --- fori di fissaggio sui prigionieri M3 del pannello
     for i, (x, y) in enumerate(PCB_STUDS):
         place(KLIB + "MountingHole.pretty", "MountingHole_3.2mm_M3_Pad", f"H{i+1}", "M3", x, y, 0, False, {"1": "GND"})

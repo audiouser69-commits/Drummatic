@@ -12,7 +12,7 @@ Cosa fa: il circuito si presenta come dispositivo USB-MIDI "Drummatic Control", 
 - LED: Note On (canale 16) nota = tasto, velocity = colore (0 spento, 1 bianco, 2 rosso, 3 arancio, 5 giallo, 7 verde,
   9 azzurro, 11 blu, 13 magenta; +16 = metà luce). CC 119 = luminosità generale, CC 121 = spegne tutto.
   Finché nessuno manda colori, ogni tasto si accende di arancio mentre lo premi.
-- Luminosità massima limitata al 30 % per non superare circa 0,5 A dall'USB.
+- Luminosità massima limitata al 20 %: LED + display restano sotto 1 A dalla porta USB del Pi (serve l'alimentatore ufficiale da 27 W).
 
 Si può provare anche col plugin sul PC: in Ableton/MIDI monitor si vedono note e CC del canale 16.
 Ricompilare: Pico SDK 2.1.1, cmake -DPICO_BOARD=pico2 (vedi sorgenti/).

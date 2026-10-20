@@ -42,7 +42,7 @@ def fab():
     rows = []
     for fp in b.GetFootprints():
         ref = fp.GetReference()
-        if ref.startswith("H"):
+        if ref.startswith(("H", "FID")):
             continue
         p = parts[ref]
         pos = fp.GetPosition()
@@ -53,7 +53,7 @@ def fab():
                          Mount="THT" if p["fp"].startswith(("RotaryEncoder", "Potentiometer", "PinHeader")) else
                          ("Non montare (switch a pressione)" if False else "SMD")))
     run("pcb", "export", "pos", "-o", str(FAB / "CPL_posizionamento.csv"), "--format", "csv", "--units", "mm",
-        "--side", "both", str(PCB))
+        "--side", "both", "--use-drill-file-origin", str(PCB))
     groups = defaultdict(list)
     for r in rows:
         v = r["Value"]

@@ -26,7 +26,7 @@ def setup_project():
     # regole di fabbricazione (classe 6 Eurocircuits: 0,15 mm; restiamo larghi)
     rules = pro["board"]["design_settings"]["rules"]
     rules.update(min_clearance=0.2, min_track_width=0.2, min_via_diameter=0.6, min_through_hole_diameter=0.3,
-                 min_hole_to_hole=0.25, min_copper_edge_clearance=0.3, min_via_annular_width=0.13)
+                 min_hole_to_hole=0.25, min_copper_edge_clearance=0.25, min_via_annular_width=0.13)
     sev = pro["board"]["design_settings"].setdefault("rule_severities", {})
     sev.update(courtyards_overlap="ignore", silk_overlap="ignore", silk_over_copper="ignore", silk_edge_clearance="ignore",
                lib_footprint_issues="ignore", lib_footprint_mismatch="ignore", text_height="ignore",

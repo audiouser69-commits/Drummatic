@@ -50,7 +50,7 @@ def page1(pdf):
         " 6   GP4    ROW4", " 7   GP5    ROW5", " 9   GP6    ROW6", "10   GP7    COL0", "11   GP8    COL1",
         "12   GP9    COL2", "14   GP10   COL3", "15   GP11   COL4", "16   GP12   COL5", "17   GP13   COL6",
         "19   GP14   COL7", "20   GP15   LED_3V3", "21   GP16   SR_LOAD", "22   GP17   SR_CLK", "24   GP18   SR_DATA",
-        "31   GP26   ADC0 (volume)", "33   AGND   AGND", "35   VREF   ADC_VREF", "36   3V3    +3V3", "40   VBUS   VBUS",
+        "31   GP26   ADC0 (volume)", "33   AGND   GND", "35   VREF   ADC_VREF", "36   3V3    +3V3", "40   VBUS   VBUS",
         "3,8,13,18,23,28,38  GND"], color=BLUE, fs=6)
     box(ax, 20, 190, 110, 50, "Matrice tasti 7 x 8", ["46 tasti Choc + 9 pulsanti encoder", "prese hot-swap Kailh CPG135001S30",
         "un diodo 1N4148W per tasto (anodo verso", "la colonna, catodo verso la riga)", "scansione: riga bassa, colonne con pull-up"])
@@ -60,9 +60,9 @@ def page1(pdf):
     box(ax, 280, 190, 115, 50, "LED (46 x SK6812MINI-E)", ["GP15 -> U5 74AHCT1G125 (3,3 -> 5 V)", "-> R2 330R -> DIN del LED 1",
         "catena a serpentina: pagine/funzioni,", "poi voci/trasporto all'indietro, poi TRIG", "100nF per LED, firmware limita al 30 %"])
     box(ax, 280, 120, 115, 55, "Alimentazione", ["USB del Pico (cavo dal Raspberry Pi 5)", "VBUS -> F1 PTC 1,5 A -> +5V",
-        "+5V: LED, U5, J1 (display)", "C70 220uF + 100nF locali", "+3V3 dal Pico: 74HC165, pull-up", "AGND unita a GND con R3 0R"])
-    box(ax, 20, 45, 110, 55, "Volume (RV1 Alps RK09K 10k)", ["pin 1 -> AGND", "pin 3 -> ADC_VREF", "cursore -> R1 1k -> GP26",
-        "C60 100nF verso AGND (filtro)"])
+        "+5V: LED, U5, J1 (display)", "C70 220uF + 100nF locali", "+3V3 dal Pico: 74HC165, pull-up", "AGND del Pico collegata a GND"])
+    box(ax, 20, 45, 110, 55, "Volume (RV1 Alps RK09K 10k)", ["pin 1 -> GND", "pin 3 -> ADC_VREF", "cursore -> R1 1k -> GP26",
+        "C60 100nF verso GND (filtro)"])
     box(ax, 280, 45, 115, 55, "Connettori", ["USB micro del Pico: al Raspberry Pi 5", "J1 2 pin 2,54 mm: 1 = +5V, 2 = GND",
         "   cavo di alimentazione del display", "H1-H10: fori M3 sui prigionieri del", "   pannello, collegati a GND"])
     for a, b, l in (((130, 215), (160, 200), "ROW0-6 / COL0-7"), ((130, 147), (160, 150), "SR_LOAD/CLK/DATA"),
