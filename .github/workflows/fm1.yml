@@ -34,7 +34,12 @@ jobs:
           JIELI_TOOLCHAIN=~/.jieli/toolchain AC79_SDK=~/fw-AC79_AIoT_SDK python3 tools/build.py --release "$V"
           cp build/drummatic-fm1-*.fwsc build/release-*/ 2>/dev/null || true
       - name: The browser emulator
-        run: sh web/build.sh
+        run: |
+          command -v wasm-ld >/dev/null || sudo apt-get install -y --no-install-recommends lld
+          W=$(command -v wasm-ld || ls /usr/bin/wasm-ld-* /usr/lib/llvm-*/bin/wasm-ld 2>/dev/null | tail -1)
+          C=$(dirname "$(readlink -f "$W")")/clang; [ -x "$C" ] || C=clang
+          echo "wasm-ld: $W, clang: $C"
+          WASMLD="$W" CLANG="$C" sh web/build.sh
       - name: Tests (the port against Drummatic's DSP, the panel in the emulator)
         run: sh tests/run_tests.sh
       - name: Install check (the package as the installer reads it)
