@@ -89,6 +89,23 @@ tbody tr:nth-child(even) td { background: #fafbfc; }
 .keep { break-inside: avoid; }
 .small { font-size: 8.4pt; color: var(--dim); }
 .end { margin-top: 12mm; padding-top: 4mm; border-top: 0.5pt solid var(--line); font-size: 8pt; color: var(--dim); }
+
+/* ---------- capitolo sampler ---------- */
+figure.wide img { width: 100% !important; border: none; border-radius: 0; }
+figure.wide figcaption { width: 100% !important; }
+figure.half img, figure.half figcaption { width: 50% !important; }
+figure.m img, figure.m figcaption { width: 66% !important; }
+.annot { display: grid; grid-template-columns: 82mm 1fr; gap: 6mm; align-items: start; margin: 3mm 0 4mm; break-inside: avoid; }
+.annot .shot { position: relative; }
+.annot .shot img { width: 100%; display: block; border-radius: 1.6mm; border: 0.5pt solid #c9ced4; }
+.badge { position: absolute; transform: translate(-50%, -50%); width: 4.4mm; height: 4.4mm; border-radius: 50%; background: var(--mint); color: #fff;
+  font-size: 6.8pt; font-weight: 800; text-align: center; line-height: 4.4mm; box-shadow: 0 0 0 0.6mm #fff, 0 0.6mm 1.6mm rgba(0,0,0,.35); }
+.legend { counter-reset: l; list-style: none; padding: 0; margin: 0; font-size: 8.6pt; }
+.legend li { counter-increment: l; position: relative; padding-left: 7.5mm; margin-bottom: 1.6mm; }
+.legend li::before { content: counter(l); position: absolute; left: 0; top: 0.2mm; width: 4.6mm; height: 4.6mm; border-radius: 50%; background: var(--mint); color: #fff; font-size: 7pt; font-weight: 800; text-align: center; line-height: 4.6mm; }
+.split { display: grid; grid-template-columns: 1fr 72mm; gap: 6mm; align-items: center; break-inside: avoid; }
+.split figure { margin: 0; } .split figure img { width: 100%; border: none; }
+.split figure figcaption { width: 100%; }
 </style>
 </head>
 <body>
@@ -117,7 +134,7 @@ tbody tr:nth-child(even) td { background: #fafbfc; }
   </div>
   <div class="shot"><img src="img/p_voice.jpg" alt=""></div>
   <div class="meta">
-    <b>Versione 0.2.2</b> · ottobre 2026<br>
+    <b>Versione 0.2.3</b> · ottobre 2026<br>
     Windows (standalone + VST3) · macOS (standalone + VST3, universale)<br>
     Emilio Falciatori
   </div>
@@ -133,11 +150,13 @@ tbody tr:nth-child(even) td { background: #fafbfc; }
     <li class="ch"><span class="n">4</span><span class="t">La voce</span><span class="p" data-toc="c4"></span></li>
     <li class="sec"><span class="t">Synth · Sampler · Blend · Tone · Modulazione · Inviluppi · LFO · Variation e Mix</span></li>
     <li class="ch"><span class="n">5</span><span class="t">Il sequencer</span><span class="p" data-toc="c5"></span></li>
-    <li class="ch"><span class="n">6</span><span class="t">Mixer, effetti e master</span><span class="p" data-toc="c6"></span></li>
-    <li class="ch"><span class="n">7</span><span class="t">Performance</span><span class="p" data-toc="c7"></span></li>
-    <li class="ch"><span class="n">8</span><span class="t">Kit, preset e randomizzazione</span><span class="p" data-toc="c8"></span></li>
-    <li class="ch"><span class="n">9</span><span class="t">Controllo MIDI e tastiera</span><span class="p" data-toc="c9"></span></li>
-    <li class="ch"><span class="n">10</span><span class="t">Risoluzione dei problemi</span><span class="p" data-toc="c10"></span></li>
+    <li class="ch"><span class="n">6</span><span class="t">Il sampler in pratica</span><span class="p" data-toc="cS"></span></li>
+    <li class="sec"><span class="t">Pannello · Primi passi · Blend e inviluppo · START/END · Motori · Sequencer · Sei tecniche · MIDI</span></li>
+    <li class="ch"><span class="n">7</span><span class="t">Mixer, effetti e master</span><span class="p" data-toc="c6"></span></li>
+    <li class="ch"><span class="n">8</span><span class="t">Performance</span><span class="p" data-toc="c7"></span></li>
+    <li class="ch"><span class="n">9</span><span class="t">Kit, preset e randomizzazione</span><span class="p" data-toc="c8"></span></li>
+    <li class="ch"><span class="n">10</span><span class="t">Controllo MIDI e tastiera</span><span class="p" data-toc="c9"></span></li>
+    <li class="ch"><span class="n">11</span><span class="t">Risoluzione dei problemi</span><span class="p" data-toc="c10"></span></li>
     <li class="ch"><span class="n">A</span><span class="t">Appendice: tabelle di riferimento e cronologia versioni</span><span class="p" data-toc="c11"></span></li>
   </ol>
 </section>
@@ -231,7 +250,7 @@ tbody tr:nth-child(even) td { background: #fafbfc; }
     <tbody>
       <tr><td>Trascina su/giù</td><td>Cambia il valore.</td></tr>
       <tr><td>Alt + clic</td><td>Riporta il controllo al valore predefinito.</td></tr>
-      <tr><td>Tasto destro</td><td>Blocca o sblocca il controllo (lucchetto, segnato da una <strong>L</strong> rossa). Vedi capitolo 8.</td></tr>
+      <tr><td>Tasto destro</td><td>Blocca o sblocca il controllo (lucchetto, segnato da una <strong>L</strong> rossa). Vedi capitolo 9.</td></tr>
       <tr><td>In modalità MAP</td><td>Il trascinamento imposta la profondità di modulazione invece del valore; doppio clic la azzera.</td></tr>
     </tbody>
   </table>
@@ -279,6 +298,7 @@ tbody tr:nth-child(even) td { background: #fafbfc; }
   </table>
 
   <h2>Sampler</h2>
+  <div class="note"><b>Approfondimento</b>Il capitolo 6 spiega il sampler passo per passo, con schermate annotate, i grafici dei motori e sei tecniche d'uso con il sequencer.</div>
   <p>Il pulsante <span class="ctl">SAMPLER</span> attiva il campionatore. Carica un file trascinandolo sulla forma d'onda (WAV, AIFF, FLAC, OGG, MP3) o con <span class="ctl">CARICA</span>; le frecce <span class="ctl">&lt; &gt;</span> passano al file precedente o successivo nella stessa cartella, <span class="ctl">RND</span> ne sceglie uno a caso, <span class="ctl">X</span> lo rimuove.</p>
   <p>I marcatori <strong>START</strong> (in alto) e <strong>END</strong> (in basso) delimitano la porzione riprodotta; se END è prima di START il campione suona al contrario. Il menu a destra sceglie l'inviluppo che controlla il volume del sampler: <em>Off</em> (il campione suona fino in fondo), <em>Env 1</em> o <em>Env 2</em>.</p>
   <table class="knobs">
@@ -434,9 +454,175 @@ tbody tr:nth-child(even) td { background: #fafbfc; }
   <p>Il pulsante <span class="ctl">ALL</span> mostra tutte le sequenze in una griglia. Clicca una cella per aggiungere o togliere un trigger manuale, clicca il numero a sinistra per selezionare la voce.</p>
 </section>
 
+<!-- ================= 6 IL SAMPLER IN PRATICA ================= -->
+<section class="chapter" id="cS">
+  <header><div class="num">06</div><div><h1>Il sampler in pratica</h1><p class="lede">Caricare, regolare e sequenziare i campioni, passo per passo</p></div></header>
+  <p><span data-mark="cS"></span>Ogni voce di Drummatic ha un campionatore accanto al synth. Il campione non ha un sequencer a parte: lo suona il sequencer della voce, che a ogni colpo lo fa ripartire dal punto <strong>START</strong>. Tutto ciò che cambia passo per passo (intonazione, punto di partenza, ripetizioni, durata) passa dalle lane del sequencer e dalla modulazione.</p>
+  <figure class="wide"><img src="img/f_flow.svg" alt=""><figcaption><b>Il percorso del campione dentro la voce.</b> In ambra i blocchi che riguardano il sampler.</figcaption></figure>
+
+  <h2>Il pannello del sampler</h2>
+  <div class="annot">
+    <div class="shot">
+      <img src="img/c_sampler.png" alt="">
+      <span class="badge" style="left:24.5%;top:4%">1</span>
+      <span class="badge" style="left:61.5%;top:4%">2</span>
+      <span class="badge" style="left:82.5%;top:4%">3</span>
+      <span class="badge" style="left:8.5%;top:17%">4</span>
+      <span class="badge" style="left:74%;top:39%">5</span>
+      <span class="badge" style="left:19.5%;top:50%">6</span>
+      <span class="badge" style="left:62%;top:45%">7</span>
+      <span class="badge" style="left:3%;top:62%">8</span>
+      <span class="badge" style="left:89.5%;top:18%">9</span>
+    </div>
+    <ol class="legend">
+      <li><b>SAMPLER</b> — accende il campionatore. Si attiva da solo quando carichi un file.</li>
+      <li><b>Motore</b> — Classic, Phase Warp, Cloner o Granular. Cambia il modo di riprodurre e il significato delle quattro manopole.</li>
+      <li><b>Inviluppo del volume</b> — <em>Off</em>, <em>Env 1</em> o <em>Env 2</em> (predefinito). Vedi più avanti.</li>
+      <li><b>START</b> — il marcatore in alto: da dove parte ogni colpo.</li>
+      <li><b>END</b> — il marcatore in basso: dove si ferma. Se è prima di START il campione suona al contrario.</li>
+      <li><b>CARICA</b> e nome del file. Puoi anche trascinare un file direttamente sulla forma d'onda.</li>
+      <li><b>&lt; &gt; RND X</b> — file precedente, successivo o casuale nella stessa cartella; X rimuove il campione.</li>
+      <li><b>PITCH e quattro manopole</b> del motore scelto.</li>
+      <li><b>BLEND</b> — quanto si sente il sampler rispetto al synth.</li>
+    </ol>
+  </div>
+  <p>Formati accettati: WAV, AIFF, FLAC, OGG e MP3, mono o stereo, fino a 60 secondi. Il kit e il preset di voce ricordano il <strong>percorso</strong> del file: se lo sposti o lo rinomini, ricaricalo e salva di nuovo.</p>
+
+  <h2>Primi passi: far suonare un campione</h2>
+  <ol class="steps">
+    <li>Seleziona una voce nella colonna di sinistra e apri la pagina <span class="ctl">VOICE</span>.</li>
+    <li>Trascina un file audio sulla forma d'onda (oppure <span class="ctl">CARICA</span>). Il pulsante <span class="ctl">SAMPLER</span> si accende.</li>
+    <li><strong>Porta BLEND tutto a destra.</strong> BLEND parte da 0, cioè solo synth: in quella posizione il campione non si sente.</li>
+    <li>Se il campione è più lungo di un colpo di batteria, scegli <em>Off</em> nel menu dell'inviluppo, oppure allunga il DECAY dell'inviluppo 2.</li>
+    <li>Premi <span class="ctl">Q</span> (con TASTI acceso), fai doppio clic sul numero della voce, oppure avvia il trasporto: la voce suona con il ritmo del suo sequencer.</li>
+  </ol>
+  <div class="warn"><b>La causa più comune di silenzio</b>Campione caricato, SAMPLER acceso, ma BLEND a 0%: il sampler è a volume zero. Spegnere il pulsante SYNTH non basta, perché BLEND regola il volume del sampler indipendentemente.</div>
+
+  <div class="split">
+    <div>
+      <h3>BLEND: synth, sampler o entrambi</h3>
+      <p>Da 0% a 50% il synth resta a pieno volume e il sampler sale; da 50% a 100% il sampler resta pieno e il synth scende. Al centro suonano entrambi a pieno volume: è la posizione per <strong>stratificare</strong>, per esempio un kick sintetico con il transiente di un campione.</p>
+    </div>
+    <figure><img src="img/f_blend.svg" alt=""><figcaption>Volume del synth (nero) e del sampler (ambra) al variare di BLEND.</figcaption></figure>
+  </div>
+
+  <h3>L'inviluppo decide quanto dura il campione</h3>
+  <p>Con <em>Env 1</em> o <em>Env 2</em> il volume del campione segue l'inviluppo scelto, e quando l'inviluppo finisce il campione si ferma anche se non è arrivato a END. Con <em>Off</em> il campione suona da START a END a volume pieno. Usa un inviluppo diverso da quello del synth quando stratifichi, così puoi dare al campione una coda più lunga o più corta.</p>
+  <figure class="wide"><img src="img/f_env.svg" alt=""><figcaption><b>Lo stesso break con inviluppo Off e con Env 2 a 800 ms.</b> La linea verde è l'inviluppo; con CURVE al 100% scende rapidamente all'inizio.</figcaption></figure>
+
+  <h2>START, END e reverse</h2>
+  <p>Trascina il marcatore <strong>superiore</strong> per spostare START e quello <strong>inferiore</strong> per spostare END: puoi cliccare anche in un punto qualsiasi della metà alta o bassa della forma d'onda. La parte tra i due marcatori è evidenziata; il resto viene ignorato.</p>
+  <figure class="wide"><img src="img/f_startend.svg" alt=""><figcaption><b>Tre modi di usare START ed END.</b> L'ultimo, con START modulato, è la base delle tecniche di "chop" descritte più avanti.</figcaption></figure>
+
+  <h2>I motori del sampler nel dettaglio</h2>
+  <p>Le quattro manopole hanno il valore neutro al <strong>centro</strong> (50%), tranne dove indicato. PITCH traspone di ±48 semitoni in tutti i motori.</p>
+
+  <h3>Classic — riproduzione diretta</h3>
+  <table>
+    <thead><tr><th>Manopola</th><th>Sinistra</th><th>Destra</th></tr></thead>
+    <tbody>
+      <tr><td>FINE</td><td>fino a −1 semitono</td><td>fino a +1 semitono</td></tr>
+      <tr><td>TILT</td><td>passa-basso sempre più chiuso: suono scuro e attutito</td><td>passa-alto: toglie i bassi, suono sottile</td></tr>
+      <tr><td>COMP</td><td>espansione: transienti più marcati, code più corte</td><td>compressione: code e ambiente più in evidenza</td></tr>
+      <tr><td>GAIN</td><td>fino a −24 dB</td><td>fino a +24 dB con saturazione morbida</td></tr>
+    </tbody>
+  </table>
+  <p>In Classic PITCH cambia anche la velocità: un'ottava sopra il campione dura la metà.</p>
+
+  <h3>Phase Warp — deformare il tempo del campione</h3>
+  <p>Phase Warp legge il campione dall'inizio alla fine della regione, ma lungo un percorso deformato. I grafici mostrano, per ogni manopola, quale punto del campione si sente durante il colpo: la diagonale tratteggiata è la lettura normale.</p>
+  <figure class="wide"><img src="img/f_warp.svg" alt=""><figcaption><b>Le quattro manopole di Phase Warp</b>, calcolate con le stesse formule del motore audio.</figcaption></figure>
+  <p>Combinazioni utili: SHAPE a destra su un rullante dà un attacco lento che "risucchia" il colpo; MIRROR a destra su un hit vocale crea balbettii ritmici; MIRROR a sinistra trasforma l'attacco di un campione in un loop granuloso.</p>
+
+  <h3>Cloner — ogni colpo un po' diverso</h3>
+  <p>Cloner divide il suono in otto bande di frequenza e a ogni colpo ne cambia leggermente il volume e l'intonazione. Così un singolo campione di hi-hat, ripetuto sedici volte, non suona mai come una "mitragliatrice".</p>
+  <figure class="wide"><img src="img/f_clone.svg" alt=""><figcaption><b>Tre colpi consecutivi dello stesso campione</b> con VARIATION al 50%.</figcaption></figure>
+  <table>
+    <thead><tr><th>Manopola</th><th>Effetto</th></tr></thead>
+    <tbody>
+      <tr><td>FINE</td><td>Intonazione fine, ±1 semitono.</td></tr>
+      <tr><td>TILT</td><td>Inclina le bande: a sinistra più bassi, a destra più acuti.</td></tr>
+      <tr><td>VARIATION</td><td>Quanto cambia ogni colpo: 50% è un'esecuzione naturale, 100% un musicista molto irregolare, 0% nessuna variazione.</td></tr>
+      <tr><td>DAMP</td><td>A destra smorza prima gli acuti, come un piatto fermato con la mano; a sinistra stringe le bande ed esalta le risonanze metalliche.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Granular — intonazione e tempo separati</h3>
+  <p>Il motore granulare suona tanti frammenti brevi (grani) presi attorno a una <strong>testina</strong> che si muove nel campione. La velocità della testina e l'intonazione dei grani sono indipendenti: puoi fermare il suono su un punto e cambiarne l'altezza con la lane PITCH, oppure scorrerlo lentamente senza che l'intonazione cambi.</p>
+  <figure class="wide"><img src="img/f_gran.svg" alt=""><figcaption><b>Testina e grani.</b> Ogni grano ha una finestra morbida, quindi non produce click.</figcaption></figure>
+  <div class="tip"><b>Ricorda</b>Il granulare suona finché dura l'inviluppo: con il menu su <em>Off</em> continuerebbe fino al colpo successivo. Usa Env 2 con un DECAY lungo e un ATTACK morbido per i pad.</div>
+
+  <h2>Il sampler nel sequencer</h2>
+  <p>Il sequencer della voce suona il campione come suonerebbe il synth: ogni colpo lo fa ripartire da START. Le lane della pagina SEQ cambiano il colpo successivo.</p>
+  <table>
+    <thead><tr><th>Lane</th><th>Effetto sul campione</th></tr></thead>
+    <tbody>
+      <tr><td>VEL</td><td>Volume del colpo, tramite gli inviluppi (vedi il controllo VELOCITY dell'inviluppo). Utile anche come sorgente VELOCITY per modulare START o il filtro. Con l'inviluppo del sampler su <em>Off</em> la VEL non cambia il volume del campione.</td></tr>
+      <tr><td>PITCH</td><td>Traspone il campione per quel passo (±24 semitoni). In Classic cambia anche la durata, in Granular no.</td></tr>
+      <tr><td>RATCH</td><td>Rifà partire il campione 2–8 volte nel passo: rullate e stutter.</td></tr>
+      <tr><td>ENV</td><td>Allunga o accorcia l'inviluppo, quindi quanto del campione si sente.</td></tr>
+      <tr><td>SHIFT · PROB</td><td>Spostano il colpo fuori griglia o lo rendono probabile.</td></tr>
+      <tr><td>MACRO 2</td><td>Il valore per quel passo della sorgente MACRO 2: collegata a START, sceglie la fetta del campione.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Tecnica 1 — "Chop" di un break con la lane MACRO 2</h3>
+  <p>Questa tecnica divide un loop in fette e ti fa scegliere, passo per passo, quale fetta suona: come affettare un break in un campionatore hardware, ma senza tagliare il file.</p>
+  <ol class="steps">
+    <li>Carica il loop su una voce, BLEND al 100%, START all'inizio (tutto a sinistra) ed END alla fine.</li>
+    <li>Scegli Env 2 con HOLD corto e DECAY 200–300 ms, così ogni fetta si chiude prima della successiva.</li>
+    <li>Premi il pulsante <strong>MAP</strong> sopra MACRO 2 (diventa verde) e, sulla forma d'onda, <strong>trascina il marcatore START verso destra</strong>: la fascia verde mostra fin dove MACRO 2 può spostarlo. Per 8 fette uguali portala al 96%, quasi alla fine.</li>
+    <li>Premi di nuovo MAP per uscire. Nella pagina SEQ imposta STEPS e FILL a 16, poi apri la lane <span class="ctl">MACRO 2</span>.</li>
+    <li>Disegna i valori: con una profondità del 96% ogni fetta corrisponde a 13 punti (0 = A, 13 = B, 26 = C, 39 = D, 52 = E, 65 = F, 78 = G, 91 = H).</li>
+  </ol>
+  <figure class="m"><img src="img/c_map.png" alt=""><figcaption><b>Modalità MAP su MACRO 2.</b> Il marcatore START mostra la fascia verde della profondità e la scritta di aiuto in basso.</figcaption></figure>
+  <figure class="wide"><img src="img/f_chop.svg" alt=""><figcaption><b>Dalla lane alla fetta.</b> La stessa sequenza del kit d'esempio: le fette vengono riordinate in un nuovo groove.</figcaption></figure>
+  <figure class="m"><img src="img/c_seq_macro.png" alt=""><figcaption><b>La lane MACRO 2 nella pagina SEQ.</b> Ogni barra sceglie la fetta di quel passo.</figcaption></figure>
+  <div class="tip"><b>Varianti</b>Aggiungi qualche RATCH a 2 o 3 per le rullate; metti la lane MACRO 2 in modalità <em>FREE</em> con lunghezza 5 o 7 per un ordine delle fette che si sposta rispetto al ritmo; usa la lane DADO per generare un nuovo ordine e premi ancora DADO finché non ti piace.</div>
+
+  <h3>Tecnica 2 — fette casuali con RANDOM</h3>
+  <p>Come la tecnica 1, ma in modalità MAP sulla sorgente <strong>RANDOM</strong>: ogni colpo pesca un punto di partenza a caso nella fascia verde. Una profondità piccola (10–20%) dà micro-variazioni a un campione singolo; una profondità grande trasforma un loop in un generatore di groove sempre diversi. Con <strong>VELOCITY</strong> invece dello START casuale, i colpi forti e quelli deboli partono da punti diversi: utile con campioni registrati a più dinamiche in sequenza.</p>
+
+  <h3>Tecnica 3 — melodie da un solo campione</h3>
+  <p>Carica un suono intonato (una nota di basso, un pluck, un hit vocale), imposta il ritmo con STEPS e FILL e disegna la lane <span class="ctl">PITCH</span>. Per un timbro che non cambia durata al variare della nota usa il motore <strong>Granular</strong> con SPEED a destra del centro.</p>
+  <figure class="m"><img src="img/c_seq_pitch.png" alt=""><figcaption><b>Lane PITCH sulla voce granulare del kit d'esempio:</b> quinta, ottava, quarta e terza minore sopra la nota originale.</figcaption></figure>
+
+  <h3>Tecnica 4 — pad e texture con il granulare</h3>
+  <figure class="half"><img src="img/c_gran.png" alt=""><figcaption>Voce 2 del kit d'esempio: pad in Granular, Env 2 con ATTACK 150 ms e DECAY 2,5 s.</figcaption></figure>
+  <ol class="steps">
+    <li>Carica un suono lungo e tenuto, scegli <strong>Granular</strong> ed Env 2 con ATTACK morbido e DECAY lungo.</li>
+    <li>SIZE verso il centro, RATE poco sopra il centro per un suono continuo; SPEED appena a destra del centro per un movimento lento.</li>
+    <li>BLUR a destra del centro sparpaglia i grani e rende il suono più diffuso.</li>
+    <li>Pochi colpi nel sequencer (FILL 2–3), mandata al riverbero e un LFO lento su SPEED o su START per un suono che evolve.</li>
+  </ol>
+
+  <h3>Tecnica 5 — stratificare synth e campione</h3>
+  <figure class="m"><img src="img/c_layer.png" alt=""><figcaption><b>Voce 4 del kit d'esempio:</b> kick sintetico e campione metallico in Phase Warp, con BLEND al 50%.</figcaption></figure>
+  <p>Con BLEND al 50% synth e sampler suonano entrambi a pieno volume. Accorcia la regione del campione (START dopo il silenzio iniziale, END presto) e assegna al sampler <em>Env 1</em> con un DECAY breve: il campione aggiunge solo il "click" d'attacco, il synth fornisce corpo e coda.</p>
+
+  <h3>Tecnica 6 — hi-hat vivi con il Cloner</h3>
+  <figure class="half"><img src="img/c_clone.png" alt=""><figcaption>Voce 3 del kit d'esempio: hi-hat aperto in Cloner con VARIATION al 70%.</figcaption></figure>
+  <p>Carica un hi-hat o un piatto, scegli <strong>Cloner</strong> con VARIATION fra 50% e 70% e programma una sequenza fitta (FILL 11 su 16 o più). Aggiungi qualche passo con VEL basso e SWING leggero: ogni colpo sarà diverso senza bisogno di più campioni.</p>
+
+  <h2>Suonare i campioni dal MIDI</h2>
+  <p>Sul canale MIDI 1 le note Do…Sol suonano le otto voci al loro tono di base. Sui canali da 2 a 9 la voce corrispondente (1–8) diventa uno strumento <strong>cromatico</strong>: il Do centrale (nota 60) suona il campione all'altezza originale, le altre note lo traspongono. È il modo più rapido per suonare un campione come una tastiera dentro Ableton.</p>
+
+  <h2>Riepilogo dei controlli modulabili del sampler</h2>
+  <table>
+    <thead><tr><th>Destinazione</th><th>Come modularla</th><th>Idee</th></tr></thead>
+    <tbody>
+      <tr><td>PITCH</td><td>MAP e trascina la manopola PITCH del sampler</td><td>ENV 1 per discese di pitch; RANDOM per piccole stonature.</td></tr>
+      <tr><td>Manopole 1–4</td><td>MAP e trascina la manopola</td><td>LFO su SPEED del granulare; VELOCITY su GAIN del Classic.</td></tr>
+      <tr><td>START · END</td><td>MAP e trascina il marcatore sulla forma d'onda</td><td>MACRO 2 + lane per il chop; RANDOM per variazioni; LFO per scorrere il campione.</td></tr>
+      <tr><td>BLEND</td><td>MAP e trascina BLEND</td><td>VELOCITY: i colpi forti più campione, i deboli più synth.</td></tr>
+    </tbody>
+  </table>
+  <p class="small">Doppio clic su una manopola o su un marcatore in modalità MAP azzera quella modulazione. Il kit d'esempio con tutte le voci di questo capitolo si chiama <em>Drummatic Demo</em>.</p>
+</section>
+
 <!-- ================= 6 MIXER ================= -->
 <section class="chapter" id="c6">
-  <header><div class="num">06</div><div><h1>Mixer, effetti e master</h1><p class="lede">Strisce di canale, routing, delay, riverbero e bus master</p></div></header>
+  <header><div class="num">07</div><div><h1>Mixer, effetti e master</h1><p class="lede">Strisce di canale, routing, delay, riverbero e bus master</p></div></header>
   <figure><img src="img/p_mix.jpg" alt=""><figcaption><b>Pagina MIX / FX.</b> Otto strisce di canale a sinistra, Shatter Delay e Headspace Reverb a destra.</figcaption></figure>
 
   <h2><span data-mark="c6"></span>Strisce di canale</h2>
@@ -495,7 +681,7 @@ tbody tr:nth-child(even) td { background: #fafbfc; }
 
 <!-- ================= 7 PERFORMANCE ================= -->
 <section class="chapter" id="c7">
-  <header><div class="num">07</div><div><h1>Performance</h1><p class="lede">Controllare tutte le voci insieme</p></div></header>
+  <header><div class="num">08</div><div><h1>Performance</h1><p class="lede">Controllare tutte le voci insieme</p></div></header>
   <figure class="xs"><img src="img/p_perf.jpg" alt=""><figcaption><b>Pagina PERFORM.</b> A sinistra ENABLE e FLIP per voce, al centro le sezioni di controllo, a destra i comandi globali.</figcaption></figure>
   <p><span data-mark="c7"></span>Ogni manopola della pagina Performance <strong>si somma</strong> al valore corrispondente di tutte le voci abilitate. Al centro (0%) non cambia nulla; ruotandola a destra o a sinistra sposti tutte le voci nella stessa direzione.</p>
   <table>
@@ -526,7 +712,7 @@ tbody tr:nth-child(even) td { background: #fafbfc; }
 
 <!-- ================= 8 KIT E PRESET ================= -->
 <section class="chapter" id="c8">
-  <header><div class="num">08</div><div><h1>Kit, preset e randomizzazione</h1><p class="lede">Salvare, richiamare e generare suoni</p></div></header>
+  <header><div class="num">09</div><div><h1>Kit, preset e randomizzazione</h1><p class="lede">Salvare, richiamare e generare suoni</p></div></header>
   <h2><span data-mark="c8"></span>Kit</h2>
   <p>Un kit (<code>.mkit</code>) contiene tutto: le otto voci, le sequenze, le modulazioni, i riferimenti ai campioni, effetti, master e Performance. Usa <span class="ctl">SALVA KIT</span> e <span class="ctl">CARICA KIT</span> nella barra superiore; le frecce ai lati del nome scorrono i kit della cartella <code>Kits</code> in ordine alfabetico.</p>
   <p>Nel DAW non serve salvare il kit: lo stato completo viene memorizzato con il progetto.</p>
@@ -549,7 +735,7 @@ tbody tr:nth-child(even) td { background: #fafbfc; }
 
 <!-- ================= 9 MIDI ================= -->
 <section class="chapter" id="c9">
-  <header><div class="num">09</div><div><h1>Controllo MIDI e tastiera</h1><p class="lede">Suonare e comandare Drummatic da note MIDI</p></div></header>
+  <header><div class="num">10</div><div><h1>Controllo MIDI e tastiera</h1><p class="lede">Suonare e comandare Drummatic da note MIDI</p></div></header>
   <p><span data-mark="c9"></span>Drummatic risponde alle note MIDI su undici canali. Nel DAW crea una clip MIDI sulla traccia di Drummatic e scegli il canale di uscita del controller o della clip.</p>
   <h2>Suonare le voci</h2>
   <table>
@@ -596,12 +782,14 @@ tbody tr:nth-child(even) td { background: #fafbfc; }
 
 <!-- ================= 10 PROBLEMI ================= -->
 <section class="chapter" id="c10">
-  <header><div class="num">10</div><div><h1>Risoluzione dei problemi</h1><p class="lede">Le situazioni più comuni e come uscirne</p></div></header>
+  <header><div class="num">11</div><div><h1>Risoluzione dei problemi</h1><p class="lede">Le situazioni più comuni e come uscirne</p></div></header>
   <table>
     <thead><tr><th>Sintomo</th><th>Causa probabile e soluzione</th></tr></thead>
     <tbody>
       <tr><td><span data-mark="c10"></span>Il DAW suona ma Drummatic no</td><td>Il sequencer è stato fermato (STOP acceso). Premi PLAY o riavvia il trasporto del DAW. Se succedeva premendo spazio con la finestra del plugin aperta, aggiorna alla versione 0.2.1 o successiva.</td></tr>
-      <tr><td>Una voce non si sente</td><td>Controlla M/S nella colonna voci, VOICE GAIN, BLEND (tutto sul sampler senza campione = silenzio) e il ROUTING nella pagina MIX / FX.</td></tr>
+      <tr><td>Una voce non si sente</td><td>Controlla M/S nella colonna voci, VOICE GAIN e il ROUTING nella pagina MIX / FX.</td></tr>
+      <tr><td>Il campione caricato non si sente</td><td>BLEND è a 0% (solo synth): portalo a destra. Controlla anche che SAMPLER sia acceso e che START ed END non siano sovrapposti.</td></tr>
+      <tr><td>Il campione si interrompe presto</td><td>L'inviluppo del sampler (Env 2 di default) finisce prima del campione: scegli <em>Off</em> o allunga il DECAY.</td></tr>
       <tr><td>Il campione non si carica</td><td>Il kit ricorda il percorso del file: se lo hai spostato o rinominato, ricaricalo con CARICA e salva di nuovo il kit.</td></tr>
       <tr><td>Il plugin non compare in Ableton</td><td>Verifica la cartella di installazione (capitolo 2) e riesegui la scansione. Su macOS rimuovi la quarantena con il comando <code>xattr</code>.</td></tr>
       <tr><td>macOS dice che l'app è danneggiata</td><td>È il blocco di Gatekeeper per software non notarizzato: esegui il comando <code>xattr</code> del capitolo 2.</td></tr>
@@ -622,20 +810,21 @@ tbody tr:nth-child(even) td { background: #fafbfc; }
 <section class="chapter" id="c11">
   <header><div class="num">A</div><div><h1>Appendice</h1><p class="lede">Riferimenti rapidi e cronologia delle versioni</p></div></header>
   <h2><span data-mark="c11"></span>Destinazioni di modulazione</h2>
-  <p>PITCH e le quattro manopole del synth; PITCH, le quattro manopole del sampler, START ed END; BLEND; CUTOFF, RESONANCE, DISTORT; ATTACK, HOLD e DECAY di entrambi gli inviluppi; SPEED e AMP di entrambi gli LFO; PAN, VOICE GAIN, DELAY e REVERB.</p>
+  <p>PITCH e le quattro manopole del synth; PITCH, le quattro manopole del sampler, START ed END (in modalità MAP si trascinano i marcatori sulla forma d'onda); BLEND; CUTOFF, RESONANCE, DISTORT; ATTACK, HOLD e DECAY di entrambi gli inviluppi; SPEED e AMP di entrambi gli LFO; PAN, VOICE GAIN, DELAY e REVERB.</p>
   <h2>Divisioni musicali</h2>
   <p>LFO, delay e predelay del riverbero: 8 bar, 4 bar, 2 bar, 1 bar, 1/2, 1/4, 1/8, 1/16, 1/32, 1/4T, 1/8T, 1/16T, 1/64.<br>Velocità del sequencer: 1/1, 1/2, 1/4, 1/8, 1/16, 1/32, 1/4T, 1/8T, 1/16T, 1/32T, con moltiplicatore /4, /3, /2, 1×, 2×, 3×, 4×.</p>
   <h2>Cronologia delle versioni</h2>
   <table>
     <thead><tr><th>Versione</th><th>Novità</th></tr></thead>
     <tbody>
+      <tr><td>0.2.3</td><td>START ed END modulabili in modalità MAP direttamente sulla forma d'onda; nuovo capitolo sul sampler; formato dei tempi corretto (es. "50 ms").</td></tr>
       <tr><td>0.2.2</td><td>Nuovo nome Drummatic e cartella <code>Documenti/Drummatic</code> con migrazione automatica; versione macOS universale; corretta l'evidenziazione delle pagine.</td></tr>
       <tr><td>0.2.1</td><td>L'audio non si ferma più premendo spazio con il plugin in primo piano; pulsante TASTI; il play del DAW riarma sempre il sequencer; la randomizzazione non cambia più routing ed ENABLE/FLIP; correzioni a choke e Dropout.</td></tr>
       <tr><td>0.2</td><td>Dieci nuovi motori (Chaos, VOSIM, SumSyn, Reson, Combinatoric, Terraining, Shame, Entangled, Haywire, Scrapyard); sampler Phase Warp, Cloner e Granular; distorsioni MiniGlitch, MegaGlitch e Contrast; pagina Performance; vista ALL; uscite multiple.</td></tr>
       <tr><td>0.1</td><td>Prima versione: 8 voci, 15 motori, sampler Classic, sequencer euclideo con lane, mixer, delay, riverbero e master, controllo MIDI.</td></tr>
     </tbody>
   </table>
-  <div class="end">Drummatic · Manuale utente · versione 0.2.2 · ottobre 2026. Nome, interfaccia e codice sono originali.</div>
+  <div class="end">Drummatic · Manuale utente · versione 0.2.3 · ottobre 2026. Nome, interfaccia e codice sono originali.</div>
 </section>
 
 </body>

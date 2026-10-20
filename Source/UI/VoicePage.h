@@ -50,10 +50,47 @@ public:
             for (size_t x = 0; x < peaks.size(); ++x)
                 g.drawVerticalLine ((int) x, mid - peaks[x] * hh, mid + peaks[x] * hh);
         }
+        // modulazione di START/END: intervallo della sorgente armata e posizione modulata corrente
+        auto& sh = ctx.shared();
+        const bool map = ctx.armedSource >= 0;
+        for (int k = 0; k < 2; ++k)
+        {
+            const int t = k == 0 ? mp::T_Start : mp::T_End;
+            const float base = k == 0 ? s : e;
+            bool anyMod = false;
+            for (int src = 0; src < mp::kNumSources; ++src) anyMod |= sh.depth[src][t].load() != 0.0f;
+            if (map)
+            {
+                const float d = sh.depth[ctx.armedSource][t].load();
+                if (d != 0.0f)
+                {
+                    const float a = r.getX() + base * r.getWidth(), b = r.getX() + juce::jlimit (0.0f, 1.0f, base + d) * r.getWidth();
+                    auto band = juce::Rectangle<float>::leftTopRightBottom (std::min (a, b), k == 0 ? r.getY() : r.getCentreY(),
+                                                                            std::max (a, b), k == 0 ? r.getCentreY() : r.getBottom());
+                    g.setColour (col::accent2.withAlpha (0.25f)); g.fillRect (band);
+                    g.setColour (col::accent2); g.drawRect (band, 1.0f);
+                }
+            }
+            if (anyMod)
+            {
+                const float xm = r.getX() + sh.display[t].load() * r.getWidth();
+                g.setColour (col::accent2.withAlpha (0.8f));
+                const float y0 = k == 0 ? r.getY() : r.getCentreY();
+                for (float y = y0; y < y0 + r.getHeight() * 0.5f; y += 6) g.drawVerticalLine ((int) xm, y, y + 3);
+            }
+        }
         g.setColour (col::accent2);
         g.drawVerticalLine ((int) xs, r.getY(), r.getBottom()); g.fillEllipse (xs - 5, r.getY(), 10, 10);
         g.drawVerticalLine ((int) xe, r.getY(), r.getBottom()); g.fillEllipse (xe - 5, r.getBottom() - 10, 10, 10);
-        if (e < s) { g.setFont (font (10, true)); g.drawText ("REVERSE", getLocalBounds().reduced (4), juce::Justification::topRight); }
+        g.setFont (font (10, true));
+        if (e < s) g.drawText ("REVERSE", getLocalBounds().reduced (4), juce::Justification::topRight);
+        if (map)
+        {
+            g.setColour (col::accent2);
+            g.drawText (juce::String ("MAP ") + mp::sourceName (ctx.armedSource) + ": trascina START (sopra) o END (sotto)",
+                        getLocalBounds().reduced (6, 4), juce::Justification::bottomLeft);
+            g.drawRoundedRectangle (r.reduced (0.5f), 3, 1.5f);
+        }
     }
 
     void mouseDown (const juce::MouseEvent& m) override
@@ -61,11 +98,20 @@ public:
         const float x = (float) m.x / std::max (1, getWidth());
         // marcatore START in alto, END in basso
         dragging = m.y < getHeight() / 2 ? 0 : 1;
-        if (std::abs (x - start()) < 0.03f && m.y < getHeight() / 2) dragging = 0;
-        else if (std::abs (x - end()) < 0.03f && m.y >= getHeight() / 2) dragging = 1;
+        if (ctx.armedSource >= 0) { setDepth (x); return; }
         setMarker (x);
     }
-    void mouseDrag (const juce::MouseEvent& m) override { setMarker ((float) m.x / std::max (1, getWidth())); }
+    void mouseDrag (const juce::MouseEvent& m) override
+    {
+        const float x = (float) m.x / std::max (1, getWidth());
+        if (ctx.armedSource >= 0) setDepth (x); else setMarker (x);
+    }
+    void mouseDoubleClick (const juce::MouseEvent& m) override
+    {
+        if (ctx.armedSource < 0) return;
+        ctx.shared().depth[ctx.armedSource][m.y < getHeight() / 2 ? mp::T_Start : mp::T_End] = 0.0f;
+        repaint();
+    }
 
     bool isInterestedInFileDrag (const juce::StringArray& files) override
     {
@@ -81,6 +127,16 @@ private:
     Context& ctx; std::shared_ptr<const mp::SampleData> data; std::vector<float> peaks; int dragging = 0;
     float start() { return ctx.proc.param (ctx.voice, "start")->getValue(); }
     float end() { return ctx.proc.param (ctx.voice, "end")->getValue(); }
+    // in modalità MAP: la profondità è la distanza fra il marcatore e il punto trascinato
+    void setDepth (float x)
+    {
+        const int t = dragging == 0 ? mp::T_Start : mp::T_End;
+        const float base = dragging == 0 ? start() : end();
+        float d = juce::jlimit (-1.0f, 1.0f, x - base);
+        if (std::abs (d) < 0.005f) d = 0.0f;
+        ctx.shared().depth[ctx.armedSource][t] = d;
+        repaint();
+    }
     void setMarker (float x)
     {
         auto* p = ctx.proc.param (ctx.voice, dragging == 0 ? "start" : "end");
@@ -182,7 +238,7 @@ public:
         repaint();
     }
 
-    void armedChanged() { for (auto* k : allKnobs) k->repaint(); for (auto& m : maps) m->repaint(); }
+    void armedChanged() { for (auto* k : allKnobs) k->repaint(); for (auto& m : maps) m->repaint(); wave.repaint(); }
 
     void paint (juce::Graphics& g) override
     {

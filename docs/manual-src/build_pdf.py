@@ -13,7 +13,7 @@ HERE = Path(__file__).parent
 SRC = HERE / "manual.html"
 OUT = Path(sys.argv[1]) if len(sys.argv) > 1 else HERE / "Drummatic-Manuale.pdf"
 CHAPTERS = [("c1", "Introduzione"), ("c2", "Installazione"), ("c3", "L'interfaccia"), ("c4", "La voce"),
-            ("c5", "Il sequencer"), ("c6", "Mixer, effetti e master"), ("c7", "Performance"),
+            ("c5", "Il sequencer"), ("cS", "Il sampler in pratica"), ("c6", "Mixer, effetti e master"), ("c7", "Performance"),
             ("c8", "Kit, preset e randomizzazione"), ("c9", "Controllo MIDI e tastiera"),
             ("c10", "Risoluzione dei problemi"), ("c11", "Appendice")]
 
@@ -89,7 +89,7 @@ def main():
         c.save()
         p.merge_page(PdfReader(io.BytesIO(buf.getvalue())).pages[0])
         writer.add_page(p)
-    writer.add_metadata({"/Title": "Drummatic — Manuale utente", "/Author": "Emilio Falciatori", "/Subject": "Drummatic 0.2.2"})
+    writer.add_metadata({"/Title": "Drummatic — Manuale utente", "/Author": "Emilio Falciatori", "/Subject": "Drummatic 0.2.3"})
     with open(OUT, "wb") as f:
         writer.write(f)
     print("pagine:", len(writer.pages), "capitoli:", {k: v + 2 for k, v in found.items()}, "->", OUT)

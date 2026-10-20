@@ -74,6 +74,39 @@ int main (int argc, char** argv)
     lane (7, L_Pitch, { 0, 3, 7, 10, 12, 10, 7, 3, 0, -2, 3, 7, 5, 3, 0, -5 });
     lane (7, L_Ratch, { 1, 1, 1, 2, 1, 1, 3, 1, 1, 1, 1, 2, 1, 1, 1, 1 });
 
+    if (argc > 2 && juce::String (argv[2]) == "--sampler")
+    {
+        const auto smp = ManipoloProcessor::userFolder().getChildFile ("Samples");
+        // 1: break affettato con MACRO 2 -> START
+        p.resetVoice (0);
+        p.loadSample (0, smp.getChildFile ("Drummatic Break 120.wav"));
+        set (0, "synthOn", 0); set (0, "blend", 1.0f); set (0, "sampEnv", 2); set (0, "e2d", 0.25f); set (0, "e2h", 0.02f);
+        set (0, "fmode", DarkLP); set (0, "fill", 16); set (0, "steps", 16); set (0, "gain", -4);
+        set (0, "sp3", 0.6f); set (0, "sp4", 0.55f);
+        p.dm.vshared[0].depth[S_Macro2][T_Start] = 0.96f;
+        lane (0, L_Macro2, { 0, 13, 26, 39, 52, 13, 78, 91, 0, 39, 26, 65, 52, 91, 78, 91 });
+        lane (0, L_Ratch, { 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 3, 1 });
+        // 2: pad granulare
+        p.resetVoice (1);
+        p.loadSample (1, smp.getChildFile ("Drummatic Pad A.wav"));
+        set (1, "synthOn", 0); set (1, "blend", 1.0f); set (1, "sampEng", SmpGranular); set (1, "sampEnv", 2);
+        set (1, "e2a", 0.15f); set (1, "e2d", 2.5f); set (1, "sp1", 0.55f); set (1, "sp2", 0.6f); set (1, "sp3", 0.58f); set (1, "sp4", 0.7f);
+        set (1, "fmode", DarkLP); set (1, "fill", 3); set (1, "rotate", 2); set (1, "rsend", 0.5f); set (1, "start", 0.2f);
+        lane (1, L_Pitch, { 0, 0, 7, 0, 0, 12, 0, 0, 5, 0, 0, 3, 0, 0, 0, 0 });
+        p.dm.vshared[1].depth[S_Lfo1][T_SP3] = 0.15f;
+        // 3: hat aperto con Cloner
+        p.resetVoice (2);
+        p.loadSample (2, smp.getChildFile ("Drummatic Open Hat.wav"));
+        set (2, "synthOn", 0); set (2, "blend", 1.0f); set (2, "sampEng", SmpCloner); set (2, "sampEnv", 0);
+        set (2, "sp3", 0.7f); set (2, "sp4", 0.6f); set (2, "fmode", DarkLP); set (2, "fill", 11); set (2, "gain", -12);
+        // 4: kick synth + campione stratificati
+        p.resetVoice (3);
+        p.loadSample (3, smp.getChildFile ("Drummatic Metal Hit.wav"));
+        set (3, "engine", EngKick); set (3, "blend", 0.5f); set (3, "sampEng", SmpPhaseWarp); set (3, "sampEnv", 1);
+        set (3, "sp1", 0.75f); set (3, "sp2", 0.35f); set (3, "fill", 4); set (3, "e1d", 0.4f); set (3, "gain", -6);
+        set (3, "start", 0.05f); set (3, "end", 0.6f);
+    }
+
     // FX / master
     p.apvts.getParameter ("d_fb")->setValueNotifyingHost (p.apvts.getParameter ("d_fb")->convertTo0to1 (0.4f));
     p.apvts.getParameter ("d_glitch")->setValueNotifyingHost (0.2f);

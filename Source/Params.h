@@ -25,7 +25,7 @@ inline const char* targetLabel (int t)
 inline juce::String vid (int v, const juce::String& name) { return "v" + juce::String (v + 1) + "_" + name; }
 
 // Testo dei valori
-inline juce::String formatTime (float s) { return s < 1.0f ? juce::String (s * 1000.0f, s < 0.01f ? 2 : 0) + " ms" : juce::String (s, 2) + " s"; }
+inline juce::String formatTime (float s) { return s < 0.01f ? juce::String (s * 1000.0f, 2) + " ms" : (s < 1.0f ? juce::String (juce::roundToInt (s * 1000.0f)) + " ms" : juce::String (s, 2) + " s"); }
 inline juce::String formatTarget (int t, float v)
 {
     switch (t)

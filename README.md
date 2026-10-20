@@ -1,4 +1,4 @@
-# Drummatic 0.2.2 — drum synth a 8 voci
+# Drummatic 0.2.3 — drum synth a 8 voci
 
 Standalone per Windows (`Drummatic.exe` / `Drummatic.app`) e plugin VST3 (`Drummatic.vst3`) per Windows e macOS dallo stesso codice JUCE.
 Architettura modellata sulle funzioni di una drum machine ibrida synth/sampler con sequencer euclideo;
@@ -64,6 +64,11 @@ nome, grafica e codice sono originali.
 **Tastiera** (pulsante TASTI attivo e finestra a fuoco): Q suona la voce, W/S voce su/giù, A/D pagina (VOICE/SEQ/MIX/PERFORM);
 Spazio play/stop solo nello standalone. Nel DAW TASTI è spento di default, così spazio e tastiera MIDI del computer restano al DAW.
 Shift+clic o doppio clic su una voce a sinistra = ascolto.
+
+## Novità 0.2.3
+- START ed END del sampler modulabili in modalità MAP trascinando i marcatori sulla forma d'onda (es. lane MACRO 2 → START per affettare un loop).
+- Tempi visualizzati in modo pulito ("50 ms").
+- Manuale: nuovo capitolo "Il sampler in pratica" con schermate annotate, grafici dei motori e sei tecniche.
 
 ## Novità 0.2.2
 - Nuovo nome Drummatic, versione macOS universale, cartella utente `Documenti/Drummatic` con migrazione automatica.
