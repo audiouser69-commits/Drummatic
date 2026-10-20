@@ -117,13 +117,13 @@ def page_panel(pdf):
     k0, k1 = L2P(*PAGE_KEYS[0]), L2P(*PAGE_KEYS[1])
     dim(ax, (k0[0], k0[1] + 8), (k1[0], k1[1] + 8), 4, text="20 passo")
     dim(ax, (0, t0[1]), (t0[0], t0[1]), 0.01, text=f"{t0[0]:.1f}")
-    note(ax, -28, -16, "Rosso = TAGLIO · blu = INCISIONE (profondità 0,1–0,2 mm) · verde = prigionieri PEM FHS-M3-8 pressati sul retro · magenta = svasati M3 90°", fs=6)
+    note(ax, -28, -16, "Rosso = TAGLIO · blu = INCISIONE (profondità 0,1–0,2 mm) · verde = prigionieri PEM pressati sul retro (FHS-M3-15 circuito, FHS-M3-8 display) · magenta = svasati M3 90°", fs=6)
     # legenda a destra
     x = 333; y = 270
     fr.text(x, y, "Lavorazioni", fontsize=9, weight="bold"); y -= 7
     for s in (f"46 fori tasto {KEY_HOLE} x {KEY_HOLE} R1,5", f"8 + 1 fori encoder Ø{ENC_HOLE}", f"1 foro volume Ø{POT_HOLE}",
               f"Finestra display {DISPLAY_WINDOW[0]:.0f} x {DISPLAY_WINDOW[1]:.0f} R2", "14 fori svasati M3 (4+4 fianchi, 3+3 vassoio)",
-              f"{len(PCB_STUDS)} + {len(DISPLAY_STUDS)} prigionieri M3 x 8", "Logo DRUMMATIC: font Michroma (OFL),", "   altezza maiuscole 8 mm, spaziatura 1,2 mm",
+              f"{len(PCB_STUDS)} prigionieri FHS-M3-15 + {len(DISPLAY_STUDS)} FHS-M3-8", "Logo DRUMMATIC: font Michroma (OFL),", "   altezza maiuscole 8 mm, spaziatura 1,2 mm",
               "Diciture: Michroma 2,2 mm / numeri 1,8 mm", "Finitura: anodizzazione nera opaca", "Fornitore: Schaeffer AG (Front Panel Designer",
               "   importa il DXF; layer = lavorazione)"):
         fr.text(x, y, s, fontsize=6.6); y -= 5

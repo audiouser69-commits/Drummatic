@@ -1,0 +1,13 @@
+DRUMMATIC — circuito di controllo, file di produzione (rev. A, 2026-10)
+
+Ordine consigliato: Eurocircuits "PCB proto + assembly" oppure Aisler.
+- Circuito: 2 strati, FR-4 1,6 mm, rame 35 µm, solder mask nero, serigrafia bianca, finitura ENIG (o HAL senza piombo).
+  Dimensioni 336 x 212 mm. Il contorno ha una tacca per il display e 46 piccoli fori rettangolari per i LED (Edge.Cuts).
+- Gerber e foratura: cartella gerber/ (oppure caricare direttamente drummatic_controllo.kicad_pcb: Eurocircuits e Aisler leggono KiCad).
+- Montaggio: BOM_distinta.csv (codici produttore) e CPL_posizionamento.csv (posizioni, lato e rotazione).
+  Lato inferiore (Bottom): tutti i componenti SMD, le 46 prese hot-swap, i 46 LED SK6812MINI-E (montaggio inverso, la luce passa nel foro),
+  il Raspberry Pi Pico 2 (modulo saldato sui bordi).
+  Lato superiore (Top): 9 encoder EC11E e il potenziometro RK09K, a foro passante.
+  NON vanno montati dal fornitore: gli switch Choc (si inseriscono a mano nelle prese) e i tasti.
+- Controllo elettrico (DRC KiCad 7): 0 errori, 0 connessioni mancanti.
+- Schema: Drummatic-Schema-Controllo.pdf.

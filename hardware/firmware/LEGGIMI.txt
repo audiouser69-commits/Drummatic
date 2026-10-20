@@ -1,0 +1,18 @@
+DRUMMATIC CONTROL — firmware del Raspberry Pi Pico 2 (rev. A)
+
+Caricarlo (una volta sola, 1 minuto):
+1. Tieni premuto il pulsantino BOOTSEL sul Pico e collega il cavo USB al computer; poi rilascia.
+2. Compare un disco chiamato RP2350.
+3. Trascina Drummatic-Control-firmware.uf2 dentro quel disco: il Pico si riavvia da solo e i tasti fanno un'onda arancione.
+
+Cosa fa: il circuito si presenta come dispositivo USB-MIDI "Drummatic Control", canale 16.
+- Tasti: Note On/Off 0..45 (VOICE..PERF = 0..7, FUNC..COPY = 8..14, VOICE1..8 = 15..22, REC/PLAY/STOP = 23..25,
+  frecce = 26..29, TRIG1..16 = 30..45). Pressione degli encoder: note 64..71, DATA = 72.
+- Encoder 1..8: CC 16..23, DATA: CC 24, relativi (1..63 = a destra, 65..127 = a sinistra). Volume: CC 7.
+- LED: Note On (canale 16) nota = tasto, velocity = colore (0 spento, 1 bianco, 2 rosso, 3 arancio, 5 giallo, 7 verde,
+  9 azzurro, 11 blu, 13 magenta; +16 = metà luce). CC 119 = luminosità generale, CC 121 = spegne tutto.
+  Finché nessuno manda colori, ogni tasto si accende di arancio mentre lo premi.
+- Luminosità massima limitata al 30 % per non superare circa 0,5 A dall'USB.
+
+Si può provare anche col plugin sul PC: in Ableton/MIDI monitor si vedono note e CC del canale 16.
+Ricompilare: Pico SDK 2.1.1, cmake -DPICO_BOARD=pico2 (vedi sorgenti/).

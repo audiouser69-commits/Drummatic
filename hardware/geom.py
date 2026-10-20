@@ -20,7 +20,7 @@ FEET_H = 4.0
 
 # ---------- pila sotto il pannello ----------
 PCB_T = 1.6
-PCB_GAP = 7.5                 # distanziali pannello→circuito (lato inferiore pannello → lato superiore circuito)
+PCB_GAP = 8.0                 # distanziali pannello→circuito (lato inferiore pannello → lato superiore circuito)
 ENC_SHAFT = 20.0              # EC11E: albero dal piano di montaggio
 SWITCH_STEM_TOP = 8.0         # Choc v1: sommità dello stelo sopra il circuito (da verificare sul campione)
 KEY_PROUD = 2.5               # quanto il tasto sporge dal pannello a riposo
@@ -66,10 +66,10 @@ ALL_KEYS = PAGE_KEYS + FUNC_KEYS + VOICE_KEYS + TRANSPORT_KEYS + ARROW_KEYS + TR
 PCB_STUDS = [(10, 63), (203, 69), (329, 69), (10, 150), (177.5, 150), (245, 165), (334, 150),
              (10, 205), (330, 216), (177.5, 216)]
 # distanziali per la staffa del display, attorno al suo ingombro
-DISPLAY_STUDS = [(36, 16.5), (194, 16.5), (36, 114), (194, 114)]
+DISPLAY_STUDS = [(38, 16.5), (194, 16.5), (38, 114), (194, 114)]
 # zona del circuito di controllo (coordinate layout): rettangolo meno la tacca del display
-PCB_RECT = (2.0, 10.0, 338.0, 219.0)
-PCB_NOTCH = (30.0, 10.0, 199.0, 120.0)
+PCB_RECT = (2.0, 10.0, 338.0, 222.0)
+PCB_NOTCH = (33.8, 10.0, 199.0, 120.0)
 # logo
 LOGO_RIGHT, LOGO_BASE, LOGO_CAP = 330.0, 30.0, 8.0
 

@@ -60,11 +60,11 @@ def panel(engrave=True):
     for c in cuts:
         body = body.cut(c)
     body = body.faces(">Z").workplane(origin=(0, 0, PANEL_T)).pushPoints(screws).cskHole(3.4, 6.4, 90)
-    # prigionieri M3 x 8 pressati sul retro (PEM FHS-M3-8): modellati come cilindri
+    # prigionieri pressati sul retro: FHS-M3-15 per il circuito (distanziale 8 + circuito + dado), FHS-M3-8 per il display
     studs = cq.Workplane("XY")
     for s in PCB_STUDS + DISPLAY_STUDS:
         u, v = P(s)
-        studs = studs.union(cq.Workplane("XY").center(u, v).circle(1.5).extrude(-8.0))
+        studs = studs.union(cq.Workplane("XY").center(u, v).circle(1.5).extrude(-15.0 if s in PCB_STUDS else -8.0))
     body = body.union(studs)
     if engrave:
         lu, lv = P((LOGO_RIGHT, LOGO_BASE))
@@ -224,6 +224,11 @@ def dummies():
         sw = sw.union(cq.Workplane("XY").box(15, 15, 5.0, centered=(True, True, False)).translate((u, v, -PCB_GAP)))
         sw = sw.union(cq.Workplane("XY").box(13, 6, 1.8, centered=(True, True, False)).translate((u, v - 3, -PCB_GAP - PCB_T - 1.8)))
         caps = caps.union(kc.translate((u, v, stem_top)))
+    # Pico 2 e spina USB a 90° sotto il circuito (tra tasti VOICE e TRIG)
+    (pu0, pv1), (pu1, pv0) = P((119.4, 174.5)), P((170.6, 195.5))
+    sw = sw.union(cq.Workplane("XY").box(pu1 - pu0, pv1 - pv0, 4.0, centered=False).translate((pu0, pv0, -PCB_GAP - PCB_T - 4.0)))
+    (qu0, qv1), (qu1, qv0) = P((170.6, 181.0)), P((192.0, 189.0))
+    sw = sw.union(cq.Workplane("XY").box(qu1 - qu0, qv1 - qv0, 8.0, centered=False).translate((qu0, qv0, -PCB_GAP - PCB_T - 8.0)))
     d["switch"] = sw; d["keycaps"] = caps
     # encoder EC11E e manopole
     enc = cq.Workplane("XY"); knobs = cq.Workplane("XY")
