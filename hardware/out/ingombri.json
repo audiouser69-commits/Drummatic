@@ -1,0 +1,20 @@
+{
+  "staffa_display_vs_fondo_mm": 39.5,
+  "circuito_davanti_vs_fondo_mm": 30.0,
+  "sporgenza_tasto_mm": 2.5,
+  "sporgenza_albero_encoder_mm": 10.5,
+  "altezza_tasto_mm": 4.0,
+  "pendenza_gradi": 7.43,
+  "distanze_minime_mm": {
+    "pi_vs_interruttori_e_prese": 13.7,
+    "pi_vs_circuito": 7.3,
+    "pi_vs_connettori_posteriori": 8.0,
+    "pi_vs_encoder": 10.7,
+    "display_vs_vassoio": 6.7,
+    "staffa_vs_vassoio": 3.2,
+    "circuito_vs_vassoio": 6.0,
+    "interruttori_vs_vassoio": 7.2,
+    "connettori_vs_vassoio": 1.0,
+    "encoder_vs_vassoio": 20.9
+  }
+}

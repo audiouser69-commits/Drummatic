@@ -1,0 +1,46 @@
+<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:#e9e7e2}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+</head><body><script type="module">
+import * as THREE from 'three';
+import {STLLoader} from 'three/addons/loaders/STLLoader.js';
+import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
+const P = new URLSearchParams(location.search);
+const view = P.get('view') || 'front';
+const Wd = +(P.get('w')||2400), Hd = +(P.get('h')||1500);
+const r = new THREE.WebGLRenderer({antialias:true, preserveDrawingBuffer:true, localClippingEnabled:true});
+r.setSize(Wd,Hd); r.setPixelRatio(1); r.toneMapping = THREE.ACESFilmicToneMapping; r.toneMappingExposure=1.05;
+r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
+r.localClippingEnabled = true;
+document.body.appendChild(r.domElement);
+const scene = new THREE.Scene(); scene.background = new THREE.Color(view==='section'?'#f3f2ee':'#e9e7e2');
+const pm = new THREE.PMREMGenerator(r); scene.environment = pm.fromScene(new RoomEnvironment(), 0.04).texture;
+const SLOPE = 7.431407971172507*Math.PI/180;
+const clip = view==='section' ? [new THREE.Plane(new THREE.Vector3(-1,0,0), 298)] : [];
+const M = (c, m=0.5, ro=0.45, extra={}) => new THREE.MeshStandardMaterial({color:c, metalness:m, roughness:ro, clippingPlanes:clip, clipShadows:true, side:THREE.DoubleSide, ...extra});
+const parts = {
+ pannello:M('#2a2c2f',0.55,0.42), incisioni:M('#d9dbdc',0.8,0.3), fianco_sx:M('#17181a',0.6,0.35), fianco_dx:M('#17181a',0.6,0.35),
+ vassoio:M('#232427',0.5,0.5), piastra_posteriore:M('#2a2c2f',0.55,0.42), keycaps:M('#cfcdc6',0.0,0.55), knobs:M('#141414',0.1,0.4),
+ connettori:M('#3c3f43',0.7,0.35), incisioni_retro:M('#d9dbdc',0.8,0.3), staffa:M('#9aa0a6',0.8,0.35), display:M('#111316',0.2,0.5), pcb:M('#1f5e3a',0.1,0.6),
+ switch:M('#3a3a3a',0.1,0.6), encoder:M('#a9adb2',0.8,0.3), pi:M('#3f7d4e',0.2,0.6)
+};
+const loader = new STLLoader(); let n=0;
+for (const [name, mat] of Object.entries(parts)) {
+  loader.load(`stl/${name}.stl`, g => { g.computeVertexNormals(); const m = new THREE.Mesh(g, mat); m.castShadow = m.receiveShadow = true; scene.add(m); if(++n===Object.keys(parts).length) go(); });
+}
+// schermo con immagine indicativa
+const tex = new THREE.TextureLoader().load('screen.jpg'); tex.colorSpace = THREE.SRGBColorSpace;
+const grp = new THREE.Group(); grp.rotation.x = SLOPE; grp.position.z = 43; scene.add(grp);
+const scr = new THREE.Mesh(new THREE.PlaneGeometry(110.4,62.1), new THREE.MeshBasicMaterial({map:tex, clippingPlanes:clip, toneMapped:false}));
+scr.position.set(123.0,167.948,0.4); grp.add(scr);
+// luci
+scene.add(new THREE.AmbientLight(0xffffff,0.25));
+const sun = new THREE.DirectionalLight(0xffffff,1.6); sun.position.set(-250,-300,600); sun.castShadow=true;
+sun.shadow.mapSize.set(4096,4096); Object.assign(sun.shadow.camera,{left:-400,right:400,top:400,bottom:-400,near:10,far:2000}); sun.target.position.set(178,115,30); scene.add(sun, sun.target);
+const fill = new THREE.DirectionalLight(0xffffff,0.5); fill.position.set(600,-100,300); scene.add(fill);
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(4000,4000), new THREE.ShadowMaterial({opacity:0.18})); ground.position.z=-4; ground.receiveShadow=true; scene.add(ground);
+const cam = new THREE.PerspectiveCamera(view==='top'?20:24, Wd/Hd, 5, 5000); cam.up.set(0,0,1);
+const views = {front:[[-120,-420,560],[178,118,25]], rear:[[560,720,330],[178,120,30]], top:[[178,30,1050],[178,118,40]], section:[[900,90,70],[178,115,38]]};
+const [pos, tgt] = views[view]; cam.position.set(...pos); cam.lookAt(...tgt);
+if (view==='section') { cam.fov = 18; cam.updateProjectionMatrix(); }
+function go(){ r.render(scene, cam); document.title='done'; }
+</script></body></html>
