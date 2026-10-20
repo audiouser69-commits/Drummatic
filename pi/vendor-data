@@ -1,0 +1,4 @@
+#cloud-config
+# Drummatic: al primo avvio installa il software (cartella "drummatic" sulla partizione bootfs)
+runcmd:
+  - [ bash, /boot/firmware/drummatic/firstboot.sh ]

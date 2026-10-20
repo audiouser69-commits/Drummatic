@@ -72,6 +72,18 @@ Performance, delay, riverbero, master, MIDI) e un **emulatore nel browser** con 
 (la piattaforma FM-1 viene da Felucca). Build: workflow *FM-1* di GitHub Actions (pacchetto `.fwsc`, emulatore,
 Flasher per Windows).
 
+## Drummatic hardware (Raspberry Pi 5) — novità 0.3.0
+- Nuova app a schermo intero `drummatic-hw` per la macchina: Raspberry Pi 5 + Pisound + Touch Display 2 + circuito di controllo
+  (cartella `hardware/`). Stesso motore audio del plugin.
+- Il circuito "Drummatic Control" (USB-MIDI, canale 16) comanda 8 pagine (VOICE, SAMPLER, TONE, MOD, SEQ, LANE, MIX, PERF),
+  8 encoder con banchi (frecce sinistra/destra), DATA, 16 tasti di passo, 8 tasti voce, trasporto, MAP, LOCK, DADO,
+  COMMIT, KIT, COPY; i LED mostrano pagina, voce, passi e testina.
+- Installazione: pacchetto `Drummatic-SD` (Raspberry Pi OS Lite 64 bit trixie + cartella `drummatic` sulla partizione bootfs),
+  aggiornamenti, campioni e backup da chiavetta USB.
+- Compilare: `cmake -S . -B build-a64 -G Ninja -DCMAKE_TOOLCHAIN_FILE=aarch64-toolchain.cmake -DDRUMMATIC_HW=ON`
+  (sysroot con alsa-lib e freetype per aarch64), oppure nativo su Linux con `-DDRUMMATIC_HW=ON`.
+  `DrummaticHWTest` simula il pannello e salva le schermate di tutte le pagine.
+
 ## Novità 0.2.3
 - START ed END del sampler modulabili in modalità MAP trascinando i marcatori sulla forma d'onda (es. lane MACRO 2 → START per affettare un loop).
 - Tempi visualizzati in modo pulito ("50 ms").

@@ -1,0 +1,49 @@
+DRUMMATIC — SOFTWARE PER LA MACCHINA (Raspberry Pi 5 + Pisound + Touch Display 2 + circuito di controllo)
+Versione 0.3.0 — ottobre 2026
+
+COSA SERVE
+- una microSD da almeno 16 GB (consigliata 64 GB "high endurance")
+- un computer con Raspberry Pi Imager (gratuito: raspberrypi.com/software)
+- la prima volta: connessione a Internet per il Pi (Wi-Fi o cavo di rete), per scaricare 6 pacchetti di sistema
+
+PREPARARE LA SCHEDA (una volta sola, circa 15 minuti)
+1. Apri Raspberry Pi Imager e scegli:
+     Dispositivo: Raspberry Pi 5
+     Sistema operativo: Raspberry Pi OS (other) > Raspberry Pi OS Lite (64-bit)   [basato su Debian 13 "trixie"]
+     Scheda: la tua microSD
+2. Quando Imager chiede la personalizzazione, imposta:
+     nome utente e password (a piacere, es. "drummatic")
+     la rete Wi-Fi di casa (nome e password) e il paese "IT"
+   poi scrivi la scheda.
+3. Togli e rimetti la scheda nel computer: compare un disco chiamato "bootfs".
+   Copia in "bootfs" la cartella  drummatic  e il file  vendor-data  di questo pacchetto
+   (non toccare gli altri file che ci sono già).
+4. Espelli la scheda, inseriscila nel Raspberry Pi della macchina e accendi.
+   Il primo avvio dura 5-10 minuti: il Pi scarica i pacchetti, installa Drummatic e si riavvia da solo.
+   Al riavvio lo schermo mostra Drummatic e i tasti fanno l'onda arancione.
+
+SE DOPO 15 MINUTI DRUMMATIC NON COMPARE
+- controlla che il Wi-Fi impostato in Imager sia giusto (oppure collega un cavo di rete);
+- collega una tastiera USB, accedi con utente e password e scrivi:
+      sudo bash /boot/firmware/drummatic/install.sh --forza
+  il registro dell'installazione è in /var/log/drummatic-install.log
+
+USO QUOTIDIANO
+- Accendi: Drummatic parte da solo a schermo intero. Spegni dal tuo interruttore o staccando l'alimentatore
+  quando il sequencer è fermo: lo stato viene salvato ogni 10 secondi.
+- Il volume è il potenziometro VOLUME; tutto il resto si comanda dai tasti (guida nel documento hardware).
+
+CHIAVETTA USB (presa USB HOST sul retro) — FAT32, exFAT o NTFS
+- Campioni: metti i file (wav, aif, flac, ogg, mp3) in una cartella  Samples  sulla chiavetta: vengono copiati
+  nella macchina e si scelgono dalla pagina SMPL (banco 2, encoder 1).
+- Kit: cartella  Kits  con file .mkit.
+- Aggiornare il programma: metti il nuovo file  drummatic-hw  in una cartella  drummatic-update .
+- A ogni inserimento la macchina scrive sulla chiavetta la cartella  Drummatic-backup  con kit e stato.
+  Lo schermo dice quando puoi togliere la chiavetta.
+
+ROTAZIONE DELLO SCHERMO
+Se l'immagine è capovolta: con la tastiera, sudo nano /etc/drummatic.conf, metti ROTAZIONE=270, riavvia.
+
+PROVARE SUL COMPUTER (Linux x86)
+La cartella "pc-linux" contiene la stessa app per un PC Linux: ./drummatic-hw --windowed
+(tasti del computer: 1-8 pagine, Q-I voci, A-K e Z-, i 16 passi, frecce banco/voce, spazio play).
