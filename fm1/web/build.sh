@@ -19,3 +19,4 @@ sed -e "s/@VERSION@/$VERSION/g" -e "s/@BUILD@/$BUILD/g" web/index.html > build/w
 cp web/worklet.js web/silence.wav web/favicon.png build/web/
 cp web/fonts/* build/web/fonts/
 echo "web: build/web ($(wc -c < build/web/drummatic.wasm | tr -d ' ') B wasm, $VERSION, $BUILD)"
+python3 web/pack_single.py build/web       # (the same page in one file: drummatic-fm1-emulator.html, opens from disk)

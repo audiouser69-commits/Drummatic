@@ -100,6 +100,9 @@ Clock: GLO > TEMPO > CLOCK EXT segue START/STOP/clock (24 per quarto) da USB o T
 browser. Tastiera del computer: Z… e Q… i tasti, 1…= i bottoni, [ ] OCT, frecce SELECT e ALGORITHM, Shift-clic tiene
 premuto un bottone.
 
+`sh web/build.sh` fa `build/web/` e anche `drummatic-fm1-emulator.html`, tutto in un file. Il browser vuole una pagina
+servita (non `file://`): `python3 -m http.server -d build/web`, poi http://localhost:8000.
+
 ## Compilare
 
 Vedi [BUILDING.md](BUILDING.md). In breve, su Linux x86-64:
