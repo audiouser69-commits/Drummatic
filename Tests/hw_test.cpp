@@ -135,6 +135,7 @@ int main (int argc, char** argv)
         if (p == P_Mix) { ctl.handle (enc (0, 2)); }
         if (p == P_Mod) { press (ctl, K_MAP); ctl.handle (enc (0, 3)); }
         runAudio (proc, 9);
+        ctl.toast = {};
         auto img = scr.createComponentSnapshot (scr.getLocalBounds(), true, 1.0f);
         juce::PNGImageFormat png; auto f = outDir.getChildFile (juce::String ("pagina_") + juce::String (p + 1) + "_" + pageName (p) + ".png");
         f.deleteFile(); juce::FileOutputStream os (f); png.writeImageToStream (img, os);
