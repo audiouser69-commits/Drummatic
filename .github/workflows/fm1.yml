@@ -1,0 +1,86 @@
+# Drummatic for the M-VAVE FM-1 (fm1/): the firmware package, the browser emulator and the host tests on Linux,
+# the Windows Flasher with the firmware inside. The artifacts: drummatic-fm1 (the .fwsc and the release folder),
+# drummatic-fm1-emulator (the web page), drummatic-fm1-flasher-windows (the .exe).
+name: FM-1
+
+on:
+  push:
+    branches: [main]
+    paths: ["fm1/**", "Source/DSP/**", ".github/workflows/fm1.yml"]
+  workflow_dispatch:
+
+jobs:
+  firmware:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: fm1
+    steps:
+      - uses: actions/checkout@v4
+      - name: Python tools
+        run: pip install --break-system-packages Pillow fonttools
+      - name: JieLi toolchain (cached)
+        uses: actions/cache@v4
+        with:
+          path: ~/.jieli
+          key: jieli-toolchain-1
+      - name: Get the toolchain
+        run: '[ -x ~/.jieli/toolchain/pi32v2/bin/clang ] || ./tools/get_toolchain.sh'
+      - name: AC79 SDK (package files)
+        run: git clone --depth 1 --branch AC79NN_SDK_V1.2.1_2023-12-13 https://gitee.com/Jieli-Tech/fw-AC79_AIoT_SDK.git ~/fw-AC79_AIoT_SDK
+      - name: Build the firmware
+        run: |
+          V=$(sed -n 's/^#define DM_VERSION "v\([^"]*\)".*/\1/p' firmware/src/app/dm_core.h)
+          JIELI_TOOLCHAIN=~/.jieli/toolchain AC79_SDK=~/fw-AC79_AIoT_SDK python3 tools/build.py --release "$V"
+          cp build/drummatic-fm1-*.fwsc build/release-*/ 2>/dev/null || true
+      - name: The browser emulator
+        run: sh web/build.sh
+      - name: Tests (the port against Drummatic's DSP, the panel in the emulator)
+        run: sh tests/run_tests.sh
+      - name: Install check (the package as the installer reads it)
+        run: |
+          pip install --break-system-packages mido
+          python3 tools/dm_flasher.py --check build/drummatic-fm1-*.fwsc || python3 -c "print('flasher check needs tkinter: skipped')"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: drummatic-fm1
+          path: |
+            fm1/build/release-*/
+            fm1/build/drummatic-fm1-*.fwsc
+      - uses: actions/upload-artifact@v4
+        with:
+          name: drummatic-fm1-emulator
+          path: fm1/build/web/
+
+  flasher:
+    needs: firmware
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          name: drummatic-fm1
+          path: fw
+      - name: Build the .exe
+        shell: bash
+        run: |
+          set -e
+          pip install mido python-rtmidi pyinstaller
+          F=$(find fw -name 'drummatic-fm1-*.fwsc' | head -1)
+          cp "$F" fm1/tools/
+          N=$(basename "$F")
+          python fm1/tools/dm_flasher.py --check "fm1/tools/$N"
+          pyinstaller --noconfirm --onefile --windowed --name DrummaticFlasher --paths fm1/tools \
+            --hidden-import mido.backends.rtmidi --add-data "fm1/tools/$N;." fm1/tools/dm_flasher.py
+          ./dist/DrummaticFlasher.exe --check "fm1/tools/$N" || { echo "::error::the .exe does not start"; exit 1; }
+          mkdir -p out/DrummaticFlasher
+          cp dist/DrummaticFlasher.exe out/DrummaticFlasher/
+          cp fm1/README.md out/DrummaticFlasher/LEGGIMI.md
+          cp fm1/LICENSE out/DrummaticFlasher/LICENSE.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: drummatic-fm1-flasher-windows
+          path: out/

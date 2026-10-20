@@ -65,6 +65,13 @@ nome, grafica e codice sono originali.
 Spazio play/stop solo nello standalone. Nel DAW TASTI è spento di default, così spazio e tastiera MIDI del computer restano al DAW.
 Shift+clic o doppio clic su una voce a sinistra = ascolto.
 
+## Drummatic per M-VAVE FM-1
+La cartella [`fm1/`](fm1/README.md) contiene Drummatic come **firmware per l'M-VAVE FM-1** (tutto tranne il sampler e
+le uscite multiple: 8 voci, 25 motori, TONE, inviluppi, LFO, modulazione MAP, sequencer euclideo con le 10 lane,
+Performance, delay, riverbero, master, MIDI) e un **emulatore nel browser** con lo stesso codice. Licenza GPL-3.0
+(la piattaforma FM-1 viene da Felucca). Build: workflow *FM-1* di GitHub Actions (pacchetto `.fwsc`, emulatore,
+Flasher per Windows).
+
 ## Novità 0.2.3
 - START ed END del sampler modulabili in modalità MAP trascinando i marcatori sulla forma d'onda (es. lane MACRO 2 → START per affettare un loop).
 - Tempi visualizzati in modo pulito ("50 ms").

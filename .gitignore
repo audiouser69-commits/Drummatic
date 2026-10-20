@@ -4,3 +4,5 @@ dist/
 shots/
 *.wav
 .DS_Store
+!fm1/web/silence.wav
+__pycache__/
