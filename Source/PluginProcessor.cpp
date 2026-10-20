@@ -514,7 +514,11 @@ void ManipoloProcessor::setStateInformation (const void* data, int size)
 // ---------------- preset ----------------
 juce::File ManipoloProcessor::userFolder()
 {
-    auto f = juce::File::getSpecialLocation (juce::File::userDocumentsDirectory).getChildFile ("Manipolo");
+    const auto docs = juce::File::getSpecialLocation (juce::File::userDocumentsDirectory);
+    auto f = docs.getChildFile ("Drummatic");
+    // migrazione: le versioni 0.1–0.2.1 salvavano in Documenti/Manipolo
+    if (! f.exists() && docs.getChildFile ("Manipolo").isDirectory())
+        docs.getChildFile ("Manipolo").copyDirectoryTo (f);
     f.getChildFile ("Kits").createDirectory();
     f.getChildFile ("Voices").createDirectory();
     return f;

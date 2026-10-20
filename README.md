@@ -1,14 +1,17 @@
-# Manipolo 0.2.1 — drum synth a 8 voci
+# Drummatic 0.2.2 — drum synth a 8 voci
 
-Standalone per Windows (`Manipolo.exe`) e plugin VST3 (`Manipolo.vst3`) dallo stesso codice JUCE.
+Standalone per Windows (`Drummatic.exe` / `Drummatic.app`) e plugin VST3 (`Drummatic.vst3`) per Windows e macOS dallo stesso codice JUCE.
 Architettura modellata sulle funzioni di una drum machine ibrida synth/sampler con sequencer euclideo;
 nome, grafica e codice sono originali.
 
 ## Installazione
-- **Standalone**: copia `Manipolo.exe` dove vuoi e avvialo. In *Options → Audio/MIDI Settings* scegli scheda audio
-  (WASAPI/DirectSound; per ASIO serve la Fase 2) e, se vuoi, l'ingresso MIDI.
-- **VST3**: copia la cartella `Manipolo.vst3` in `C:\Program Files\Common Files\VST3\` e riesegui la scansione in Ableton.
-- Preset e kit vengono salvati in `Documenti\Manipolo\` (`Kits`, `Voices`, `Samples`).
+- **Standalone**: copia `Drummatic.exe` dove vuoi e avvialo. In *Options → Audio/MIDI Settings* scegli scheda audio
+  (WASAPI/DirectSound) e, se vuoi, l'ingresso MIDI.
+- **VST3 Windows**: copia `Drummatic.vst3` in `C:\Program Files\Common Files\VST3\` e riesegui la scansione in Ableton.
+- **macOS**: `Drummatic.vst3` in `~/Library/Audio/Plug-Ins/VST3/`, `Drummatic.app` in Applicazioni; al primo avvio
+  `xattr -dr com.apple.quarantine ~/Library/Audio/Plug-Ins/VST3/Drummatic.vst3 /Applications/Drummatic.app`.
+- Preset e kit vengono salvati in `Documenti/Drummatic/` (`Kits`, `Voices`, `Samples`); i file di `Documenti/Manipolo` vengono copiati lì al primo avvio.
+- Manuale completo: `docs/Drummatic-Manuale.pdf`.
 
 ## Funzioni
 **Voce (×8)**
@@ -62,6 +65,10 @@ nome, grafica e codice sono originali.
 Spazio play/stop solo nello standalone. Nel DAW TASTI è spento di default, così spazio e tastiera MIDI del computer restano al DAW.
 Shift+clic o doppio clic su una voce a sinistra = ascolto.
 
+## Novità 0.2.2
+- Nuovo nome Drummatic, versione macOS universale, cartella utente `Documenti/Drummatic` con migrazione automatica.
+- Corretta l'evidenziazione delle pagine nella barra superiore.
+
 ## Novità 0.2.1
 - Risolto: l'audio poteva sparire durante la riproduzione nel DAW. Con la finestra del plugin attiva, lo spazio
   (e i tasti A/W/S/D della tastiera MIDI di Ableton) venivano catturati da Manipolo, che fermava il proprio sequencer.
@@ -77,8 +84,10 @@ Shift+clic o doppio clic su una voce a sinistra = ascolto.
   esclusiva per una latenza bassa, oppure il VST3 dentro Ableton.
 - La modulazione è calcolata ogni 16 campioni (≈0,3 ms): gli LFO fino a 440 Hz sono "audio-rate" solo in modo approssimato.
 - Il Cloner usa un banco di filtri a 8 bande invece di una vera elaborazione FFT.
+- Binari non firmati da un'autorità: Windows SmartScreen e macOS Gatekeeper mostrano un avviso al primo avvio.
 
 ## Compilare
 Cross-compilazione da Linux: `cmake -S . -B build-win -G Ninja -DCMAKE_TOOLCHAIN_FILE=mingw-toolchain.cmake -DCMAKE_BUILD_TYPE=Release && cmake --build build-win`
-(JUCE 7.0.12 incluso, MinGW-w64 posix). Su Windows funziona anche con Visual Studio 2022 senza toolchain file.
+(JUCE 7.0.12, scaricato automaticamente se manca la cartella `JUCE`). Su Windows funziona anche con Visual Studio 2022;
+su macOS: `cmake -S . -B build -G Xcode -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" && cmake --build build --config Release`.
 Test: `-DMANIPOLO_TESTS=ON` poi `ManipoloTest`.

@@ -26,17 +26,18 @@ jobs:
 
       - name: Firma ad-hoc e impacchetta
         run: |
-          OUT=dist/Manipolo-macOS
+          OUT=dist/Drummatic-macOS
           mkdir -p "$OUT"
-          cp -R build/Manipolo_artefacts/Release/VST3/Manipolo.vst3 "$OUT/"
-          cp -R build/Manipolo_artefacts/Release/Standalone/Manipolo.app "$OUT/"
-          codesign --force --deep --sign - "$OUT/Manipolo.vst3"
-          codesign --force --deep --sign - "$OUT/Manipolo.app"
-          lipo -info "$OUT/Manipolo.vst3/Contents/MacOS/Manipolo"
+          cp -R build/Manipolo_artefacts/Release/VST3/Drummatic.vst3 "$OUT/"
+          cp -R build/Manipolo_artefacts/Release/Standalone/Drummatic.app "$OUT/"
+          codesign --force --deep --sign - "$OUT/Drummatic.vst3"
+          codesign --force --deep --sign - "$OUT/Drummatic.app"
+          lipo -info "$OUT/Drummatic.vst3/Contents/MacOS/Drummatic"
           cp README.md "$OUT/LEGGIMI.md"
-          cd dist && ditto -c -k --keepParent Manipolo-macOS Manipolo-macOS.zip
+          cp docs/Drummatic-Manuale.pdf "$OUT/"
+          cd dist && ditto -c -k --keepParent Drummatic-macOS Drummatic-macOS.zip
 
       - uses: actions/upload-artifact@v4
         with:
-          name: Manipolo-macOS
-          path: dist/Manipolo-macOS.zip
+          name: Drummatic-macOS
+          path: dist/Drummatic-macOS.zip

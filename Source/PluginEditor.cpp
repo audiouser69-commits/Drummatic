@@ -94,7 +94,10 @@ void ManipoloEditor::showPage (int p)
 {
     page = p;
     voicePage.setVisible (p == 0); seqPage.setVisible (p == 1); mixerPage.setVisible (p == 2); perfPage.setVisible (p == 3);
-    (p == 0 ? tabVoice : p == 1 ? tabSeq : p == 2 ? tabMix : tabPerf).setToggleState (true, juce::dontSendNotification);
+    tabVoice.setToggleState (p == 0, juce::dontSendNotification);
+    tabSeq.setToggleState (p == 1, juce::dontSendNotification);
+    tabMix.setToggleState (p == 2, juce::dontSendNotification);
+    tabPerf.setToggleState (p == 3, juce::dontSendNotification);
 }
 
 void ManipoloEditor::timerCallback()
@@ -115,7 +118,7 @@ void ManipoloEditor::paint (juce::Graphics& g)
     g.setColour (ui::col::panel); g.fillRect (0, 0, getWidth(), 44);
     g.setColour (ui::col::line); g.drawHorizontalLine (44, 0, (float) getWidth());
     g.setColour (ui::col::accent); g.setFont (ui::font (22, true));
-    g.drawText ("MANIPOLO", 14, 0, 150, 44, juce::Justification::centredLeft);
+    g.drawText ("DRUMMATIC", 14, 0, 150, 44, juce::Justification::centredLeft);
     g.setColour (ui::col::dim); g.setFont (ui::font (10));
     g.drawText ("drum synth", 16, 28, 120, 14, juce::Justification::centredLeft);
     // master

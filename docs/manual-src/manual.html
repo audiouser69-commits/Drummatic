@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Drummatic — Manuale utente</title>
+<style>
+@page { size: A4; margin: 22mm 18mm 20mm 18mm; }
+@page cover { margin: 0; }
+:root {
+  --ink: #1d2126; --dim: #5f6873; --line: #dde1e6; --soft: #f4f5f7;
+  --amber: #e8962a; --amber-d: #b86f12; --mint: #2fae8e; --graphite: #131518;
+}
+* { box-sizing: border-box; }
+html { font-family: "Inter", sans-serif; color: var(--ink); font-size: 9.6pt; line-height: 1.52; }
+body { margin: 0; }
+h1, h2, h3, h4 { font-family: "Inter Display", "Inter", sans-serif; color: var(--ink); line-height: 1.2; }
+p { margin: 0 0 2.4mm; orphans: 3; widows: 3; }
+strong { font-weight: 650; }
+code, .k { font-family: "DejaVu Sans Mono", monospace; font-size: 8.4pt; background: var(--soft); border: 0.5pt solid var(--line); border-radius: 2px; padding: 0 1.2mm; white-space: nowrap; }
+.ctl { font-weight: 650; letter-spacing: 0.02em; font-size: 8.8pt; }
+
+/* ---------- copertina ---------- */
+.cover { page: cover; width: 210mm; height: 297mm; background: var(--graphite); color: #e9ecef; position: relative; overflow: hidden; break-after: page; }
+.cover .band { position: absolute; left: 0; top: 0; width: 9mm; height: 100%; background: var(--amber); }
+.cover .brand { position: absolute; left: 26mm; top: 34mm; }
+.cover .brand .eyebrow { font-size: 9pt; letter-spacing: 0.32em; color: #9aa3ad; text-transform: uppercase; }
+.cover .brand h1 { font-size: 58pt; margin: 4mm 0 0; color: var(--amber); letter-spacing: 0.02em; font-weight: 800; }
+.cover .brand .sub { font-size: 15pt; color: #e9ecef; margin-top: 3mm; font-weight: 300; }
+.cover .shot { position: absolute; left: 26mm; right: 0; top: 112mm; }
+.cover .shot img { width: 196mm; border-radius: 3mm 0 0 3mm; box-shadow: 0 6mm 18mm rgba(0,0,0,.55); display: block; }
+.cover .meta { position: absolute; left: 26mm; bottom: 26mm; font-size: 9pt; color: #9aa3ad; line-height: 1.7; }
+.cover .meta b { color: #e9ecef; font-weight: 600; }
+.cover .rings { position: absolute; right: -40mm; top: -40mm; width: 150mm; height: 150mm; }
+
+/* ---------- indice ---------- */
+.toc { break-after: page; }
+.toc h1 { font-size: 24pt; margin: 0 0 8mm; }
+.toc ol { list-style: none; padding: 0; margin: 0; counter-reset: c; }
+.toc li { display: flex; align-items: baseline; padding: 2.1mm 0; border-bottom: 0.5pt solid var(--line); }
+.toc li.ch { font-weight: 650; font-size: 10.5pt; padding-top: 3.4mm; }
+.toc li.sec { padding-left: 9mm; color: var(--dim); font-size: 9.2pt; padding: 1.2mm 0 1.2mm 9mm; border-bottom: none; }
+.toc .n { color: var(--amber-d); width: 9mm; flex: none; font-weight: 700; }
+.toc .t { flex: 1; }
+.toc .p { width: 12mm; text-align: right; font-variant-numeric: tabular-nums; color: var(--dim); }
+
+/* ---------- capitoli ---------- */
+.chapter { break-before: page; }
+.chapter > header { margin-bottom: 7mm; padding-bottom: 4mm; border-bottom: 1.2pt solid var(--ink); display: flex; align-items: flex-end; gap: 5mm; }
+.chapter > header .num { font-family: "Inter Display"; font-size: 34pt; font-weight: 800; color: var(--amber); line-height: .9; }
+.chapter > header h1 { font-size: 22pt; margin: 0; font-weight: 750; }
+.chapter > header .lede { font-size: 9.5pt; color: var(--dim); margin: 1.5mm 0 0; }
+h2 { font-size: 13pt; margin: 7mm 0 2.5mm; font-weight: 700; break-after: avoid; }
+h2::before { content: ""; display: inline-block; width: 2.2mm; height: 2.2mm; background: var(--amber); margin-right: 2.4mm; vertical-align: 0.6mm; }
+h3 { font-size: 10.5pt; margin: 5mm 0 1.8mm; font-weight: 700; break-after: avoid; }
+ul, ol { margin: 0 0 2.6mm; padding-left: 5mm; }
+li { margin-bottom: 1mm; }
+
+figure { margin: 4mm 0 5mm; break-inside: avoid; }
+figure.s img, figure.s figcaption { width: 70% !important; }
+figure.xs img, figure.xs figcaption { width: 58% !important; }
+figure img { width: 86%; margin: 0 auto; display: block; border-radius: 1.6mm; border: 0.5pt solid #c9ced4; }
+figcaption { font-size: 8.2pt; color: var(--dim); margin: 2mm auto 0; width: 86%; }
+figcaption b { color: var(--ink); }
+
+table { width: 100%; border-collapse: collapse; margin: 2mm 0 4mm; font-size: 8.6pt; break-inside: auto; }
+thead { display: table-header-group; }
+tr { break-inside: avoid; }
+th { text-align: left; font-weight: 650; font-size: 7.8pt; letter-spacing: 0.06em; text-transform: uppercase; color: var(--dim); border-bottom: 1pt solid var(--ink); padding: 1.6mm 2mm; }
+td { border-bottom: 0.5pt solid var(--line); padding: 1.6mm 2mm; vertical-align: top; }
+td:first-child { font-weight: 650; white-space: nowrap; }
+table.knobs td:nth-child(n+2):nth-child(-n+5) { font-family: "Inter"; font-size: 7.6pt; letter-spacing: 0.03em; color: #39414a; white-space: nowrap; }
+tbody tr:nth-child(even) td { background: #fafbfc; }
+
+.note, .tip, .warn { border-left: 1.4mm solid var(--mint); background: #eef8f5; padding: 3mm 4mm; margin: 3mm 0 4mm; border-radius: 0 1.5mm 1.5mm 0; break-inside: avoid; font-size: 9pt; }
+.warn { border-color: var(--amber); background: #fdf4e8; }
+.note b:first-child, .tip b:first-child, .warn b:first-child { display: block; font-size: 7.8pt; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1mm; }
+.tip b:first-child { color: #1f7f68; } .warn b:first-child { color: var(--amber-d); } .note b:first-child { color: #1f7f68; }
+
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; break-inside: avoid; }
+.card { border: 0.5pt solid var(--line); border-radius: 2mm; padding: 3.5mm 4mm; break-inside: avoid; }
+.card h4 { margin: 0 0 1.5mm; font-size: 9.6pt; }
+.card p { font-size: 8.8pt; margin: 0; color: #39414a; }
+.steps { counter-reset: s; list-style: none; padding: 0; }
+.steps li { counter-increment: s; position: relative; padding-left: 9mm; margin-bottom: 2.4mm; }
+.steps li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 5.6mm; height: 5.6mm; border-radius: 50%; background: var(--ink); color: #fff; font-size: 7.8pt; font-weight: 700; text-align: center; line-height: 5.6mm; }
+.callouts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3mm; margin: 2mm 0 4mm; }
+.callouts div { background: var(--soft); border-radius: 1.6mm; padding: 2.6mm 3mm; font-size: 8.4pt; break-inside: avoid; }
+.callouts div b { display: block; color: var(--amber-d); font-size: 8pt; letter-spacing: 0.05em; margin-bottom: 0.6mm; }
+.keep { break-inside: avoid; }
+.small { font-size: 8.4pt; color: var(--dim); }
+.end { margin-top: 12mm; padding-top: 4mm; border-top: 0.5pt solid var(--line); font-size: 8pt; color: var(--dim); }
+</style>
+</head>
+<body>
+
+<!-- ================= COPERTINA ================= -->
+<section class="cover">
+  <div class="band"></div>
+  <svg class="rings" viewBox="0 0 200 200">
+    <g fill="none" stroke="#e8962a" stroke-opacity=".16">
+      <circle cx="100" cy="100" r="96" stroke-width="1.2"/>
+      <circle cx="100" cy="100" r="78" stroke-width="1.2"/>
+      <circle cx="100" cy="100" r="60" stroke-width="1.2"/>
+    </g>
+    <g fill="#e8962a" fill-opacity=".55">
+      <circle cx="100" cy="4" r="4"/><circle cx="183" cy="52" r="4"/><circle cx="183" cy="148" r="4"/>
+      <circle cx="100" cy="196" r="4"/><circle cx="17" cy="148" r="4"/>
+    </g>
+    <g fill="#2fae8e" fill-opacity=".5">
+      <circle cx="100" cy="22" r="3"/><circle cx="163" cy="146" r="3"/><circle cx="37" cy="146" r="3"/>
+    </g>
+  </svg>
+  <div class="brand">
+    <div class="eyebrow">Drum synth · Sampler · Sequencer euclideo</div>
+    <h1>DRUMMATIC</h1>
+    <div class="sub">Manuale utente</div>
+  </div>
+  <div class="shot"><img src="img/p_voice.jpg" alt=""></div>
+  <div class="meta">
+    <b>Versione 0.2.2</b> · ottobre 2026<br>
+    Windows (standalone + VST3) · macOS (standalone + VST3, universale)<br>
+    Emilio Falciatori
+  </div>
+</section>
+
+<!-- ================= INDICE ================= -->
+<section class="toc">
+  <h1>Indice</h1>
+  <ol>
+    <li class="ch"><span class="n">1</span><span class="t">Introduzione</span><span class="p" data-toc="c1"></span></li>
+    <li class="ch"><span class="n">2</span><span class="t">Installazione</span><span class="p" data-toc="c2"></span></li>
+    <li class="ch"><span class="n">3</span><span class="t">L'interfaccia</span><span class="p" data-toc="c3"></span></li>
+    <li class="ch"><span class="n">4</span><span class="t">La voce</span><span class="p" data-toc="c4"></span></li>
+    <li class="sec"><span class="t">Synth · Sampler · Blend · Tone · Modulazione · Inviluppi · LFO · Variation e Mix</span></li>
+    <li class="ch"><span class="n">5</span><span class="t">Il sequencer</span><span class="p" data-toc="c5"></span></li>
+    <li class="ch"><span class="n">6</span><span class="t">Mixer, effetti e master</span><span class="p" data-toc="c6"></span></li>
+    <li class="ch"><span class="n">7</span><span class="t">Performance</span><span class="p" data-toc="c7"></span></li>
+    <li class="ch"><span class="n">8</span><span class="t">Kit, preset e randomizzazione</span><span class="p" data-toc="c8"></span></li>
+    <li class="ch"><span class="n">9</span><span class="t">Controllo MIDI e tastiera</span><span class="p" data-toc="c9"></span></li>
+    <li class="ch"><span class="n">10</span><span class="t">Risoluzione dei problemi</span><span class="p" data-toc="c10"></span></li>
+    <li class="ch"><span class="n">A</span><span class="t">Appendice: tabelle di riferimento e cronologia versioni</span><span class="p" data-toc="c11"></span></li>
+  </ol>
+</section>
+
+<!-- ================= 1 INTRODUZIONE ================= -->
+<section class="chapter" id="c1">
+  <header><div class="num">01</div><div><h1>Introduzione</h1><p class="lede">Cos'è Drummatic e come è organizzato</p></div></header>
+  <p><span data-mark="c1"></span>Drummatic è una drum machine ibrida a <strong>otto voci</strong>. Ogni voce unisce un sintetizzatore con 25 motori di sintesi, un campionatore con quattro motori di riproduzione, un filtro e una distorsione, un sistema di modulazione completo e un proprio <strong>sequencer euclideo</strong>. Le voci passano in un mixer con delay e riverbero in mandata e in un bus master con compressione, equalizzazione e clipping.</p>
+  <p>Drummatic funziona come <strong>applicazione standalone</strong> e come <strong>plugin VST3</strong> per Ableton Live e gli altri DAW compatibili, su Windows e macOS. Lo stato completo (suoni, sequenze, modulazioni, campioni) viene salvato con il progetto del DAW.</p>
+
+  <h2>Concetti chiave</h2>
+  <div class="grid2">
+    <div class="card"><h4>Una voce, due sorgenti</h4><p>Ogni voce ha un synth e un sampler. Il controllo BLEND decide quanto si sente di ciascuno: al centro entrambi suonano a pieno volume.</p></div>
+    <div class="card"><h4>Modulazione a mappatura</h4><p>Otto sorgenti (Random, Velocity, Macro 1–2, Env 1–2, LFO 1–2) si collegano a quasi ogni manopola: premi MAP su una sorgente e trascina le manopole.</p></div>
+    <div class="card"><h4>Sequenze generative</h4><p>Ogni voce ha un generatore euclideo con permutazioni, swing e curve di tempo, più dieci lane per passo con lunghezze indipendenti per poliritmi.</p></div>
+    <div class="card"><h4>Controllo globale</h4><p>La pagina Performance sposta insieme i parametri di tutte le voci; COMMIT scrive il risultato nelle voci quando ti piace.</p></div>
+  </div>
+
+  <h2>Requisiti</h2>
+  <table>
+    <thead><tr><th>Sistema</th><th>Formati</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr><td>Windows 10/11 64 bit</td><td>Drummatic.exe · Drummatic.vst3</td><td>Nessuna libreria aggiuntiva da installare.</td></tr>
+      <tr><td>macOS 10.13 o successivo</td><td>Drummatic.app · Drummatic.vst3</td><td>Binario universale: Apple Silicon e Intel.</td></tr>
+      <tr><td>DAW</td><td>VST3</td><td>Testato con Ableton Live 12. Ingresso MIDI e fino a 8 uscite stereo.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ================= 2 INSTALLAZIONE ================= -->
+<section class="chapter" id="c2">
+  <header><div class="num">02</div><div><h1>Installazione</h1><p class="lede">Windows, macOS e prima configurazione</p></div></header>
+
+  <h2><span data-mark="c2"></span>Windows</h2>
+  <ol class="steps">
+    <li>Estrai lo zip <code>Drummatic-Windows.zip</code>.</li>
+    <li><strong>Plugin:</strong> copia la cartella <code>Drummatic.vst3</code> in <code>C:\Program Files\Common Files\VST3\</code>.</li>
+    <li><strong>Standalone:</strong> copia <code>Drummatic.exe</code> dove preferisci (per esempio sul desktop) e avvialo. Se compare l'avviso di Windows SmartScreen, scegli <em>Ulteriori informazioni → Esegui comunque</em>.</li>
+    <li>In Ableton apri <em>Preferenze → Plug-in</em>, verifica che <em>Usa cartella di sistema VST3</em> sia attivo e premi <em>Riesegui scansione</em>.</li>
+  </ol>
+
+  <h2>macOS</h2>
+  <ol class="steps">
+    <li>Estrai lo zip <code>Drummatic-macOS.zip</code>.</li>
+    <li><strong>Plugin:</strong> copia <code>Drummatic.vst3</code> in <code>~/Library/Audio/Plug-Ins/VST3/</code> (nel Finder: <em>Vai → Vai alla cartella…</em>).</li>
+    <li><strong>Standalone:</strong> trascina <code>Drummatic.app</code> in <em>Applicazioni</em>.</li>
+    <li>Il software non è notarizzato da Apple. Al primo avvio apri il Terminale ed esegui una volta:<br>
+      <code>xattr -dr com.apple.quarantine ~/Library/Audio/Plug-Ins/VST3/Drummatic.vst3 /Applications/Drummatic.app</code></li>
+    <li>Riavvia Ableton o riesegui la scansione dei plug-in.</li>
+  </ol>
+
+  <h2>Prima configurazione dello standalone</h2>
+  <p>Apri <span class="ctl">Options → Audio/MIDI Settings</span> in alto a sinistra nella finestra e scegli scheda audio, frequenza di campionamento, dimensione del buffer e, se vuoi suonare Drummatic da una tastiera o da un controller, l'ingresso MIDI.</p>
+  <div class="tip"><b>Latenza su Windows</b>Lo standalone non include il driver ASIO. Per una latenza bassa scegli <strong>Windows Audio (Exclusive Mode)</strong>, oppure usa il plugin VST3 dentro Ableton, che sfrutta il driver ASIO del DAW.</div>
+
+  <h2>Dove vengono salvati i file</h2>
+  <table>
+    <thead><tr><th>Contenuto</th><th>Cartella</th></tr></thead>
+    <tbody>
+      <tr><td>Kit</td><td><code>Documenti/Drummatic/Kits</code> · file <code>.mkit</code></td></tr>
+      <tr><td>Preset di voce</td><td><code>Documenti/Drummatic/Voices</code> · file <code>.mvoice</code></td></tr>
+      <tr><td>Campioni</td><td><code>Documenti/Drummatic/Samples</code> (cartella predefinita del browser campioni)</td></tr>
+    </tbody>
+  </table>
+  <p class="small">Se avevi già salvato kit con le versioni precedenti (cartella <code>Documenti/Manipolo</code>), al primo avvio vengono copiati automaticamente nella nuova cartella.</p>
+</section>
+
+<!-- ================= 3 INTERFACCIA ================= -->
+<section class="chapter" id="c3">
+  <header><div class="num">03</div><div><h1>L'interfaccia</h1><p class="lede">Barra superiore, colonna delle voci, pagine e master</p></div></header>
+  <figure class="s"><img src="img/p_voice.jpg" alt=""><figcaption><b>Pagina VOICE.</b> A sinistra le otto voci, al centro la voce selezionata (qui la 7: Scrapyard più un campione in Granular), a destra il bus master.</figcaption></figure>
+  <p><span data-mark="c3"></span>La finestra è divisa in quattro zone fisse e in un'area centrale che cambia con la pagina scelta.</p>
+  <div class="callouts">
+    <div><b>Barra superiore</b>PLAY e STOP, tempo (solo standalone), le quattro pagine, il browser dei kit, TASTI e RANDOM.</div>
+    <div><b>Colonna voci</b>Clic per selezionare. Il LED si accende quando la voce suona. M e S per mute e solo. Shift+clic o doppio clic per ascoltarla.</div>
+    <div><b>Master</b>MAXIMIZE, equalizzatore a tre bande, tipo di clipping, GAIN finale e profondità della randomizzazione.</div>
+  </div>
+  <h2>Le pagine</h2>
+  <table>
+    <thead><tr><th>Pagina</th><th>Contenuto</th></tr></thead>
+    <tbody>
+      <tr><td>VOICE</td><td>Il suono della voce selezionata: synth, sampler, blend, tone, modulazione, inviluppi, LFO, variation e mix.</td></tr>
+      <tr><td>SEQ</td><td>Il sequencer della voce selezionata, con le lane per passo, e la vista ALL con tutte le sequenze.</td></tr>
+      <tr><td>MIX / FX</td><td>Una striscia di canale per voce, Shatter Delay e Headspace Reverb.</td></tr>
+      <tr><td>PERFORM</td><td>Controlli globali che agiscono su tutte le voci insieme.</td></tr>
+    </tbody>
+  </table>
+  <h2>Usare le manopole</h2>
+  <table>
+    <thead><tr><th>Gesto</th><th>Effetto</th></tr></thead>
+    <tbody>
+      <tr><td>Trascina su/giù</td><td>Cambia il valore.</td></tr>
+      <tr><td>Alt + clic</td><td>Riporta il controllo al valore predefinito.</td></tr>
+      <tr><td>Tasto destro</td><td>Blocca o sblocca il controllo (lucchetto, segnato da una <strong>L</strong> rossa). Vedi capitolo 8.</td></tr>
+      <tr><td>In modalità MAP</td><td>Il trascinamento imposta la profondità di modulazione invece del valore; doppio clic la azzera.</td></tr>
+    </tbody>
+  </table>
+  <p>L'arco ambra mostra il valore impostato; un puntino verde menta mostra il valore modulato in tempo reale.</p>
+</section>
+
+<!-- ================= 4 LA VOCE ================= -->
+<section class="chapter" id="c4">
+  <header><div class="num">04</div><div><h1>La voce</h1><p class="lede">Synth, sampler, tone e modulazione</p></div></header>
+  <p><span data-mark="c4"></span>Il percorso del segnale di ogni voce è: <strong>Synth + Sampler → Blend → blocco DC → Filtro / Distorsione (ordine selezionabile) → Gain e Pan → uscita e mandate</strong>.</p>
+
+  <h2>Synth</h2>
+  <p>Il pulsante <span class="ctl">SYNTH</span> attiva il sintetizzatore; il menu sceglie il motore. <span class="ctl">PITCH</span> trasporta in semitoni (±48); le altre quattro manopole cambiano nome e funzione secondo il motore. <span class="ctl">ENV 2</span> fa usare al synth l'inviluppo 2 invece dell'1 per il volume; <span class="ctl">STEREO</span> genera un secondo canale leggermente desintonizzato.</p>
+  <p>I motori pensati per la cassa (Kick, Zap, Pillow, Tripwire, Radiator) suonano un'ottava sotto (Do 1, 65 Hz) a PITCH 0; tutti gli altri partono da Do 2 (131 Hz).</p>
+
+  <table class="knobs">
+    <thead><tr><th>Motore</th><th>1</th><th>2</th><th>3</th><th>4</th><th>Carattere</th></tr></thead>
+    <tbody>
+      <tr><td>Kick</td><td>P. DECAY</td><td>P. DEPTH</td><td>WAVEFORM</td><td>SUB</td><td>Cassa a seno con discesa di pitch; forma da triangolo a seno saturato.</td></tr>
+      <tr><td>Snare</td><td>P. DECAY</td><td>P. DEPTH</td><td>CUTOFF</td><td>S. RATE</td><td>Tono più rumore filtrato a frequenza di campionamento variabile.</td></tr>
+      <tr><td>Hat</td><td>BLEND</td><td>S. RATE</td><td>CUTOFF</td><td>HARMONIC</td><td>Sei oscillatori quadri in stile 808 miscelati con rumore.</td></tr>
+      <tr><td>Clap</td><td>CLAPS</td><td>SPACING</td><td>CUTOFF</td><td>REV DECAY</td><td>Da 1 a 8 battiti di rumore filtrato più coda ambientale.</td></tr>
+      <tr><td>FM</td><td>RATIO</td><td>DEPTH</td><td>FEEDBACK</td><td>ENV</td><td>Due operatori con feedback; ENV aggiunge un attacco brillante.</td></tr>
+      <tr><td>Modal</td><td>HARMONICS</td><td>DAMPEN</td><td>VARY</td><td>BRIGHT</td><td>Otto modi risonanti da membrana a barra metallica.</td></tr>
+      <tr><td>Cowbell</td><td>FILTER</td><td>CLICK</td><td>NOISE</td><td>HARMONIC</td><td>Due onde quadre in rapporto variabile, click e rumore.</td></tr>
+      <tr><td>Zap</td><td>ENV</td><td>CLICK</td><td>OVERTONE</td><td>SUB</td><td>Discesa di pitch rapidissima, da laser a cassa elettronica.</td></tr>
+      <tr><td>Pillow</td><td>PILLOW</td><td>CLICK</td><td>RATTLE</td><td>SUB</td><td>Cassa morbida e attutita; RATTLE la rende granulosa.</td></tr>
+      <tr><td>Tripwire</td><td>P. DECAY</td><td>P. DEPTH</td><td>TRANSIENT</td><td>SQUARE</td><td>Cassa con doppio inviluppo di pitch e saturazione a onda quadra.</td></tr>
+      <tr><td>Radiator</td><td>ENV</td><td>TICK</td><td>OVERTONE</td><td>ROAST</td><td>Cassa saturata con tick e un sub rumoroso.</td></tr>
+      <tr><td>Kombucha</td><td>S. RATE</td><td>FEEDBACK</td><td>P. ENV</td><td>DAMP</td><td>Corda pizzicata (Karplus-Strong): plucked, tom, metalli.</td></tr>
+      <tr><td>LPG</td><td>FOLD</td><td>SHAPE</td><td>NOISE</td><td>DAMP</td><td>Wavefolder in un low-pass gate: bongo e percussioni modulari.</td></tr>
+      <tr><td>Builder</td><td>OSC WAVE</td><td>OSC GAIN</td><td>NOISE TILT</td><td>NOISE GAIN</td><td>Oscillatore morfabile più rumore inclinabile, da costruire a mano.</td></tr>
+      <tr><td>Additive</td><td>FREQ RATIO</td><td>AMP RATIO</td><td>PARTIALS</td><td>AMP ENV</td><td>Fino a 24 parziali, da seno puro a campana a saturazione.</td></tr>
+      <tr><td>Chaos</td><td>RATIO</td><td>CHAOS</td><td>FILTER</td><td>CHAOS ENV</td><td>Due oscillatori che si modulano a vicenda, con filtro mobile.</td></tr>
+      <tr><td>VOSIM</td><td>PARTIAL 1</td><td>PARTIAL 2</td><td>FM</td><td>FM ENV</td><td>Due seni finestrati: timbri vocali e formantici.</td></tr>
+      <tr><td>SumSyn</td><td>RATIO</td><td>BRIGHT</td><td>PM</td><td>PM ENV</td><td>Sintesi per sommatoria; BRIGHT alto aggiunge wavefolding.</td></tr>
+      <tr><td>Reson</td><td>HARMONICS</td><td>DAMPEN</td><td>MATERIAL</td><td>RING</td><td>Impulso di rumore in un banco di sei risonatori.</td></tr>
+      <tr><td>Combinatoric</td><td>COMB RATIO</td><td>FEEDBACK</td><td>P. ENV</td><td>FM</td><td>Seno in un filtro a pettine modulato.</td></tr>
+      <tr><td>Terraining</td><td>PITCH 2</td><td>SHAPE 1</td><td>SHAPE 2</td><td>TERRAIN</td><td>Wave terrain e operatori bitwise su due oscillatori.</td></tr>
+      <tr><td>Shame</td><td>PITCH 2</td><td>FM</td><td>FEEDBACK</td><td>SHAME</td><td>Sample &amp; hold incrociati, FM e feedback: digitale e instabile.</td></tr>
+      <tr><td>Entangled</td><td>PITCH 2</td><td>FM</td><td>FEEDBACK</td><td>TANGLE</td><td>Ring modulation, finestre e terrain su seni.</td></tr>
+      <tr><td>Haywire</td><td>OVERTONE</td><td>P. DEPTH</td><td>BRIGHT</td><td>RATTLE</td><td>Rullante "acustico" con sezione di cordiera.</td></tr>
+      <tr><td>Scrapyard</td><td>RATIO</td><td>ZAP</td><td>MATERIAL</td><td>FM</td><td>Otto modi metallici con FM e attacco a zap.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Sampler</h2>
+  <p>Il pulsante <span class="ctl">SAMPLER</span> attiva il campionatore. Carica un file trascinandolo sulla forma d'onda (WAV, AIFF, FLAC, OGG, MP3) o con <span class="ctl">CARICA</span>; le frecce <span class="ctl">&lt; &gt;</span> passano al file precedente o successivo nella stessa cartella, <span class="ctl">RND</span> ne sceglie uno a caso, <span class="ctl">X</span> lo rimuove.</p>
+  <p>I marcatori <strong>START</strong> (in alto) e <strong>END</strong> (in basso) delimitano la porzione riprodotta; se END è prima di START il campione suona al contrario. Il menu a destra sceglie l'inviluppo che controlla il volume del sampler: <em>Off</em> (il campione suona fino in fondo), <em>Env 1</em> o <em>Env 2</em>.</p>
+  <table class="knobs">
+    <thead><tr><th>Motore</th><th>1</th><th>2</th><th>3</th><th>4</th><th>Uso</th></tr></thead>
+    <tbody>
+      <tr><td>Classic</td><td>FINE</td><td>TILT</td><td>COMP</td><td>GAIN</td><td>Riproduzione diretta. TILT scurisce o schiarisce, COMP comprime o espande, GAIN satura sopra il centro.</td></tr>
+      <tr><td>Phase Warp</td><td>MIRROR</td><td>SHAPE</td><td>SPLIT</td><td>SWING</td><td>Deforma il tempo del campione: rimbalzi, accelerazioni, cambi di velocità a metà.</td></tr>
+      <tr><td>Cloner</td><td>FINE</td><td>TILT</td><td>VARIATION</td><td>DAMP</td><td>Ogni colpo è leggermente diverso, come un musicista vero. DAMP toglie o esalta le risonanze.</td></tr>
+      <tr><td>Granular</td><td>SIZE</td><td>RATE</td><td>SPEED</td><td>BLUR</td><td>Grani da 5 a 300 ms: tempo e intonazione indipendenti, BLUR sparpaglia o inverte i grani.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Blend</h2>
+  <p>La manopola verticale <span class="ctl">BLEND</span> bilancia synth e sampler: a sinistra solo synth, a destra solo sampler, al centro entrambi a pieno volume.</p>
+
+  <h2>Tone</h2>
+  <p><span class="ctl">CUTOFF</span>, <span class="ctl">RESONANCE</span> e <span class="ctl">DISTORT</span> controllano filtro e distorsione. Il pulsante <span class="ctl">POST</span> mette la distorsione dopo il filtro invece che prima.</p>
+  <div class="grid2">
+    <div>
+      <table>
+        <thead><tr><th>Filtro</th><th>Carattere</th></tr></thead>
+        <tbody>
+          <tr><td>Scream LP/HP/BP</td><td>Risonanza aggressiva, satura nel loop.</td></tr>
+          <tr><td>Dark LP/HP/BP</td><td>Morbido e scuro, risonanza contenuta.</td></tr>
+          <tr><td>Comb FB+ / FB−</td><td>Pettine con retroazione: toni metallici.</td></tr>
+          <tr><td>Comb FF+ / FF−</td><td>Pettine senza retroazione: phasing statico.</td></tr>
+          <tr><td>Comb AP</td><td>Allpass: diffusione e risonanze sottili.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <table>
+        <thead><tr><th>Distorsione</th><th>Carattere</th></tr></thead>
+        <tbody>
+          <tr><td>Tape · Tube</td><td>Saturazione calda, simmetrica o asimmetrica.</td></tr>
+          <tr><td>Bitcrush · Rate Crush</td><td>Riduzione di bit e di frequenza.</td></tr>
+          <tr><td>Wavefold · Square</td><td>Ripiegamento dell'onda, squadratura.</td></tr>
+          <tr><td>Phase · Contrast</td><td>Distorsione di fase; Contrast esalta i transienti.</td></tr>
+          <tr><td>Dropout</td><td>Elimina cicli d'onda interi.</td></tr>
+          <tr><td>MiniGlitch · MegaGlitch</td><td>Micro-delay instabile, mono o stereo.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <h2>Modulazione</h2>
+  <figure><img src="img/p_map.jpg" alt=""><figcaption><b>Modalità MAP attiva su RANDOM.</b> Le manopole modulabili diventano verdi e mostrano la profondità invece del valore.</figcaption></figure>
+  <p>Le otto sorgenti sono: <strong>RANDOM</strong> (un valore nuovo a ogni colpo), <strong>VELOCITY</strong> (la dinamica del colpo), <strong>MACRO 1</strong> e <strong>MACRO 2</strong> (manopole libere, automatizzabili dal DAW), <strong>ENV 1</strong>, <strong>ENV 2</strong>, <strong>LFO 1</strong> e <strong>LFO 2</strong>.</p>
+  <ol class="steps">
+    <li>Premi il pulsante <strong>MAP</strong> (l'icona con l'onda) accanto alla sorgente: si illumina in verde.</li>
+    <li>Trascina una manopola qualsiasi: imposti quanto quella sorgente la sposta, in positivo o in negativo. Un arco verde mostra l'escursione.</li>
+    <li>Premi di nuovo MAP per tornare alla modifica normale. Doppio clic su una manopola in modalità MAP azzera quella modulazione.</li>
+  </ol>
+  <p>I due riquadri RANDOM e VELOCITY mostrano gli ultimi cinque valori generati, utili per capire quanto sta variando il suono.</p>
+
+  <h2>Inviluppi</h2>
+  <p>Due inviluppi <strong>AHD</strong> (Attack, Hold, Decay). <span class="ctl">CURVE</span> va da lineare a esponenziale; <span class="ctl">VELOCITY</span> stabilisce quanto la dinamica del colpo riduce il picco. Se una voce viene ricolpita mentre suona, l'inviluppo riparte dal livello corrente: niente click.</p>
+
+  <h2>LFO</h2>
+  <p>Due LFO con <span class="ctl">SPEED</span>, <span class="ctl">SHAPE</span> e <span class="ctl">AMP</span>. Con <span class="ctl">SYNC</span> la velocità è una divisione musicale (da 8 battute a 1/64, terzine comprese); senza, va da 0,01 a 440 Hz. <span class="ctl">BIPOLAR</span> fa oscillare il valore sopra e sotto il centro.</p>
+  <table>
+    <thead><tr><th>Forma</th><th>SHAPE</th></tr></thead>
+    <tbody>
+      <tr><td>Wavetable</td><td>Morfa seno → triangolo → dente di sega → quadra → casuale.</td></tr>
+      <tr><td>Triangle Tilt</td><td>Inclina il triangolo verso rampa crescente o decrescente.</td></tr>
+      <tr><td>Pulse Width</td><td>Larghezza dell'impulso.</td></tr>
+      <tr><td>Smooth Random</td><td>Quanto è morbido il passaggio tra un valore casuale e il successivo.</td></tr>
+    </tbody>
+  </table>
+  <table>
+    <thead><tr><th>Reset</th><th>Comportamento</th></tr></thead>
+    <tbody>
+      <tr><td>Free Run</td><td>Gira libero, ripartendo solo all'avvio del trasporto.</td></tr>
+      <tr><td>Always Reset</td><td>Riparte da zero a ogni colpo.</td></tr>
+      <tr><td>Soft Reset</td><td>Riparte solo se la voce era in silenzio.</td></tr>
+      <tr><td>Sample and Hold</td><td>Tiene il valore letto al momento del colpo.</td></tr>
+      <tr><td>One Shot</td><td>Esegue un solo ciclo per colpo, poi si ferma.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Variation e Mix</h2>
+  <p><span class="ctl">VARIATION</span> aggiunge a ogni colpo piccoli scostamenti casuali a tutti i controlli non bloccati: più alto il valore, più ogni colpo è diverso. <span class="ctl">DELAY</span> e <span class="ctl">REVERB</span> sono le mandate agli effetti, <span class="ctl">PAN</span> e <span class="ctl">VOICE GAIN</span> posizionano la voce nel mix.</p>
+  <p>Sotto il blocco Tone trovi <span class="ctl">CARICA VOCE</span> e <span class="ctl">SALVA VOCE</span> per i preset di voce, <span class="ctl">RESET</span> per riportare la voce ai valori iniziali e <span class="ctl">DADO</span> per randomizzarla.</p>
+</section>
+
+<!-- ================= 5 SEQUENCER ================= -->
+<section class="chapter" id="c5">
+  <header><div class="num">05</div><div><h1>Il sequencer</h1><p class="lede">Generatore euclideo, lane per passo e vista ALL</p></div></header>
+  <figure><img src="img/p_seq.jpg" alt=""><figcaption><b>Pagina SEQ, voce 8.</b> In alto la riga dei trigger (punti verdi dal generatore, ambra quelli manuali), sotto la lane PITCH con una linea melodica.</figcaption></figure>
+
+  <h2><span data-mark="c5"></span>Generate</h2>
+  <table>
+    <thead><tr><th>Controllo</th><th>Funzione</th></tr></thead>
+    <tbody>
+      <tr><td>STEPS</td><td>Lunghezza del pattern euclideo (1–64 passi).</td></tr>
+      <tr><td>FILL</td><td>Numero di colpi distribuiti nel modo più uniforme possibile.</td></tr>
+      <tr><td>PATTERN</td><td>Permutazioni: sposta i colpi singolarmente per ritmi meno regolari (1 = euclideo puro).</td></tr>
+      <tr><td>ROTATE</td><td>Ruota il pattern in avanti o indietro.</td></tr>
+      <tr><td>INVERT</td><td>Inverte colpi e pause.</td></tr>
+    </tbody>
+  </table>
+  <p>Clicca nella riga in alto per aggiungere o togliere <strong>trigger manuali</strong>, che si sommano a quelli generati; trascina per disegnarne diversi.</p>
+
+  <h2>Modify</h2>
+  <table>
+    <thead><tr><th>Controllo</th><th>Funzione</th></tr></thead>
+    <tbody>
+      <tr><td>SHIFT</td><td>Anticipa o ritarda l'intera sequenza fino a mezzo passo.</td></tr>
+      <tr><td>SWING</td><td>Sposta i passi dispari; valori negativi li anticipano.</td></tr>
+      <tr><td>SHAPE</td><td>Curva il tempo all'interno del pattern: i colpi accelerano o rallentano.</td></tr>
+      <tr><td>DENSITY</td><td>In negativo toglie colpi a caso, in positivo ne aggiunge sulle pause.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Settings e Humanize</h2>
+  <p><span class="ctl">LENGTH</span> è la lunghezza della sequenza (fino a 128 passi). Con <span class="ctl">SNAP</span> attivo viene arrotondata a un multiplo di STEPS; spegnilo per poliritmi (per esempio 7 passi contro 16). La velocità del passo è <span class="ctl">SPEED</span> (da 1/1 a 1/32, terzine comprese) moltiplicata per <span class="ctl">MULT</span> (da /4 a 4×). <span class="ctl">RESET</span> fa ripartire tutto ogni <span class="ctl">RESET LEN</span> passi.</p>
+  <p><span class="ctl">HUMANIZE</span> è globale: sposta i colpi di piccole quantità casuali, uguali per tutte le voci che suonano sullo stesso passo, così il groove resta coeso.</p>
+
+  <h2>Lane per passo</h2>
+  <p>Sotto la riga dei trigger puoi disegnare valori diversi per ogni passo. Alt+clic riporta un passo al valore predefinito.</p>
+  <table>
+    <thead><tr><th>Lane</th><th>Intervallo</th><th>Effetto</th></tr></thead>
+    <tbody>
+      <tr><td>VEL</td><td>0–127</td><td>Dinamica del colpo. A 127 (barra rossa) aggiunge una spinta di distorsione.</td></tr>
+      <tr><td>SHIFT</td><td>±100</td><td>Sposta il singolo passo fino a mezzo passo.</td></tr>
+      <tr><td>PITCH</td><td>±24 st</td><td>Trasposizione per passo, per linee melodiche.</td></tr>
+      <tr><td>RATCH</td><td>1–8</td><td>Ripetizioni del colpo all'interno del passo.</td></tr>
+      <tr><td>ENV</td><td>±100</td><td>Accorcia o allunga gli inviluppi (fino a 4× o ¼).</td></tr>
+      <tr><td>PAN</td><td>±100</td><td>Spostamento stereo per passo.</td></tr>
+      <tr><td>VAR</td><td>0–100</td><td>Variation aggiuntiva per quel colpo.</td></tr>
+      <tr><td>PROB</td><td>±100</td><td>In negativo probabilità di saltare il colpo, in positivo probabilità di raddoppiare il ratchet.</td></tr>
+      <tr><td>SENDS</td><td>±100</td><td>In positivo mandata extra al delay, in negativo al riverbero.</td></tr>
+      <tr><td>MACRO 2</td><td>0–100</td><td>Sostituisce il valore di MACRO 2 per quel colpo.</td></tr>
+    </tbody>
+  </table>
+  <p>Ogni lane ha una modalità di avanzamento e una lunghezza propria (menu in basso a destra):</p>
+  <table>
+    <thead><tr><th>Modalità</th><th>Avanzamento</th></tr></thead>
+    <tbody>
+      <tr><td>SYNC</td><td>Segue la sequenza principale passo per passo.</td></tr>
+      <tr><td>FREE</td><td>Avanza a ogni passo ma con la propria lunghezza: poliritmi di parametri.</td></tr>
+      <tr><td>TRIG</td><td>Avanza solo quando la voce suona davvero.</td></tr>
+      <tr><td>RETRIG</td><td>Come TRIG, ma riparte dall'inizio a ogni giro della sequenza.</td></tr>
+    </tbody>
+  </table>
+  <p>I pulsanti in basso: <span class="ctl">X</span> azzera la lane, <span class="ctl">&lt; &gt;</span> la ruotano (con Alt ruotano anche i trigger manuali), <span class="ctl">DADO</span> la randomizza, <span class="ctl">CANCELLA TRIGGER</span> rimuove i trigger manuali.</p>
+
+  <h2>Trasporto</h2>
+  <p>Nel DAW il sequencer segue il trasporto: parte e si ferma con Ableton e resta agganciato alla sua posizione. <span class="ctl">PLAY</span> lo avvia anche a DAW fermo; quando il DAW parte, Drummatic torna a seguirlo. <span class="ctl">STOP</span> lo ferma anche se il DAW sta suonando; il successivo play del DAW lo riarma automaticamente. Nello standalone il tempo si imposta con il campo BPM.</p>
+
+  <h2>Vista ALL</h2>
+  <figure><img src="img/p_all.jpg" alt=""><figcaption><b>Vista ALL.</b> Le otto sequenze insieme: si vedono il poliritmo della voce 5 (3 su 7) e della voce 6 (5 su 13).</figcaption></figure>
+  <p>Il pulsante <span class="ctl">ALL</span> mostra tutte le sequenze in una griglia. Clicca una cella per aggiungere o togliere un trigger manuale, clicca il numero a sinistra per selezionare la voce.</p>
+</section>
+
+<!-- ================= 6 MIXER ================= -->
+<section class="chapter" id="c6">
+  <header><div class="num">06</div><div><h1>Mixer, effetti e master</h1><p class="lede">Strisce di canale, routing, delay, riverbero e bus master</p></div></header>
+  <figure><img src="img/p_mix.jpg" alt=""><figcaption><b>Pagina MIX / FX.</b> Otto strisce di canale a sinistra, Shatter Delay e Headspace Reverb a destra.</figcaption></figure>
+
+  <h2><span data-mark="c6"></span>Strisce di canale</h2>
+  <table>
+    <thead><tr><th>Controllo</th><th>Funzione</th></tr></thead>
+    <tbody>
+      <tr><td>DELAY · REVERB</td><td>Mandate agli effetti.</td></tr>
+      <tr><td>PAN · GAIN</td><td>Posizione stereo e volume della voce (il meter a sinistra del numero mostra il livello).</td></tr>
+      <tr><td>TRIGGER</td><td>Quando questa voce suona, fa suonare anche la voce indicata: utile per stratificare.</td></tr>
+      <tr><td>CHOKE</td><td>Quando questa voce suona, zittisce la voce indicata (es. hi-hat aperto e chiuso).</td></tr>
+      <tr><td>ROUTING</td><td>Uscita della voce: Main 1-2 oppure una delle uscite ausiliarie 3-4 … 15-16.</td></tr>
+      <tr><td>M · S</td><td>Mute e solo.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Uscite multiple in Ableton</h2>
+  <ol class="steps">
+    <li>Nella traccia di Drummatic, apri il menu delle uscite e attiva le uscite aggiuntive del plugin.</li>
+    <li>Crea una traccia audio per ogni uscita usata e scegli come ingresso <em>Drummatic → Out 3-4</em> (e così via), con il monitor su <em>In</em>.</li>
+    <li>Nella pagina MIX / FX imposta il ROUTING delle voci da separare.</li>
+  </ol>
+  <div class="warn"><b>Attenzione</b>Il bus MASTER (Maximize, EQ, clipping) agisce solo sull'uscita Main, e anche delay e riverbero escono sempre dal Main. Se mandi una voce su un'uscita ausiliaria non attiva nel DAW, non la sentirai.</div>
+
+  <h2>Shatter Delay</h2>
+  <p>Un delay che cambia tempo all'istante, senza glissati di pitch.</p>
+  <table>
+    <thead><tr><th>Controllo</th><th>Funzione</th></tr></thead>
+    <tbody>
+      <tr><td>TIME · SYNC</td><td>Tempo in millisecondi, oppure una divisione musicale con SYNC attivo.</td></tr>
+      <tr><td>FEEDBACK</td><td>Ripetizioni.</td></tr>
+      <tr><td>GLITCH</td><td>Variazioni casuali del tempo: da leggero vibrato a ritmi spezzati.</td></tr>
+      <tr><td>DUCKING</td><td>Abbassa il delay mentre le voci suonano.</td></tr>
+      <tr><td>FB TILT</td><td>Scurisce o schiarisce le ripetizioni.</td></tr>
+      <tr><td>S.RATE</td><td>Rallenta l'elaborazione: suono lo-fi e tempi più lunghi.</td></tr>
+      <tr><td>GAIN · &gt; REVERB</td><td>Volume del delay e quanto ne va nel riverbero.</td></tr>
+      <tr><td>STEREO · PONG</td><td>Glitch indipendente per canale; ripetizioni alternate sinistra/destra.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Headspace Reverb</h2>
+  <table>
+    <thead><tr><th>Controllo</th><th>Funzione</th></tr></thead>
+    <tbody>
+      <tr><td>Modo</td><td>Dark, Bright, Hall o Tin Can (stanza minuscola e metallica).</td></tr>
+      <tr><td>PREDELAY · SYNC</td><td>Ritardo prima della coda, in ms o in divisioni musicali.</td></tr>
+      <tr><td>DECAY</td><td>Durata della coda (0,1–20 s).</td></tr>
+      <tr><td>S.RATE</td><td>Come nel delay: grana e spazio più grandi.</td></tr>
+      <tr><td>IN TILT · OUT TILT</td><td>Equalizzazione prima e dopo il riverbero.</td></tr>
+      <tr><td>GAIN</td><td>Volume del riverbero.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Master</h2>
+  <p><span class="ctl">MAXIMIZE</span> è un compressore aggressivo che alza le parti deboli e le code. <span class="ctl">HIGH</span>, <span class="ctl">MID</span> e <span class="ctl">LOW</span> sono un equalizzatore a tre bande (±18 dB). Il menu di clipping offre <em>No Clipping</em>, <em>Soft Clip</em>, <em>Hard Clip</em> e <em>Wavefold</em>; <span class="ctl">GAIN</span> è il volume finale.</p>
+</section>
+
+<!-- ================= 7 PERFORMANCE ================= -->
+<section class="chapter" id="c7">
+  <header><div class="num">07</div><div><h1>Performance</h1><p class="lede">Controllare tutte le voci insieme</p></div></header>
+  <figure class="xs"><img src="img/p_perf.jpg" alt=""><figcaption><b>Pagina PERFORM.</b> A sinistra ENABLE e FLIP per voce, al centro le sezioni di controllo, a destra i comandi globali.</figcaption></figure>
+  <p><span data-mark="c7"></span>Ogni manopola della pagina Performance <strong>si somma</strong> al valore corrispondente di tutte le voci abilitate. Al centro (0%) non cambia nulla; ruotandola a destra o a sinistra sposti tutte le voci nella stessa direzione.</p>
+  <table>
+    <thead><tr><th>Sezione</th><th>Controlli</th></tr></thead>
+    <tbody>
+      <tr><td>ENV</td><td>ATTACK, HOLD, DECAY, CURVE — su entrambi gli inviluppi.</td></tr>
+      <tr><td>SYNTH</td><td>PITCH e le quattro manopole del motore.</td></tr>
+      <tr><td>SAMPLER</td><td>PITCH e le quattro manopole del motore sampler.</td></tr>
+      <tr><td>MODULATION</td><td>MACRO 1, MACRO 2, VARIATION e MOD AMP (scala tutte le profondità di modulazione, da 0 a 2×).</td></tr>
+      <tr><td>TONE</td><td>DISTORT, CUTOFF, RES.</td></tr>
+      <tr><td>SEQUENCER</td><td>STEPS, FILL, PATTERN, DENSITY, PROB, RATCHET.</td></tr>
+    </tbody>
+  </table>
+  <h2>Voci e controlli globali</h2>
+  <p><span class="ctl">ENABLE</span> include o esclude una voce; <span class="ctl">FLIP</span> le applica l'effetto al contrario (per esempio, alzando DECAY le altre voci si allungano e questa si accorcia). Nel riquadro GLOBAL:</p>
+  <table>
+    <thead><tr><th>Controllo</th><th>Funzione</th></tr></thead>
+    <tbody>
+      <tr><td>DEPTH</td><td>Scala tutta la pagina; in negativo la inverte.</td></tr>
+      <tr><td>DADO</td><td>Randomizza i controlli Performance non bloccati, con l'ampiezza di RANDOMIZE DEPTH.</td></tr>
+      <tr><td>COMMIT</td><td>Scrive il suono attuale nei controlli delle voci e riporta la Performance a zero.</td></tr>
+      <tr><td>RESET</td><td>Riporta tutti i controlli Performance a zero senza toccare le voci.</td></tr>
+      <tr><td>ENABLED</td><td>Attiva o disattiva l'intera pagina, per confrontare il prima e il dopo.</td></tr>
+    </tbody>
+  </table>
+  <div class="tip"><b>Flusso consigliato</b>Usa DADO finché trovi una variazione interessante, regola DEPTH per dosarla e premi COMMIT per renderla definitiva. Tasto destro su una manopola Performance la esclude dal DADO; i lucchetti delle singole voci escludono quei controlli anche dalla Performance.</div>
+</section>
+
+<!-- ================= 8 KIT E PRESET ================= -->
+<section class="chapter" id="c8">
+  <header><div class="num">08</div><div><h1>Kit, preset e randomizzazione</h1><p class="lede">Salvare, richiamare e generare suoni</p></div></header>
+  <h2><span data-mark="c8"></span>Kit</h2>
+  <p>Un kit (<code>.mkit</code>) contiene tutto: le otto voci, le sequenze, le modulazioni, i riferimenti ai campioni, effetti, master e Performance. Usa <span class="ctl">SALVA KIT</span> e <span class="ctl">CARICA KIT</span> nella barra superiore; le frecce ai lati del nome scorrono i kit della cartella <code>Kits</code> in ordine alfabetico.</p>
+  <p>Nel DAW non serve salvare il kit: lo stato completo viene memorizzato con il progetto.</p>
+  <h2>Preset di voce</h2>
+  <p>Un preset di voce (<code>.mvoice</code>) contiene il suono di una singola voce, comprese modulazioni e campione, ma <strong>non</strong> la sequenza, il routing, il choke e il trigger: puoi cambiare suono senza perdere il ritmo.</p>
+  <h2>Randomizzazione</h2>
+  <table>
+    <thead><tr><th>Comando</th><th>Cosa cambia</th></tr></thead>
+    <tbody>
+      <tr><td>DADO (voce)</td><td>I parametri sonori della voce selezionata.</td></tr>
+      <tr><td>RANDOM (barra)</td><td>I parametri sonori di tutte le voci.</td></tr>
+      <tr><td>DADO (lane)</td><td>I valori della lane visibile nel sequencer.</td></tr>
+      <tr><td>DADO (Performance)</td><td>I controlli della pagina Performance.</td></tr>
+    </tbody>
+  </table>
+  <p>L'ampiezza dei cambiamenti dipende da <span class="ctl">RND DEPTH</span> nel master. La randomizzazione non tocca mai sequenza, routing, choke, trigger, pan, volume e mandate, e tiene i decadimenti entro valori utilizzabili.</p>
+  <h2>Lucchetti</h2>
+  <p>Tasto destro su una manopola della voce la blocca: compare una <strong>L</strong> rossa. Un controllo bloccato è escluso da VARIATION, dalla randomizzazione, dalla Performance e dal caricamento di preset e kit. Ripeti il tasto destro per sbloccarlo.</p>
+</section>
+
+<!-- ================= 9 MIDI ================= -->
+<section class="chapter" id="c9">
+  <header><div class="num">09</div><div><h1>Controllo MIDI e tastiera</h1><p class="lede">Suonare e comandare Drummatic da note MIDI</p></div></header>
+  <p><span data-mark="c9"></span>Drummatic risponde alle note MIDI su undici canali. Nel DAW crea una clip MIDI sulla traccia di Drummatic e scegli il canale di uscita del controller o della clip.</p>
+  <h2>Suonare le voci</h2>
+  <table>
+    <thead><tr><th>Canale</th><th>Note</th><th>Azione</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Do, Do#, Re, Re#, Mi, Fa, Fa#, Sol (qualsiasi ottava)</td><td>Suonano le voci 1–8.</td></tr>
+      <tr><td>2–9</td><td>Tutte</td><td>Suonano la voce 1–8 in modo cromatico; il Do centrale (nota 60) è l'intonazione di base.</td></tr>
+    </tbody>
+  </table>
+  <h2>Trasporto, mute e solo (canale 10)</h2>
+  <table>
+    <thead><tr><th>Note</th><th>Azione</th></tr></thead>
+    <tbody>
+      <tr><td>0 · 1 · 2</td><td>Play/stop alternato · Play · Stop del sequencer.</td></tr>
+      <tr><td>12–19</td><td>Mute on/off delle voci 1–8.</td></tr>
+      <tr><td>24–31</td><td>Solo on/off delle voci 1–8.</td></tr>
+      <tr><td>36–43</td><td>Mute momentaneo (finché la nota è premuta).</td></tr>
+      <tr><td>48–55</td><td>Solo momentaneo.</td></tr>
+      <tr><td>60–67</td><td>Choke immediato della voce.</td></tr>
+    </tbody>
+  </table>
+  <h2>Kit e randomizzazione (canale 11)</h2>
+  <table>
+    <thead><tr><th>Note</th><th>Azione</th></tr></thead>
+    <tbody>
+      <tr><td>0 · 1</td><td>Kit precedente · successivo.</td></tr>
+      <tr><td>2 · 3</td><td>Kit casuale · randomizza tutte le voci.</td></tr>
+      <tr><td>12 · 13 · 14</td><td>Performance: DADO · RESET · COMMIT.</td></tr>
+      <tr><td>24–31</td><td>Randomizza la voce 1–8.</td></tr>
+    </tbody>
+  </table>
+  <h2>Scorciatoie da tastiera</h2>
+  <p>Le scorciatoie funzionano quando il pulsante <span class="ctl">TASTI</span> è acceso e la finestra di Drummatic è attiva. Nello standalone TASTI è acceso di default; nel DAW è spento, così la barra spaziatrice e la tastiera MIDI del computer restano al DAW.</p>
+  <table>
+    <thead><tr><th>Tasto</th><th>Azione</th></tr></thead>
+    <tbody>
+      <tr><td>Q</td><td>Suona la voce selezionata.</td></tr>
+      <tr><td>W · S</td><td>Voce precedente · successiva.</td></tr>
+      <tr><td>A · D</td><td>Pagina precedente · successiva.</td></tr>
+      <tr><td>Spazio</td><td>Play/stop (solo standalone).</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ================= 10 PROBLEMI ================= -->
+<section class="chapter" id="c10">
+  <header><div class="num">10</div><div><h1>Risoluzione dei problemi</h1><p class="lede">Le situazioni più comuni e come uscirne</p></div></header>
+  <table>
+    <thead><tr><th>Sintomo</th><th>Causa probabile e soluzione</th></tr></thead>
+    <tbody>
+      <tr><td><span data-mark="c10"></span>Il DAW suona ma Drummatic no</td><td>Il sequencer è stato fermato (STOP acceso). Premi PLAY o riavvia il trasporto del DAW. Se succedeva premendo spazio con la finestra del plugin aperta, aggiorna alla versione 0.2.1 o successiva.</td></tr>
+      <tr><td>Una voce non si sente</td><td>Controlla M/S nella colonna voci, VOICE GAIN, BLEND (tutto sul sampler senza campione = silenzio) e il ROUTING nella pagina MIX / FX.</td></tr>
+      <tr><td>Il campione non si carica</td><td>Il kit ricorda il percorso del file: se lo hai spostato o rinominato, ricaricalo con CARICA e salva di nuovo il kit.</td></tr>
+      <tr><td>Il plugin non compare in Ableton</td><td>Verifica la cartella di installazione (capitolo 2) e riesegui la scansione. Su macOS rimuovi la quarantena con il comando <code>xattr</code>.</td></tr>
+      <tr><td>macOS dice che l'app è danneggiata</td><td>È il blocco di Gatekeeper per software non notarizzato: esegui il comando <code>xattr</code> del capitolo 2.</td></tr>
+      <tr><td>Crepitii o interruzioni</td><td>Aumenta la dimensione del buffer audio. Su Windows usa il driver ASIO del DAW o WASAPI esclusivo.</td></tr>
+      <tr><td>Le scorciatoie non funzionano</td><td>Accendi TASTI nella barra superiore e clicca dentro la finestra di Drummatic.</td></tr>
+    </tbody>
+  </table>
+  <h2>Limiti noti</h2>
+  <ul>
+    <li>Lo standalone per Windows non include il driver ASIO: usa WASAPI esclusivo o il plugin nel DAW.</li>
+    <li>La modulazione viene calcolata ogni 16 campioni (circa 0,3 ms): gli LFO molto veloci sono un'approssimazione della modulazione audio-rate.</li>
+    <li>Il motore Cloner usa un banco di filtri a 8 bande invece di un'analisi spettrale completa.</li>
+    <li>Le versioni macOS e Windows non sono firmate da un'autorità di certificazione: il sistema operativo mostra un avviso al primo avvio.</li>
+  </ul>
+</section>
+
+<!-- ================= APPENDICE ================= -->
+<section class="chapter" id="c11">
+  <header><div class="num">A</div><div><h1>Appendice</h1><p class="lede">Riferimenti rapidi e cronologia delle versioni</p></div></header>
+  <h2><span data-mark="c11"></span>Destinazioni di modulazione</h2>
+  <p>PITCH e le quattro manopole del synth; PITCH, le quattro manopole del sampler, START ed END; BLEND; CUTOFF, RESONANCE, DISTORT; ATTACK, HOLD e DECAY di entrambi gli inviluppi; SPEED e AMP di entrambi gli LFO; PAN, VOICE GAIN, DELAY e REVERB.</p>
+  <h2>Divisioni musicali</h2>
+  <p>LFO, delay e predelay del riverbero: 8 bar, 4 bar, 2 bar, 1 bar, 1/2, 1/4, 1/8, 1/16, 1/32, 1/4T, 1/8T, 1/16T, 1/64.<br>Velocità del sequencer: 1/1, 1/2, 1/4, 1/8, 1/16, 1/32, 1/4T, 1/8T, 1/16T, 1/32T, con moltiplicatore /4, /3, /2, 1×, 2×, 3×, 4×.</p>
+  <h2>Cronologia delle versioni</h2>
+  <table>
+    <thead><tr><th>Versione</th><th>Novità</th></tr></thead>
+    <tbody>
+      <tr><td>0.2.2</td><td>Nuovo nome Drummatic e cartella <code>Documenti/Drummatic</code> con migrazione automatica; versione macOS universale; corretta l'evidenziazione delle pagine.</td></tr>
+      <tr><td>0.2.1</td><td>L'audio non si ferma più premendo spazio con il plugin in primo piano; pulsante TASTI; il play del DAW riarma sempre il sequencer; la randomizzazione non cambia più routing ed ENABLE/FLIP; correzioni a choke e Dropout.</td></tr>
+      <tr><td>0.2</td><td>Dieci nuovi motori (Chaos, VOSIM, SumSyn, Reson, Combinatoric, Terraining, Shame, Entangled, Haywire, Scrapyard); sampler Phase Warp, Cloner e Granular; distorsioni MiniGlitch, MegaGlitch e Contrast; pagina Performance; vista ALL; uscite multiple.</td></tr>
+      <tr><td>0.1</td><td>Prima versione: 8 voci, 15 motori, sampler Classic, sequencer euclideo con lane, mixer, delay, riverbero e master, controllo MIDI.</td></tr>
+    </tbody>
+  </table>
+  <div class="end">Drummatic · Manuale utente · versione 0.2.2 · ottobre 2026. Nome, interfaccia e codice sono originali.</div>
+</section>
+
+</body>
+</html>

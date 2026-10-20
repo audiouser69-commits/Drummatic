@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-project(Manipolo VERSION 0.2.1)
+project(Drummatic VERSION 0.2.2)
 set(CMAKE_CXX_STANDARD 17)
 
 if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/JUCE/CMakeLists.txt)
@@ -12,8 +12,8 @@ endif()
 
 juce_add_plugin(Manipolo
     COMPANY_NAME "Emilio Falciatori"
-    BUNDLE_ID com.emiliofalciatori.manipolo
-    PRODUCT_NAME "Manipolo"
+    BUNDLE_ID com.emiliofalciatori.drummatic
+    PRODUCT_NAME "Drummatic"
     FORMATS VST3 Standalone
     IS_SYNTH TRUE
     NEEDS_MIDI_INPUT TRUE
@@ -48,6 +48,13 @@ option(MANIPOLO_TESTS "Compila i test" OFF)
 if (MANIPOLO_TESTS)
     juce_add_console_app(ManipoloTest PRODUCT_NAME "ManipoloTest")
     target_sources(ManipoloTest PRIVATE Tests/proc_test.cpp Source/Params.cpp Source/PluginProcessor.cpp Source/PluginEditor.cpp)
-    target_compile_definitions(ManipoloTest PRIVATE JUCE_WEB_BROWSER=0 JUCE_USE_CURL=0 JucePlugin_Name="Manipolo")
+    target_compile_definitions(ManipoloTest PRIVATE JUCE_WEB_BROWSER=0 JUCE_USE_CURL=0 JucePlugin_Name="Drummatic")
     target_link_libraries(ManipoloTest PRIVATE juce::juce_audio_utils juce::juce_audio_formats juce::juce_recommended_config_flags)
+endif()
+
+if (MANIPOLO_TESTS)
+    juce_add_console_app(DrummaticDemoKit PRODUCT_NAME "DrummaticDemoKit")
+    target_sources(DrummaticDemoKit PRIVATE Tests/demo_kit.cpp Source/Params.cpp Source/PluginProcessor.cpp Source/PluginEditor.cpp)
+    target_compile_definitions(DrummaticDemoKit PRIVATE JUCE_WEB_BROWSER=0 JUCE_USE_CURL=0 JucePlugin_Name="Drummatic")
+    target_link_libraries(DrummaticDemoKit PRIVATE juce::juce_audio_utils juce::juce_audio_formats juce::juce_recommended_config_flags)
 endif()
