@@ -6,3 +6,4 @@ shots/
 .DS_Store
 !fm1/web/silence.wav
 __pycache__/
+fm1/docs/manual/_render.html

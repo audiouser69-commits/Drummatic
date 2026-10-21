@@ -41,6 +41,10 @@ Differenze volute:
   girano a 22 kHz); il glitch dentro la voce (MINI/MEGA GLITCH) ha un buffer di ~160 ms (l'originale 250 ms);
 - l'interfaccia dell'FM-1 al posto del mouse (sotto).
 
+## Manuale
+
+[`docs/Drummatic-FM1-Manuale.pdf`](docs/Drummatic-FM1-Manuale.pdf): il pannello, lo schermo e tutti i menu del firmware, pagina per pagina (39 pagine). Sorgenti in `docs/manual/`: `manual.html`, `build.py` (PDF) e `capture.mjs` (le schermate dall'emulatore).
+
 ## Il pannello
 
 - **PLAY** avvia e ferma. **Tasti neri 1–8**: scegli la voce. **Tasti bianchi 1–16**: i passi della voce (OCT− / OCT+:

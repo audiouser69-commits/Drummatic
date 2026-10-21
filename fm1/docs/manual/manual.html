@@ -1,0 +1,1381 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Drummatic FM-1 — Manuale dell'interfaccia</title>
+<style>
+@page { size: A4; margin: 20mm 17mm 21mm 17mm; }
+@page cover { margin: 0; }
+:root {
+  --ink: #15191e; --dim: #5b6570; --faint: #8a939c; --line: #d9dee3; --soft: #f3f5f7; --soft2: #e9edf1;
+  --night: #0d1117; --night2: #161c24; --sky: #3fb0e6; --sky-d: #1f7fb0; --ember: #f26b3a; --ember-d: #c84a1c;
+  --amber: #f5b13d; --mint: #39c2a0; --rose: #e0567a;
+}
+* { box-sizing: border-box; }
+html { font-family: "Inter", sans-serif; color: var(--ink); font-size: 9.4pt; line-height: 1.5;
+       -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { margin: 0; }
+h1, h2, h3, h4 { font-family: "Inter Display", "Inter", sans-serif; line-height: 1.15; margin: 0; }
+h2 { font-size: 15pt; font-weight: 700; margin: 7mm 0 2.6mm; letter-spacing: -0.005em; break-after: avoid; }
+h2 .tag { display: inline-block; font-size: 7.4pt; font-weight: 700; letter-spacing: 0.12em; color: #fff; background: var(--night);
+          border-radius: 1.2mm; padding: 0.7mm 1.8mm; margin-right: 2.4mm; vertical-align: 2.2pt; }
+h3 { font-size: 10.6pt; font-weight: 650; margin: 5mm 0 1.8mm; break-after: avoid; }
+h4 { font-size: 8pt; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); margin: 3.6mm 0 1.4mm; break-after: avoid; }
+p { margin: 0 0 2.3mm; orphans: 3; widows: 3; }
+strong { font-weight: 650; }
+em { font-style: normal; color: var(--sky-d); font-weight: 550; }
+ul, ol { margin: 0 0 2.6mm; padding-left: 5mm; }
+li { margin: 0 0 1.1mm; }
+.c { font-weight: 650; font-size: 8.3pt; letter-spacing: 0.035em; white-space: nowrap; }
+.k { display: inline-block; font-weight: 700; font-size: 7.3pt; letter-spacing: 0.05em; white-space: nowrap; color: var(--ink);
+     background: linear-gradient(#fff, #eef1f4); border: 0.5pt solid #b9c1c9; border-bottom-width: 1.2pt; border-radius: 1.3mm;
+     padding: 0.15mm 1.5mm 0.05mm; line-height: 1.45; vertical-align: 0.4pt; }
+.k.b { background: linear-gradient(#2a2f36, #15191e); color: #f2f4f6; border-color: #0b0d10; }
+.k.w { background: linear-gradient(#fbfbfb, #e3e6ea); }
+.k.r { color: var(--ember-d); }
+.s { font-family: "DejaVu Sans Mono", monospace; font-size: 7.6pt; color: #e8eef3; background: var(--night); border-radius: 1mm;
+     padding: 0.2mm 1.3mm; white-space: nowrap; letter-spacing: 0.02em; }
+.s.o { color: #ffb08f; } .s.b { color: #8fd3f4; }
+.nb { white-space: nowrap; }
+
+/* ---------------- copertina ---------------- */
+.cover { page: cover; width: 210mm; height: 297mm; background: var(--night); color: #e9eef2; position: relative; overflow: hidden; break-after: page; }
+.cover .grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+               linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px); background-size: 10mm 10mm; }
+.cover .glow { position: absolute; left: -40mm; top: 130mm; width: 300mm; height: 160mm;
+               background: radial-gradient(closest-side, rgba(63,176,230,.20), transparent); }
+.cover .eyebrow { position: absolute; left: 22mm; top: 26mm; font-size: 8.4pt; letter-spacing: 0.34em; color: #8e9aa6; text-transform: uppercase; }
+.cover .eyebrow b { color: var(--ember); font-weight: 700; }
+.cover h1 { position: absolute; left: 21mm; top: 38mm; font-size: 64pt; font-weight: 800; letter-spacing: -0.02em; color: #fff; line-height: 0.95; }
+.cover h1 span { color: var(--sky); }
+.cover .sub { position: absolute; left: 22mm; top: 82mm; font-size: 15pt; font-weight: 300; color: #c9d3dc; max-width: 150mm; line-height: 1.35; }
+.cover .panel { position: absolute; left: 14mm; right: 14mm; top: 118mm; }
+.cover .panel img { width: 100%; display: block; filter: drop-shadow(0 8mm 14mm rgba(0,0,0,.6)); }
+.cover .chips { position: absolute; left: 22mm; top: 236mm; display: flex; gap: 3mm; flex-wrap: wrap; width: 170mm; }
+.cover .chips span { border: 0.6pt solid #3a4553; color: #c9d3dc; border-radius: 10mm; padding: 1.2mm 3.4mm; font-size: 8pt; letter-spacing: 0.04em; }
+.cover .meta { position: absolute; left: 22mm; bottom: 20mm; font-size: 8.4pt; color: #8e9aa6; line-height: 1.75; }
+.cover .meta b { color: #e9eef2; font-weight: 600; }
+.cover .bar { position: absolute; right: 0; bottom: 0; width: 70mm; height: 4mm; background: linear-gradient(90deg, var(--sky), var(--ember)); }
+
+/* ---------------- indice ---------------- */
+.toc { break-after: page; }
+.toc h1 { font-size: 24pt; font-weight: 800; margin: 0 0 1.6mm; letter-spacing: -0.01em; }
+.toc .intro { color: var(--dim); margin-bottom: 4mm; max-width: 135mm; }
+.toc ol { list-style: none; padding: 0; margin: 0; }
+.toc li { display: flex; align-items: baseline; margin: 0; padding: 1.1mm 0 1.1mm; border-bottom: 0.5pt solid var(--line); }
+.toc li .n { width: 11mm; flex: none; font-weight: 800; color: var(--ember); font-variant-numeric: tabular-nums; font-size: 10pt; }
+.toc li .t { flex: 1; font-weight: 650; font-size: 10.3pt; }
+.toc li .t small { display: block; font-weight: 400; color: var(--dim); font-size: 7.8pt; margin-top: 0.3mm; }
+.toc li .p { width: 12mm; text-align: right; font-variant-numeric: tabular-nums; color: var(--dim); font-weight: 600; }
+
+/* ---------------- capitoli ---------------- */
+.chapter { break-before: page; }
+.chapter > header { position: relative; margin: 0 0 7mm; padding: 0 0 5mm; border-bottom: 1.4pt solid var(--ink); }
+.chapter > header .num { font-family: "Inter Display"; font-size: 46pt; font-weight: 800; line-height: 0.8; color: var(--ember); letter-spacing: -0.03em; }
+.chapter > header h1 { font-size: 25pt; font-weight: 800; letter-spacing: -0.015em; margin-top: 3mm; }
+.chapter > header .kick { font-size: 10.5pt; color: var(--dim); margin-top: 1.6mm; font-weight: 400; }
+.chapter > header .btn { position: absolute; right: 0; bottom: 5mm; }
+.chapter > header .btn .k { font-size: 10pt; padding: 1mm 3mm; }
+.lead { font-size: 10.6pt; line-height: 1.5; color: #2a3139; margin-bottom: 4mm; }
+
+/* tabelle */
+table { width: 100%; border-collapse: collapse; margin: 1.5mm 0 4mm; font-size: 8.5pt; break-inside: auto; }
+thead th { text-align: left; font-size: 7pt; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--dim);
+           border-bottom: 1pt solid var(--ink); padding: 1.3mm 2mm 1.3mm 0; }
+td { border-bottom: 0.5pt solid var(--line); padding: 1.6mm 2.5mm 1.6mm 0; vertical-align: top; }
+tr { break-inside: avoid; }
+td:first-child { font-weight: 650; white-space: nowrap; }
+td.w, th.w { white-space: normal; }
+table.kn td:first-child { width: 22mm; }
+table.compact td { padding-top: 1.1mm; padding-bottom: 1.1mm; }
+td .d { color: var(--faint); font-size: 7.6pt; }
+.rng { color: var(--dim); font-variant-numeric: tabular-nums; white-space: nowrap; font-size: 8pt; }
+
+/* pagina di riferimento: schermata + tabella */
+.page-ref { display: flex; gap: 6mm; align-items: flex-start; margin: 3mm 0 4mm; break-inside: avoid; }
+.page-ref.long { break-inside: auto; }
+.page-ref .shot { flex: none; width: 50mm; }
+.page-ref .body { flex: 1; min-width: 0; }
+.page-ref .body table { margin-top: 0; }
+.page-ref .ttl { display: flex; align-items: center; gap: 2.4mm; margin: 0 0 2mm; }
+.page-ref .ttl h3 { margin: 0; font-size: 11.5pt; }
+.page-ref .ttl .path { font-size: 7.6pt; color: var(--dim); letter-spacing: 0.04em; }
+
+.shot img, img.scr { display: block; width: 100%; border-radius: 2.2mm; border: 1.6mm solid #0b0b0c; box-shadow: 0 0 0 0.4pt #3b4148;
+                     image-rendering: pixelated; }
+.shot figcaption, figure figcaption { font-size: 7.4pt; color: var(--dim); margin-top: 1.6mm; line-height: 1.35; }
+figure { margin: 3mm 0 4mm; break-inside: avoid; }
+
+/* box */
+.note { border-left: 1.4mm solid var(--sky); background: #eef7fc; padding: 2.6mm 3.4mm 2.2mm; margin: 3mm 0 4mm; border-radius: 0 1.5mm 1.5mm 0; break-inside: avoid; }
+.note.warn { border-color: var(--ember); background: #fdf1ec; }
+.note.tip { border-color: var(--mint); background: #edf9f5; }
+.note b.h { display: block; font-size: 7.2pt; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.8mm; color: var(--sky-d); }
+.note.warn b.h { color: var(--ember-d); }
+.note.tip b.h { color: #1d8a6f; }
+.note p:last-child { margin-bottom: 0; }
+
+/* figure del pannello */
+.panelfig { position: relative; margin: 2mm 0 2mm; }
+.panelfig img { width: 100%; display: block; }
+.mk { position: absolute; width: 5.6mm; height: 5.6mm; margin: -2.8mm 0 0 -2.8mm; border-radius: 50%; background: var(--ember); color: #fff;
+      font-size: 7.6pt; font-weight: 800; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 0.7mm #fff, 0 1mm 2mm rgba(0,0,0,.35); }
+.mk.sky { background: var(--sky-d); }
+.legend { columns: 2; column-gap: 7mm; font-size: 8.4pt; margin: 3mm 0 0; }
+.legend div { break-inside: avoid; display: flex; gap: 2.4mm; margin-bottom: 2.2mm; }
+.legend .i { flex: none; width: 5mm; height: 5mm; border-radius: 50%; background: var(--ember); color: #fff; font-size: 7pt; font-weight: 800;
+             display: flex; align-items: center; justify-content: center; margin-top: 0.3mm; }
+.legend .i.sky { background: var(--sky-d); }
+.legend b { font-weight: 700; }
+
+.scrfig { display: flex; gap: 7mm; align-items: flex-start; margin: 3mm 0 4mm; break-inside: avoid; }
+.scrfig .wrap { position: relative; flex: none; width: 92mm; }
+.scrfig .wrap img { width: 100%; display: block; border-radius: 2.6mm; border: 2mm solid #0b0b0c; image-rendering: pixelated; }
+.scrfig .legend { columns: 1; margin: 0; flex: 1; }
+
+/* mappa dei menu */
+.map { display: grid; grid-template-columns: repeat(6, 1fr); gap: 2.4mm; margin: 3mm 0 4mm; }
+.map .g { background: var(--soft); border-radius: 2mm; padding: 2.2mm 2.2mm 1.4mm; break-inside: avoid; }
+.map .g .bt { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.8mm; }
+.map .g .bt .k { font-size: 7.6pt; }
+.map .g .bt span { font-size: 6.5pt; color: var(--dim); letter-spacing: 0.06em; text-transform: uppercase; }
+.map .g .pg { font-size: 7.4pt; font-weight: 650; background: #fff; border: 0.5pt solid var(--line); border-radius: 1mm; padding: 0.7mm 1.6mm;
+              margin-bottom: 1mm; display: flex; justify-content: space-between; }
+.map .g .pg i { font-style: normal; color: var(--faint); font-weight: 500; }
+.map .g.dark { background: var(--night); }
+.map .g.dark .pg { background: var(--night2); border-color: #2a323c; color: #e9eef2; }
+.map .g.dark .bt span { color: #8e9aa6; }
+
+.flow { display: flex; align-items: stretch; gap: 0; margin: 3mm 0 4mm; break-inside: avoid; }
+.flow .b { flex: 1; background: var(--soft); border-radius: 1.6mm; padding: 2mm 2.2mm; font-size: 7.6pt; line-height: 1.35; }
+.flow .b b { display: block; font-size: 8pt; margin-bottom: 0.6mm; }
+.flow .b small { color: var(--dim); }
+.flow .b.hl { background: var(--night); color: #dfe6ec; } .flow .b.hl small { color: #8e9aa6; } .flow .b.hl b { color: #fff; }
+.flow .a { flex: none; width: 5mm; display: flex; align-items: center; justify-content: center; color: var(--faint); font-weight: 700; }
+
+.two { display: flex; gap: 6mm; break-inside: avoid; } .two > div { flex: 1; min-width: 0; }
+.gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3.4mm; margin: 3mm 0 4mm; }
+.gallery figure { margin: 0; }
+.steps { counter-reset: st; list-style: none; padding-left: 0; }
+.steps > li { counter-increment: st; position: relative; padding-left: 8.5mm; margin-bottom: 2.4mm; }
+.steps > li::before { content: counter(st); position: absolute; left: 0; top: -0.2mm; width: 5.4mm; height: 5.4mm; border-radius: 50%;
+                      background: var(--ink); color: #fff; font-size: 7.4pt; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+.eng { columns: 1; }
+.pill { display: inline-block; font-size: 6.6pt; font-weight: 700; letter-spacing: 0.08em; padding: 0.2mm 1.4mm; border-radius: 3mm; background: var(--soft2); color: var(--dim); vertical-align: 1pt; }
+.pill.kick { background: #fde5da; color: var(--ember-d); }
+.qr { font-size: 8pt; }
+.qr table { font-size: 7.7pt; }
+.qr td { padding: 1mm 2mm 1mm 0; }
+.end { margin-top: 8mm; padding-top: 3mm; border-top: 0.5pt solid var(--line); color: var(--faint); font-size: 7.6pt; }
+.avoid { break-inside: avoid; }
+.mark { position: absolute; left: 0; top: 0; font-size: 1pt; color: #fff; }
+.pb { break-before: page; }
+</style>
+</head>
+<body>
+
+<!-- ======================================================= COPERTINA -->
+<section class="cover">
+  <div class="grid"></div><div class="glow"></div>
+  <div class="eyebrow"><b>Firmware</b> &nbsp;·&nbsp; M-VAVE FM-1</div>
+  <h1>Drummatic<br><span>FM-1</span></h1>
+  <div class="sub">Manuale dell'interfaccia: il pannello, lo schermo e tutti i menu del firmware, pagina per pagina.</div>
+  <div class="panel"><img src="img/panel_clean.png" alt=""></div>
+  <div class="chips"><span>8 voci</span><span>25 motori di sintesi</span><span>Sequencer euclideo · 10 lane</span><span>Performance</span><span>Delay · Riverbero · Master</span><span>16 kit · 16 preset di voce</span></div>
+  <div class="meta"><b>Firmware v0.1</b> · Manuale edizione 1 · ottobre 2026<br>Emilio Falciatori</div>
+  <div class="bar"></div>
+</section>
+
+<!-- ======================================================= INDICE -->
+<section class="toc">
+  <h1>Indice</h1>
+  <p class="intro">Il manuale segue il pannello: prima i comandi e lo schermo, poi un capitolo per ogni bottone di pagina, nell'ordine in cui li userai costruendo un kit. In fondo, il riferimento rapido di tutte le pagine in due facciate.</p>
+  <ol>
+    <li><span class="n">01</span><span class="t">Introduzione<small>Cosa fa il firmware, come leggere il manuale, i primi cinque minuti</small></span><span class="p" data-toc="c1"></span></li>
+    <li><span class="n">02</span><span class="t">Il pannello<small>Manopole, bottoni, tasti neri e bianchi, combinazioni tenute</small></span><span class="p" data-toc="c2"></span></li>
+    <li><span class="n">03</span><span class="t">Lo schermo e i LED<small>Barra superiore, le otto righe, la striscia della pagina, i messaggi</small></span><span class="p" data-toc="c3"></span></li>
+    <li><span class="n">04</span><span class="t">Navigare: gruppi e pagine<small>La mappa completa dei menu</small></span><span class="p" data-toc="c4"></span></li>
+    <li><span class="n">05</span><span class="t">EDIT — il suono della voce<small>SYNTH, ENGINE, VOICE e i 25 motori</small></span><span class="p" data-toc="c5"></span></li>
+    <li><span class="n">06</span><span class="t">FX — filtro e distorsione<small>TONE e TONE 2</small></span><span class="p" data-toc="c6"></span></li>
+    <li><span class="n">07</span><span class="t">ENV — gli inviluppi<small>ENV 1, ENV 2, VELOCITY</small></span><span class="p" data-toc="c7"></span></li>
+    <li><span class="n">08</span><span class="t">LFO — gli oscillatori lenti<small>LFO 1, LFO 1+, LFO 2, LFO 2+</small></span><span class="p" data-toc="c8"></span></li>
+    <li><span class="n">09</span><span class="t">SCL — modulazione, macro e lucchetti<small>MOD, MACRO, LOCKS, MAP con SCL tenuto</small></span><span class="p" data-toc="c9"></span></li>
+    <li><span class="n">10</span><span class="t">SEQ — il sequencer<small>EUCLID, TIME, GROOVE, MORE, LANE, TOOLS, passi e lane, REC</small></span><span class="p" data-toc="c10"></span></li>
+    <li><span class="n">11</span><span class="t">HOME — mixer e routing<small>MIX, ROUTING, MUTE e SOLO</small></span><span class="p" data-toc="c11"></span></li>
+    <li><span class="n">12</span><span class="t">ARP — la Performance<small>Le sette pagine PF</small></span><span class="p" data-toc="c12"></span></li>
+    <li><span class="n">13</span><span class="t">GLO — tempo, effetti e master<small>TEMPO, DELAY, REVERB, MASTER</small></span><span class="p" data-toc="c13"></span></li>
+    <li><span class="n">14</span><span class="t">SAVE — kit e preset di voce<small>KITS, VOICES, autosave, il kit "Dael"</small></span><span class="p" data-toc="c14"></span></li>
+    <li><span class="n">15</span><span class="t">Il menu di sistema e il DADO<small>HOME tenuto; la randomizzazione pagina per pagina</small></span><span class="p" data-toc="c15"></span></li>
+    <li><span class="n">16</span><span class="t">MIDI e clock<small>Gli undici canali, il clock esterno</small></span><span class="p" data-toc="c16"></span></li>
+    <li><span class="n">17</span><span class="t">Installazione, aggiornamento e soluzione dei problemi<small>Flasher, UBOOT, ripristino, carico della CPU</small></span><span class="p" data-toc="c17"></span></li>
+    <li><span class="n">A</span><span class="t">Riferimento rapido<small>Tutte le pagine e tutte le combinazioni in due facciate</small></span><span class="p" data-toc="c18"></span></li>
+  </ol>
+</section>
+
+<!-- ======================================================= 1 -->
+<section class="chapter" id="c1">
+  <header><span class="mark">QQc1QQ</span><div class="num">01</div><h1>Introduzione</h1><div class="kick">Cosa fa il firmware e come leggere questo manuale</div></header>
+
+  <p class="lead">Drummatic FM-1 trasforma l'M-VAVE FM-1 in una drum machine a otto voci: ogni voce ha un sintetizzatore con 25 motori, un filtro, una distorsione, due inviluppi, due LFO, una matrice di modulazione e un proprio sequencer euclideo con dieci lane per passo. Le voci passano in un mixer con delay e riverbero in mandata e in un bus master.</p>
+
+  <p>Il motore audio è lo stesso di Drummatic 0.2.3, il plugin per Windows e macOS, riscritto per il processore dell'FM-1 e verificato voce per voce contro l'originale. Un kit fatto sull'FM-1 suona come lo stesso kit nel plugin. Mancano solo il <strong>sampler</strong> (l'FM-1 non ha memoria per i campioni) e le <strong>uscite multiple</strong> (l'FM-1 ha un'uscita stereo).</p>
+
+  <h2>Concetti di base</h2>
+  <table>
+    <thead><tr><th>Termine</th><th class="w">Significato</th></tr></thead>
+    <tbody>
+      <tr><td>Kit</td><td class="w">Tutto quello che suona: le otto voci, le loro sequenze, le modulazioni, il mixer, gli effetti, il master e la Performance. Se ne salvano 16 nella memoria flash.</td></tr>
+      <tr><td>Voce</td><td class="w">Uno degli otto strumenti del kit, numerati da 1 a 8. Ognuna ha suono e sequenza propri.</td></tr>
+      <tr><td>Voce scelta</td><td class="w">La voce su cui agiscono le manopole e i tasti dei passi. Si sceglie con i tasti neri 1–8 o con la manopola ALGORITHM; il suo numero e il suo motore sono scritti sullo schermo sopra i controlli.</td></tr>
+      <tr><td>Gruppo</td><td class="w">L'insieme di pagine di un bottone: EDIT, FX, ENV, LFO, SCL, SEQ, HOME, ARP, GLO, SAVE.</td></tr>
+      <tr><td>Pagina</td><td class="w">Quattro controlli, uno per ogni manopola KNOB 1–4. Il nome della pagina è in alto a destra della striscia inferiore dello schermo.</td></tr>
+      <tr><td>Passo</td><td class="w">Una posizione del sequencer. Una sequenza ha fino a 128 passi; i tasti bianchi ne mostrano 16 alla volta.</td></tr>
+      <tr><td>Lane</td><td class="w">Un valore per passo che cambia quel colpo: dinamica, intonazione, ripetizioni, probabilità e altri sei.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Come leggere il manuale</h2>
+  <ul>
+    <li>I comandi del pannello sono scritti come tasti: <span class="k">PLAY</span>, <span class="k">KNOB 2</span>, <span class="k b">V3</span> (tasto nero), <span class="k w">5</span> (tasto bianco).</li>
+    <li>Il testo che compare sullo schermo è scritto così: <span class="s">KIT SAVED</span>.</li>
+    <li>Un percorso nei menu si scrive <strong>GRUPPO › PAGINA › controllo</strong>, per esempio <strong>SEQ › EUCLID › FILL</strong>.</li>
+    <li><strong>Premere</strong> è un tocco breve; <strong>tenere</strong> vuol dire tenere premuto mentre si fa altro (girare una manopola, toccare un tasto) o, per <span class="k">HOME</span>, tenere per almeno mezzo secondo.</li>
+    <li><strong>Girare a destra</strong> aumenta il valore; per i controlli azione (COPY, COMMIT, NEW…) è il gesto che esegue il comando.</li>
+  </ul>
+
+  <h2>I primi cinque minuti</h2>
+  <ol class="steps">
+    <li><strong>Accendi.</strong> Drummatic riparte dall'ultimo kit salvato in automatico; la prima volta carica il kit <span class="s">INIT</span> (cassa, rullante, due hi-hat, clap, FM, modal, cowbell).</li>
+    <li><strong>Premi <span class="k">PLAY</span>.</strong> Il quadrato in alto a destra dello schermo si accende e le otto righe mostrano il cursore che corre. <span class="k">SELECT</span> cambia il tempo.</li>
+    <li><strong>Scegli una voce</strong> con i tasti neri <span class="k b">V1</span>…<span class="k b">V8</span>. I tasti bianchi mostrano la sua sequenza: un tocco aggiunge o toglie un colpo.</li>
+    <li><strong>Cambia il suono.</strong> <span class="k">EDIT</span> apre la pagina SYNTH: le quattro manopole del motore. Premi ancora <span class="k">EDIT</span> per ENGINE e gira <span class="k">KNOB 1</span> per cambiare motore.</li>
+    <li><strong>Cambia il ritmo.</strong> <span class="k">SEQ</span> apre EUCLID: <span class="k">KNOB 2</span> (FILL) distribuisce i colpi, <span class="k">KNOB 4</span> (ROTATE) li sposta.</li>
+    <li><strong>Lancia il dado.</strong> Il tasto nero <span class="k b">DADO</span> su una pagina del suono inventa un suono nuovo per la voce scelta.</li>
+    <li><strong>Salva.</strong> <span class="k">SAVE</span>, scegli lo slot con <span class="k">KNOB 1</span> e premi <span class="k">OCT+</span>. Anche senza salvare, a macchina ferma il kit va nell'autosave dopo 4 secondi.</li>
+  </ol>
+
+  <div class="note"><b class="h">L'emulatore</b><p>Lo stesso firmware gira nel browser, con il pannello disegnato: è il modo più comodo per imparare l'interfaccia lontano dallo strumento. Tutto quello che questo manuale descrive funziona allo stesso modo; le schermate del manuale sono state riprese da lì.</p></div>
+</section>
+
+<!-- ======================================================= 2 -->
+<section class="chapter" id="c2">
+  <header><span class="mark">QQc2QQ</span><div class="num">02</div><h1>Il pannello</h1><div class="kick">Ogni comando e cosa fa</div></header>
+
+  <p class="lead">L'FM-1 ha otto manopole, quattordici bottoni e ventisette tasti. Drummatic usa i tasti bianchi per i passi del sequencer, i tasti neri per le voci e per tre funzioni, i bottoni per le pagine.</p>
+
+  <div class="panelfig">
+    <img src="img/panel_clean.png" alt="">
+    <div class="mk" style="left:14.4%;top:16%">1</div>
+    <div class="mk" style="left:25.4%;top:16%">2</div>
+    <div class="mk" style="left:14.4%;top:32.9%">3</div>
+    <div class="mk" style="left:25.4%;top:32.9%">4</div>
+    <div class="mk" style="left:15%;top:44.1%">5</div>
+    <div class="mk" style="left:26%;top:44.1%">6</div>
+    <div class="mk sky" style="left:56.4%;top:9.4%">7</div>
+    <div class="mk" style="left:76.6%;top:22.4%">8</div>
+    <div class="mk" style="left:97.6%;top:36.7%">9</div>
+    <div class="mk" style="left:27.4%;top:63.5%">10</div>
+    <div class="mk" style="left:83.9%;top:63.5%">11</div>
+    <div class="mk" style="left:50%;top:96.8%">12</div>
+  </div>
+  <div class="legend">
+    <div><span class="i">1</span><span><b>MASTER</b> — volume dell'uscita. Agisce sulle cuffie e sull'uscita di linea; sull'audio USB solo se il menu dice USB OUT › MASTER.</span></div>
+    <div><span class="i">2</span><span><b>SELECT</b> — tempo, da 40 a 300 BPM, a scatti di 1 BPM (più veloce se giri in fretta). Con il clock esterno non fa nulla.</span></div>
+    <div><span class="i">3</span><span><b>PRESETS</b> — scorre le pagine del gruppo attuale. Con tasti bianchi tenuti, sceglie il gruppo di lane.</span></div>
+    <div><span class="i">4</span><span><b>ALGORITHM</b> — sceglie la voce (1–8), come i tasti neri V1–V8.</span></div>
+    <div><span class="i">5</span><span><b>OCT−</b> — pagina dei passi precedente; in PADS l'ottava più bassa; in SAVE esce dalla pagina e annulla una conferma in sospeso.</span></div>
+    <div><span class="i">6</span><span><b>OCT+</b> — pagina dei passi successiva; in PADS l'ottava più alta; conferma i comandi (salvare, RESET, NEW).</span></div>
+    <div><span class="i sky">7</span><span><b>Schermo</b> — tutte le otto sequenze sempre visibili, la voce scelta e la pagina con i suoi quattro valori. Vedi il capitolo 3.</span></div>
+    <div><span class="i">8</span><span><b>KNOB 1–4</b> — i quattro controlli della pagina, da sinistra a destra come sullo schermo.</span></div>
+    <div><span class="i">9</span><span><b>Bottoni</b> — i gruppi di pagine, PLAY e REC. Tabella nella pagina seguente.</span></div>
+    <div><span class="i">10</span><span><b>Tasti neri V1–V8</b> — scelgono la voce. Il LED del tasto lampeggia a ogni colpo della voce.</span></div>
+    <div><span class="i">11</span><span><b>MUTE · SOLO · DADO</b> — i tasti neri 9, 10 e 11: tre funzioni sulla voce scelta o, tenuti, sulle voci dei tasti V premuti.</span></div>
+    <div><span class="i">12</span><span><b>Tasti bianchi 1–16</b> — i passi della voce scelta; in PADS suonano le voci; nelle pagine SAVE caricano gli slot.</span></div>
+  </div>
+
+  <h2>I bottoni</h2>
+  <table>
+    <thead><tr><th>Bottone</th><th class="w">Pressione</th><th class="w">Tenuto</th></tr></thead>
+    <tbody>
+      <tr><td><span class="k">EDIT</span></td><td class="w">Gruppo EDIT: SYNTH › ENGINE › VOICE. Di nuovo: la pagina dopo.</td><td class="w">—</td></tr>
+      <tr><td><span class="k">FX</span></td><td class="w">Gruppo FX: TONE › TONE 2.</td><td class="w">—</td></tr>
+      <tr><td><span class="k">ENV</span></td><td class="w">Gruppo ENV: ENV 1 › ENV 2 › VELOCITY.</td><td class="w">—</td></tr>
+      <tr><td><span class="k">LFO</span></td><td class="w">Gruppo LFO: LFO 1 › LFO 1+ › LFO 2 › LFO 2+.</td><td class="w">—</td></tr>
+      <tr><td><span class="k">SCL</span></td><td class="w">Gruppo SCL: MOD › MACRO › LOCKS (al rilascio).</td><td class="w">+ una manopola: <strong>MAP</strong>, collega la sorgente di SCL › MOD a quel controllo (capitolo 9).</td></tr>
+      <tr><td><span class="k">SEQ</span></td><td class="w">Gruppo SEQ: EUCLID › TIME › GROOVE › MORE › LANE › TOOLS.</td><td class="w">—</td></tr>
+      <tr><td><span class="k">HOME</span></td><td class="w">Gruppo HOME: MIX › ROUTING (al rilascio).</td><td class="w">Mezzo secondo: il <strong>menu</strong> di sistema (capitolo 15).</td></tr>
+      <tr><td><span class="k">ARP</span></td><td class="w">Gruppo ARP: le sette pagine della Performance.</td><td class="w">—</td></tr>
+      <tr><td><span class="k">GLO</span></td><td class="w">Gruppo GLO: TEMPO › DELAY ×3 › REVERB ×3 › MASTER ×2.</td><td class="w">—</td></tr>
+      <tr><td><span class="k">SAVE</span></td><td class="w">KITS › VOICES (al rilascio).</td><td class="w">+ una manopola: mette o toglie il <strong>lucchetto</strong> a quel controllo.</td></tr>
+      <tr><td><span class="k">PLAY</span></td><td class="w">Avvia e ferma il sequencer. Con il clock esterno arma la partenza: <span class="s">CLOCK EXT: WAITING FOR START</span>.</td><td class="w">—</td></tr>
+      <tr><td><span class="k r">REC</span></td><td class="w">Modo dei tasti: STEPS › PADS › REC › STEPS (capitolo 10).</td><td class="w">—</td></tr>
+      <tr><td><span class="k">OCT−</span> <span class="k">OCT+</span></td><td class="w">Vedi la legenda sopra.</td><td class="w">Insieme per 5 secondi: <strong>UBOOT</strong>, la modalità per installare un firmware.</td></tr>
+    </tbody>
+  </table>
+  <p><span class="k">SCL</span>, <span class="k">HOME</span> e <span class="k">SAVE</span> agiscono al rilascio perché servono anche da tasti modificatori: se mentre li tieni giri una manopola, al rilascio la pagina non cambia.</p>
+
+  <h2>I tasti neri</h2>
+  <table>
+    <thead><tr><th>Tasto</th><th class="w">Tocco</th><th class="w">Tenuto + tasti V1–V8</th></tr></thead>
+    <tbody>
+      <tr><td><span class="k b">V1</span>…<span class="k b">V8</span></td><td class="w">Sceglie la voce.</td><td class="w">—</td></tr>
+      <tr><td><span class="k b">MUTE</span></td><td class="w">Muta o riattiva la voce scelta.</td><td class="w">Muta o riattiva ogni voce toccata.</td></tr>
+      <tr><td><span class="k b">SOLO</span></td><td class="w">Solo sulla voce scelta (si sentono solo le voci in solo).</td><td class="w">Solo su ogni voce toccata.</td></tr>
+      <tr><td><span class="k b">DADO</span></td><td class="w">Randomizza secondo la pagina: la voce, la lane, la Performance o tutte le voci (capitolo 15).</td><td class="w">Randomizza il suono di ogni voce toccata.</td></tr>
+    </tbody>
+  </table>
+  <p>Una voce mutata continua a suonare in silenzio: smutandola rientra subito a tempo, con inviluppi e LFO al punto giusto.</p>
+
+  <h2>I tasti bianchi</h2>
+  <p>Cosa fanno dipende dal modo scelto con <span class="k r">REC</span> e dalla pagina:</p>
+  <table>
+    <thead><tr><th>Situazione</th><th class="w">Tocco</th><th class="w">Tenuto</th></tr></thead>
+    <tbody>
+      <tr><td>STEPS (normale)</td><td class="w">Aggiunge o toglie un trigger sul passo (al rilascio).</td><td class="w">+ KNOB 1–4: le lane dei passi tenuti (capitolo 10). Si possono tenere più tasti insieme.</td></tr>
+      <tr><td>PADS</td><td class="w">1–8 suonano le voci 1–8; 9–16 suonano la voce scelta su una scala maggiore, da Do a Do.</td><td class="w">—</td></tr>
+      <tr><td>REC</td><td class="w">Come PADS; mentre suona, i pad 1–8 scrivono un trigger sul passo in corso della loro voce.</td><td class="w">—</td></tr>
+      <tr><td>SAVE › KITS</td><td class="w">Carica il kit dello slot 1–16.</td><td class="w">—</td></tr>
+      <tr><td>SAVE › VOICES</td><td class="w">Carica il preset 1–16 nella voce scelta.</td><td class="w">—</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Le manopole</h2>
+  <p>Le manopole sono encoder senza fine: non c'è un punto di partenza da allineare. Girate piano cambiano di un passo per scatto; girate in fretta accelerano (due o quattro passi per scatto). Alcuni controlli hanno un passo proprio:</p>
+  <ul>
+    <li><strong>PITCH</strong> si muove a semitoni interi.</li>
+    <li>I <strong>tempi</strong> (attacchi, decadimenti, delay, predelay) cambiano in proporzione: lo stesso giro passa da 10 a 12 ms o da 1 a 1,2 s.</li>
+    <li>I <strong>menu a scelta</strong> (motore, filtro, forma d'onda…) avanzano di una voce per scatto, senza accelerare.</li>
+    <li>Il controllo appena girato si colora di arancio sullo schermo per un istante.</li>
+  </ul>
+</section>
+
+<!-- ======================================================= 3 -->
+<section class="chapter" id="c3">
+  <header><span class="mark">QQc3QQ</span><div class="num">03</div><h1>Lo schermo e i LED</h1><div class="kick">Cosa ti dice l'FM-1 in ogni momento</div></header>
+
+  <p class="lead">Lo schermo è diviso in tre fasce: in alto lo stato della macchina, al centro le otto sequenze, in basso la voce scelta con la pagina attuale. Le sequenze restano sempre visibili, qualunque pagina tu stia modificando.</p>
+
+  <div class="scrfig">
+    <div class="wrap"><svg viewBox="0 0 100 101" width="100%" style="display:block"><rect x="7.4" y="7.4" width="85.2" height="85.2" rx="2.4" fill="#0b0b0c"/><image href="img/tone_mapped.png" x="9" y="9" width="82" height="82" style="image-rendering:pixelated"/><line x1="13.8" y1="3.2" x2="13.8" y2="14.8" stroke="#fff" stroke-width="0.9"/><line x1="13.8" y1="3.2" x2="13.8" y2="14.8" stroke="#f26b3a" stroke-width="0.45"/><circle cx="13.8" cy="14.8" r="0.9" fill="#f26b3a" stroke="#fff" stroke-width="0.35"/><circle cx="13.8" cy="3.2" r="2.7" fill="#f26b3a" stroke="#fff" stroke-width="0.5"/><text x="13.8" y="4.2" text-anchor="middle" font-family="Inter" font-weight="800" font-size="2.9" fill="#fff">1</text><line x1="57.5" y1="3.2" x2="57.5" y2="14.8" stroke="#fff" stroke-width="0.9"/><line x1="57.5" y1="3.2" x2="57.5" y2="14.8" stroke="#f26b3a" stroke-width="0.45"/><circle cx="57.5" cy="14.8" r="0.9" fill="#f26b3a" stroke="#fff" stroke-width="0.35"/><circle cx="57.5" cy="3.2" r="2.7" fill="#f26b3a" stroke="#fff" stroke-width="0.5"/><text x="57.5" y="4.2" text-anchor="middle" font-family="Inter" font-weight="800" font-size="2.9" fill="#fff">2</text><line x1="71.2" y1="3.2" x2="71.2" y2="14.8" stroke="#fff" stroke-width="0.9"/><line x1="71.2" y1="3.2" x2="71.2" y2="14.8" stroke="#f26b3a" stroke-width="0.45"/><circle cx="71.2" cy="14.8" r="0.9" fill="#f26b3a" stroke="#fff" stroke-width="0.35"/><circle cx="71.2" cy="3.2" r="2.7" fill="#f26b3a" stroke="#fff" stroke-width="0.5"/><text x="71.2" y="4.2" text-anchor="middle" font-family="Inter" font-weight="800" font-size="2.9" fill="#fff">3</text><line x1="87.9" y1="3.2" x2="87.9" y2="14.8" stroke="#fff" stroke-width="0.9"/><line x1="87.9" y1="3.2" x2="87.9" y2="14.8" stroke="#f26b3a" stroke-width="0.45"/><circle cx="87.9" cy="14.8" r="0.9" fill="#f26b3a" stroke="#fff" stroke-width="0.35"/><circle cx="87.9" cy="3.2" r="2.7" fill="#f26b3a" stroke="#fff" stroke-width="0.5"/><text x="87.9" y="4.2" text-anchor="middle" font-family="Inter" font-weight="800" font-size="2.9" fill="#fff">4</text><line x1="3.2" y1="38.0" x2="17.5" y2="38.0" stroke="#fff" stroke-width="0.9"/><line x1="3.2" y1="38.0" x2="17.5" y2="38.0" stroke="#f26b3a" stroke-width="0.45"/><circle cx="17.5" cy="38.0" r="0.9" fill="#f26b3a" stroke="#fff" stroke-width="0.35"/><circle cx="3.2" cy="38.0" r="2.7" fill="#f26b3a" stroke="#fff" stroke-width="0.5"/><text x="3.2" y="39.0" text-anchor="middle" font-family="Inter" font-weight="800" font-size="2.9" fill="#fff">5</text><line x1="96.8" y1="29.5" x2="60.2" y2="29.5" stroke="#fff" stroke-width="0.9"/><line x1="96.8" y1="29.5" x2="60.2" y2="29.5" stroke="#f26b3a" stroke-width="0.45"/><circle cx="60.2" cy="29.5" r="0.9" fill="#f26b3a" stroke="#fff" stroke-width="0.35"/><circle cx="96.8" cy="29.5" r="2.7" fill="#f26b3a" stroke="#fff" stroke-width="0.5"/><text x="96.8" y="30.5" text-anchor="middle" font-family="Inter" font-weight="800" font-size="2.9" fill="#fff">6</text><line x1="96.8" y1="43.2" x2="88.3" y2="43.2" stroke="#fff" stroke-width="0.9"/><line x1="96.8" y1="43.2" x2="88.3" y2="43.2" stroke="#f26b3a" stroke-width="0.45"/><circle cx="88.3" cy="43.2" r="0.9" fill="#f26b3a" stroke="#fff" stroke-width="0.35"/><circle cx="96.8" cy="43.2" r="2.7" fill="#f26b3a" stroke="#fff" stroke-width="0.5"/><text x="96.8" y="44.2" text-anchor="middle" font-family="Inter" font-weight="800" font-size="2.9" fill="#fff">7</text><line x1="3.2" y1="62.6" x2="17.5" y2="62.6" stroke="#fff" stroke-width="0.9"/><line x1="3.2" y1="62.6" x2="17.5" y2="62.6" stroke="#1f7fb0" stroke-width="0.45"/><circle cx="17.5" cy="62.6" r="0.9" fill="#1f7fb0" stroke="#fff" stroke-width="0.35"/><circle cx="3.2" cy="62.6" r="2.7" fill="#1f7fb0" stroke="#fff" stroke-width="0.5"/><text x="3.2" y="63.6" text-anchor="middle" font-family="Inter" font-weight="800" font-size="2.9" fill="#fff">8</text><line x1="96.8" y1="62.6" x2="82.5" y2="62.6" stroke="#fff" stroke-width="0.9"/><line x1="96.8" y1="62.6" x2="82.5" y2="62.6" stroke="#1f7fb0" stroke-width="0.45"/><circle cx="82.5" cy="62.6" r="0.9" fill="#1f7fb0" stroke="#fff" stroke-width="0.35"/><circle cx="96.8" cy="62.6" r="2.7" fill="#1f7fb0" stroke="#fff" stroke-width="0.5"/><text x="96.8" y="63.6" text-anchor="middle" font-family="Inter" font-weight="800" font-size="2.9" fill="#fff">9</text><line x1="3.2" y1="70.2" x2="19.2" y2="70.2" stroke="#fff" stroke-width="0.9"/><line x1="3.2" y1="70.2" x2="19.2" y2="70.2" stroke="#1f7fb0" stroke-width="0.45"/><circle cx="19.2" cy="70.2" r="0.9" fill="#1f7fb0" stroke="#fff" stroke-width="0.35"/><circle cx="3.2" cy="70.2" r="2.7" fill="#1f7fb0" stroke="#fff" stroke-width="0.5"/><text x="3.2" y="71.2" text-anchor="middle" font-family="Inter" font-weight="800" font-size="2.5" fill="#fff">10</text><line x1="3.2" y1="77.0" x2="19.2" y2="77.0" stroke="#fff" stroke-width="0.9"/><line x1="3.2" y1="77.0" x2="19.2" y2="77.0" stroke="#1f7fb0" stroke-width="0.45"/><circle cx="19.2" cy="77.0" r="0.9" fill="#1f7fb0" stroke="#fff" stroke-width="0.35"/><circle cx="3.2" cy="77.0" r="2.7" fill="#1f7fb0" stroke="#fff" stroke-width="0.5"/><text x="3.2" y="78.0" text-anchor="middle" font-family="Inter" font-weight="800" font-size="2.5" fill="#fff">11</text><line x1="49.3" y1="97.6" x2="49.3" y2="82.5" stroke="#fff" stroke-width="0.9"/><line x1="49.3" y1="97.6" x2="49.3" y2="82.5" stroke="#1f7fb0" stroke-width="0.45"/><circle cx="49.3" cy="82.5" r="0.9" fill="#1f7fb0" stroke="#fff" stroke-width="0.35"/><circle cx="49.3" cy="97.6" r="2.7" fill="#1f7fb0" stroke="#fff" stroke-width="0.5"/><text x="49.3" y="98.6" text-anchor="middle" font-family="Inter" font-weight="800" font-size="2.5" fill="#fff">12</text><line x1="3.2" y1="86.6" x2="19.2" y2="86.6" stroke="#fff" stroke-width="0.9"/><line x1="3.2" y1="86.6" x2="19.2" y2="86.6" stroke="#1f7fb0" stroke-width="0.45"/><circle cx="19.2" cy="86.6" r="0.9" fill="#1f7fb0" stroke="#fff" stroke-width="0.35"/><circle cx="3.2" cy="86.6" r="2.7" fill="#1f7fb0" stroke="#fff" stroke-width="0.5"/><text x="3.2" y="87.6" text-anchor="middle" font-family="Inter" font-weight="800" font-size="2.5" fill="#fff">13</text></svg></div>
+    <div class="legend">
+      <div><span class="i">1</span><span><b>Nome del kit.</b> Un quadratino accanto: ci sono modifiche non salvate.</span></div>
+      <div><span class="i">2</span><span><b>Carico della CPU</b> misurato, in percento. Diventa rosso sopra l'80 %.</span></div>
+      <div><span class="i">3</span><span><b>Tempo</b> in BPM; con il clock esterno è scritto EXT.</span></div>
+      <div><span class="i">4</span><span><b>Trasporto</b>: il quadrato è arancio quando il sequencer suona.</span></div>
+      <div><span class="i">5</span><span><b>Le otto voci</b>: numero e motore. Il numero lampeggia a ogni colpo; una voce mutata è grigia, una voce in solo ha il motore colorato. La riga della voce scelta ha lo sfondo più chiaro.</span></div>
+      <div><span class="i">6</span><span><b>I sedici passi</b> della pagina di passi attuale. Barra alta colorata: colpo del generatore euclideo. Barra alta bianca: trigger messo a mano. Trattino: passo vuoto. Arancio: il passo che suona. Niente: oltre la lunghezza della sequenza.</span></div>
+      <div><span class="i">7</span><span><b>Livello</b> di uscita della voce.</span></div>
+      <div><span class="i sky">8</span><span><b>Voce scelta</b>: numero e motore, nel colore della voce.</span></div>
+      <div><span class="i sky">9</span><span><b>Nome della pagina.</b> Diventa arancio mentre tieni SCL; con passi tenuti mostra il gruppo di lane (STEP: VEL PITCH…).</span></div>
+      <div><span class="i sky">10</span><span><b>Etichette</b> dei quattro controlli. Rosse: controllo bloccato.</span></div>
+      <div><span class="i sky">11</span><span><b>Valori</b> e indicatori. Sotto ogni valore una barra mostra dove si trova nel suo intervallo.</span></div>
+      <div><span class="i sky">12</span><span><b>Puntino</b> alla fine della barra: il controllo è modulato da almeno una sorgente.</span></div>
+      <div><span class="i sky">13</span><span><b>Riga dei messaggi</b>: i passi mostrati (STEPS 1-16, e la lunghezza se supera 16), gli aiuti della pagina o la conferma di un comando.</span></div>
+    </div>
+  </div>
+
+  <h2>I colori</h2>
+  <p>Ogni voce ha un colore fisso, usato per il suo numero, per i colpi del generatore e per le barre dei valori. L'arancio indica sempre <em>la cosa attiva in questo momento</em>: il passo in riproduzione, il controllo appena girato, un valore di MAP. Il rosso indica lucchetti e la modalità REC. La palette dei colori si cambia nel menu di sistema (capitolo 15).</p>
+
+  <h2>I messaggi</h2>
+  <p>Per un paio di secondi la riga in basso conferma quello che è successo. I messaggi sono in inglese, come sullo strumento:</p>
+  <table class="compact">
+    <thead><tr><th>Messaggio</th><th class="w">Significato</th></tr></thead>
+    <tbody>
+      <tr><td><span class="s">KIT SAVED</span> · <span class="s">KIT LOADED</span></td><td class="w">Kit scritto o caricato.</td></tr>
+      <tr><td><span class="s">USED: OCT+ AGAIN TO OVERWRITE</span></td><td class="w">Lo slot contiene già qualcosa: premi OCT+ ancora una volta per sovrascriverlo.</td></tr>
+      <tr><td><span class="s">EMPTY SLOT</span></td><td class="w">Hai toccato uno slot vuoto: niente da caricare.</td></tr>
+      <tr><td><span class="s">KIT TOO BIG: CLEAR SOME LANES</span></td><td class="w">Il kit non sta nello spazio di uno slot: svuota qualche lane che non usi (SEQ › TOOLS › CLR LANE).</td></tr>
+      <tr><td><span class="s">SAVE FAILED</span> · <span class="s">LOAD FAILED</span></td><td class="w">Errore della memoria flash: la copia precedente resta valida. Riprova.</td></tr>
+      <tr><td><span class="s">VOICE SAVED</span> · <span class="s">VOICE LOADED</span></td><td class="w">Preset di voce scritto o caricato.</td></tr>
+      <tr><td><span class="s">VOICE COPIED</span> · <span class="s">VOICE PASTED</span></td><td class="w">EDIT › VOICE: copia e incolla del suono.</td></tr>
+      <tr><td><span class="s">NOTHING COPIED</span></td><td class="w">PASTE senza aver prima copiato una voce.</td></tr>
+      <tr><td><span class="s">OCT+: RESET THE VOICE</span></td><td class="w">RESET armato: OCT+ conferma, qualsiasi bottone di pagina annulla.</td></tr>
+      <tr><td><span class="s">VOICE RESET</span></td><td class="w">Il suono della voce è tornato ai valori iniziali.</td></tr>
+      <tr><td><span class="s">OCT+: NEW KIT (INIT)</span> · <span class="s">(DAEL REFERENCE)</span></td><td class="w">NEW armato: OCT+ carica il kit indicato.</td></tr>
+      <tr><td><span class="s">LOCKED</span> · <span class="s">UNLOCKED</span></td><td class="w">SAVE tenuto + manopola: lucchetto messo o tolto.</td></tr>
+      <tr><td><span class="s">OUT OF THE DADO</span> · <span class="s">IN THE DADO</span></td><td class="w">Lo stesso su una pagina PF: il controllo esce o rientra nel DADO della Performance.</td></tr>
+      <tr><td><span class="s">DADO: VOICE / LANE / PERFORMANCE / ALL VOICES</span></td><td class="w">Cosa ha randomizzato il tasto DADO.</td></tr>
+      <tr><td><span class="s">LANE CLEARED</span> · <span class="s">TRIGS CLEARED</span></td><td class="w">SEQ › TOOLS: lane riportata ai valori iniziali, trigger manuali tolti.</td></tr>
+      <tr><td><span class="s">PERFORMANCE COMMITTED</span> · <span class="s">RESET</span></td><td class="w">ARP › PF GLOBAL: Performance scritta nelle voci o azzerata.</td></tr>
+      <tr><td><span class="s">CLOCK EXT: WAITING FOR START</span></td><td class="w">PLAY con clock esterno: si parte al prossimo START MIDI.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>I LED</h2>
+  <p>Ogni tasto e bottone ha un LED. Acceso pieno vuol dire "attivo"; tenue vuol dire "disponibile". Il menu di sistema (LEDS › DARK) spegne i LED tenui per un pannello più scuro.</p>
+  <table>
+    <thead><tr><th>LED</th><th class="w">Acceso</th><th class="w">Tenue</th></tr></thead>
+    <tbody>
+      <tr><td>Neri V1–V8</td><td class="w">La voce scelta; ogni colpo della voce lo fa lampeggiare.</td><td class="w">Voce non mutata.</td></tr>
+      <tr><td>Nero MUTE</td><td class="w">La voce scelta è mutata.</td><td class="w">—</td></tr>
+      <tr><td>Nero SOLO</td><td class="w">Almeno una voce è in solo.</td><td class="w">—</td></tr>
+      <tr><td>Bianchi (STEPS)</td><td class="w">Passi con un colpo; il passo in riproduzione inverte il suo stato e così il cursore corre sui tasti.</td><td class="w">Passi dentro la lunghezza della sequenza.</td></tr>
+      <tr><td>Bianchi (SAVE)</td><td class="w">Lo slot scelto.</td><td class="w">Slot occupati.</td></tr>
+      <tr><td>Bianchi (PADS)</td><td class="w">Lampeggiano con i colpi delle voci 1–8.</td><td class="w">Tutti.</td></tr>
+      <tr><td>Bottoni di pagina</td><td class="w">Il gruppo della pagina attuale.</td><td class="w">Gli altri.</td></tr>
+      <tr><td>PLAY · REC</td><td class="w">Il sequencer suona · modo PADS (in REC lampeggia).</td><td class="w">—</td></tr>
+      <tr><td>OCT− · OCT+</td><td class="w">C'è una pagina di passi prima o dopo quella mostrata.</td><td class="w">—</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ======================================================= 4 -->
+<section class="chapter" id="c4">
+  <header><span class="mark">QQc4QQ</span><div class="num">04</div><h1>Navigare: gruppi e pagine</h1><div class="kick">La mappa completa dei menu</div></header>
+
+  <p class="lead">Il firmware ha 41 pagine, raccolte in dieci gruppi più il menu di sistema. Ogni gruppo ha il suo bottone: premerlo apre la prima pagina del gruppo; premerlo di nuovo passa alla successiva e dopo l'ultima torna alla prima.</p>
+
+  <div class="map">
+    <div class="g"><div class="bt"><span class="k">EDIT</span><span>voce</span></div><div class="pg">SYNTH</div><div class="pg">ENGINE</div><div class="pg">VOICE</div></div>
+    <div class="g"><div class="bt"><span class="k">FX</span><span>voce</span></div><div class="pg">TONE</div><div class="pg">TONE 2</div></div>
+    <div class="g"><div class="bt"><span class="k">ENV</span><span>voce</span></div><div class="pg">ENV 1</div><div class="pg">ENV 2</div><div class="pg">VELOCITY</div></div>
+    <div class="g"><div class="bt"><span class="k">LFO</span><span>voce</span></div><div class="pg">LFO 1</div><div class="pg">LFO 1+</div><div class="pg">LFO 2</div><div class="pg">LFO 2+</div></div>
+    <div class="g"><div class="bt"><span class="k">SCL</span><span>voce</span></div><div class="pg">MOD</div><div class="pg">MACRO</div><div class="pg">LOCKS</div></div>
+    <div class="g"><div class="bt"><span class="k">SEQ</span><span>voce</span></div><div class="pg">EUCLID</div><div class="pg">TIME</div><div class="pg">GROOVE</div><div class="pg">MORE</div><div class="pg">LANE</div><div class="pg">TOOLS</div></div>
+    <div class="g"><div class="bt"><span class="k">HOME</span><span>voce</span></div><div class="pg">MIX</div><div class="pg">ROUTING</div></div>
+    <div class="g dark"><div class="bt"><span class="k">ARP</span><span>kit</span></div><div class="pg">PF ENV</div><div class="pg">PF SYNTH</div><div class="pg">PF MOD</div><div class="pg">PF TONE</div><div class="pg">PF SEQ</div><div class="pg">PF SEQ 2</div><div class="pg">PF GLOBAL</div></div>
+    <div class="g dark"><div class="bt"><span class="k">GLO</span><span>kit</span></div><div class="pg">TEMPO</div><div class="pg">DELAY <i>1–3</i></div><div class="pg">REVERB <i>1–3</i></div><div class="pg">MASTER <i>1–2</i></div></div>
+    <div class="g dark"><div class="bt"><span class="k">SAVE</span><span>flash</span></div><div class="pg">KITS</div><div class="pg">VOICES</div></div>
+    <div class="g dark"><div class="bt"><span class="k">HOME</span><span>tenuto</span></div><div class="pg">MENU</div></div>
+    <div class="g" style="background:none;border:0.6pt dashed var(--line)"><div class="bt"><span style="color:var(--dim);text-transform:none;letter-spacing:0;font-size:7.2pt">Legenda</span></div><div style="font-size:7pt;color:var(--dim);line-height:1.45">Chiari: pagine della <b>voce scelta</b>.<br>Scuri: pagine del <b>kit</b> e della macchina.</div></div>
+  </div>
+
+  <h2>Tre modi di muoversi</h2>
+  <ul>
+    <li><strong>Il bottone del gruppo</strong>: da un altro gruppo apre la prima pagina; dallo stesso gruppo va alla pagina dopo.</li>
+    <li><strong>La manopola <span class="k">PRESETS</span></strong>: scorre avanti e indietro tra le pagine del gruppo attuale, senza ricominciare dalla prima. È il modo più veloce per tornare indietro di una pagina.</li>
+    <li><strong>Cambiare voce non cambia pagina</strong>: con <span class="k b">V1</span>…<span class="k b">V8</span> o <span class="k">ALGORITHM</span> passi da una voce all'altra restando, per esempio, su FX › TONE. È il modo naturale di confrontare il filtro di due voci.</li>
+  </ul>
+
+  <h2>Pagine della voce e pagine del kit</h2>
+  <p>EDIT, FX, ENV, LFO, SCL, SEQ e HOME mostrano i controlli della <strong>voce scelta</strong>: il numero e il motore scritti a sinistra sopra i controlli dicono quale. ARP, GLO e SAVE agiscono su tutto il kit e non dipendono dalla voce scelta, che resta indicata per comodità.</p>
+
+  <div class="note tip"><b class="h">Un'abitudine utile</b><p>Tieni una mano sui tasti neri e l'altra sulle manopole: scegli la voce, giri, scegli la voce successiva. Le otto righe in alto ti fanno vedere in ogni momento cosa sta suonando.</p></div>
+
+  <h2>Le pagine in sintesi</h2>
+  <table class="compact">
+    <thead><tr><th>Gruppo</th><th class="w">Pagine</th><th class="w">A cosa servono</th><th>Cap.</th></tr></thead>
+    <tbody>
+      <tr><td>EDIT</td><td class="w">SYNTH · ENGINE · VOICE</td><td class="w">Le quattro manopole del motore; motore, intonazione, stereo; copia, incolla, reset, preset.</td><td>5</td></tr>
+      <tr><td>FX</td><td class="w">TONE · TONE 2</td><td class="w">Filtro, risonanza, distorsione e il loro ordine.</td><td>6</td></tr>
+      <tr><td>ENV</td><td class="w">ENV 1 · ENV 2 · VELOCITY</td><td class="w">I due inviluppi AHD e la loro risposta alla dinamica.</td><td>7</td></tr>
+      <tr><td>LFO</td><td class="w">LFO 1 · LFO 1+ · LFO 2 · LFO 2+</td><td class="w">Velocità, ampiezza, forma; sync, bipolare, reset.</td><td>8</td></tr>
+      <tr><td>SCL</td><td class="w">MOD · MACRO · LOCKS</td><td class="w">Matrice di modulazione, macro e variation, lucchetti.</td><td>9</td></tr>
+      <tr><td>SEQ</td><td class="w">EUCLID · TIME · GROOVE · MORE · LANE · TOOLS</td><td class="w">Generatore, velocità e lunghezza, groove, lane, strumenti.</td><td>10</td></tr>
+      <tr><td>HOME</td><td class="w">MIX · ROUTING</td><td class="w">Volume, pan, mandate; choke, trigger, Performance.</td><td>11</td></tr>
+      <tr><td>ARP</td><td class="w">PF ENV … PF GLOBAL</td><td class="w">22 controlli che spostano tutte le voci insieme.</td><td>12</td></tr>
+      <tr><td>GLO</td><td class="w">TEMPO · DELAY · REVERB · MASTER</td><td class="w">Tempo e clock, Shatter Delay, Headspace Reverb, bus master.</td><td>13</td></tr>
+      <tr><td>SAVE</td><td class="w">KITS · VOICES</td><td class="w">16 kit e 16 preset di voce nella flash.</td><td>14</td></tr>
+      <tr><td>HOME tenuto</td><td class="w">MENU</td><td class="w">Palette, LED, livello USB, autosave.</td><td>15</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ======================================================= 5 -->
+<section class="chapter" id="c5">
+  <header><span class="mark">QQc5QQ</span><div class="num">05</div><h1>EDIT — il suono della voce</h1><div class="kick">SYNTH, ENGINE, VOICE</div><div class="btn"><span class="k">EDIT</span></div></header>
+
+  <p class="lead">Il gruppo EDIT è il punto di partenza di ogni suono: scegli il motore di sintesi, lo intoni e lo modelli con le sue quattro manopole. Le pagine FX, ENV e LFO lavorano poi sul segnale che il motore produce.</p>
+
+  <h3>Il percorso del segnale di una voce</h3>
+  <div class="flow">
+    <div class="b hl"><b>Motore</b><small>25 tipi · PITCH · 4 manopole · STEREO</small></div><div class="a">›</div>
+    <div class="b"><b>Filtro</b><small>11 tipi · CUTOFF · RESO</small></div><div class="a">⇄</div>
+    <div class="b"><b>Distorsione</b><small>11 tipi · DISTORT · ordine PRE/POST</small></div><div class="a">›</div>
+    <div class="b"><b>Ampiezza</b><small>ENV 1 o ENV 2</small></div><div class="a">›</div>
+    <div class="b"><b>Mix</b><small>GAIN · PAN</small></div><div class="a">›</div>
+    <div class="b hl"><b>Uscita</b><small>+ mandate DELAY e REVERB</small></div>
+  </div>
+
+  <div class="page-ref">
+    <figure class="shot"><img src="img/clean_home.png" alt=""><figcaption>EDIT › SYNTH con il motore KICK: le etichette sono quelle del motore.</figcaption></figure>
+    <div class="body">
+      <div class="ttl"><h3>SYNTH</h3><span class="path">EDIT › 1ª pagina</span></div>
+      <p>Le quattro manopole del motore scelto. Cambiano nome e funzione con il motore: la tabella dei motori, più avanti, le elenca tutte. Vanno da 0 a 100 e partono da 50.</p>
+      <table class="kn"><tbody>
+        <tr><td>KNOB 1–4</td><td class="w">Le manopole 1–4 del motore (per KICK: P.DECAY, P.DEPTH, WAVE, SUB).</td></tr>
+      </tbody></table>
+      <p>Sono anche destinazioni di modulazione: con <span class="k">SCL</span> tenuto e una manopola le colleghi a un LFO, a un inviluppo o alla dinamica (capitolo 9).</p>
+    </div>
+  </div>
+
+  <div class="page-ref">
+    <figure class="shot"><img src="img/edit_1.png" alt=""><figcaption>EDIT › ENGINE.</figcaption></figure>
+    <div class="body">
+      <div class="ttl"><h3>ENGINE</h3><span class="path">EDIT › 2ª pagina</span></div>
+      <table class="kn"><tbody>
+        <tr><td>ENGINE</td><td class="w">Il motore di sintesi, uno dei 25. Il suono cambia subito; le quattro manopole di SYNTH restano ai loro valori. <span class="rng">KICK … SCRAPYRD</span></td></tr>
+        <tr><td>PITCH</td><td class="w">Trasposizione in semitoni. A 0 i motori da cassa suonano un Do1 (65 Hz), gli altri un Do2 (131 Hz). <span class="rng">−48 … +48 ST</span></td></tr>
+        <tr><td>STEREO</td><td class="w">Genera un secondo canale leggermente desintonizzato: suono più largo, ma il motore costa il doppio di CPU. <span class="rng">OFF · ON</span></td></tr>
+        <tr><td>AMP ENV</td><td class="w">Quale inviluppo controlla il volume della voce. L'altro resta libero per modulare. <span class="rng">ENV 1 · ENV 2</span></td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+  <div class="page-ref">
+    <figure class="shot"><img src="img/edit_2.png" alt=""><figcaption>EDIT › VOICE: quattro comandi. Si eseguono girando la manopola a destra.</figcaption></figure>
+    <div class="body">
+      <div class="ttl"><h3>VOICE</h3><span class="path">EDIT › 3ª pagina</span></div>
+      <table class="kn"><tbody>
+        <tr><td>COPY</td><td class="w">Copia il suono della voce scelta in memoria. <span class="s">VOICE COPIED</span></td></tr>
+        <tr><td>PASTE</td><td class="w">Incolla il suono copiato nella voce scelta. Restano com'erano la sequenza, il mixer, il routing e i controlli bloccati. <span class="s">VOICE PASTED</span></td></tr>
+        <tr><td>RESET</td><td class="w">Riporta il suono ai valori iniziali. Chiede conferma: <span class="s">OCT+: RESET THE VOICE</span>, poi <span class="k">OCT+</span>.</td></tr>
+        <tr><td>PRESETS</td><td class="w">Apre SAVE › VOICES, i 16 preset di voce (capitolo 14).</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+  <div class="note tip"><b class="h">Raddoppiare una voce</b><p>COPY sulla voce 1, scegli la voce 5, PASTE: hai lo stesso suono con un'altra sequenza. Spostane PITCH e PAN e ottieni due tom, o una cassa con il suo eco.</p></div>
+
+  <h2>I 25 motori</h2>
+  <p>I motori marcati <span class="pill kick">CASSA</span> suonano un'ottava sotto (Do1). Le etichette sono quelle mostrate sullo schermo.</p>
+  <table class="compact">
+    <thead><tr><th>Motore</th><th>KNOB 1</th><th>KNOB 2</th><th>KNOB 3</th><th>KNOB 4</th><th class="w">Carattere</th></tr></thead>
+    <tbody>
+      <tr><td>KICK <span class="pill kick">CASSA</span></td><td>P.DECAY</td><td>P.DEPTH</td><td>WAVE</td><td>SUB</td><td class="w">Cassa a seno con discesa di pitch; forma da triangolo a seno saturato.</td></tr>
+      <tr><td>SNARE</td><td>P.DECAY</td><td>P.DEPTH</td><td>CUTOFF</td><td>S.RATE</td><td class="w">Tono più rumore filtrato a frequenza di campionamento variabile.</td></tr>
+      <tr><td>HAT</td><td>BLEND</td><td>S.RATE</td><td>CUTOFF</td><td>HARMONIC</td><td class="w">Sei oscillatori quadri in stile 808 miscelati con rumore.</td></tr>
+      <tr><td>CLAP</td><td>CLAPS</td><td>SPACING</td><td>CUTOFF</td><td>REV DEC</td><td class="w">Da 1 a 8 battiti di rumore filtrato più coda ambientale.</td></tr>
+      <tr><td>FM</td><td>RATIO</td><td>DEPTH</td><td>FEEDBACK</td><td>ENV</td><td class="w">Due operatori con feedback; ENV aggiunge un attacco brillante.</td></tr>
+      <tr><td>MODAL</td><td>HARMONIC</td><td>DAMPEN</td><td>VARY</td><td>BRIGHT</td><td class="w">Otto modi risonanti, da membrana a barra metallica.</td></tr>
+      <tr><td>COWBELL</td><td>FILTER</td><td>CLICK</td><td>NOISE</td><td>HARMONIC</td><td class="w">Due onde quadre in rapporto variabile, click e rumore.</td></tr>
+      <tr><td>ZAP <span class="pill kick">CASSA</span></td><td>ENV</td><td>CLICK</td><td>OVERTONE</td><td>SUB</td><td class="w">Discesa di pitch rapidissima, da laser a cassa elettronica.</td></tr>
+      <tr><td>PILLOW <span class="pill kick">CASSA</span></td><td>PILLOW</td><td>CLICK</td><td>RATTLE</td><td>SUB</td><td class="w">Cassa morbida e attutita; RATTLE la rende granulosa.</td></tr>
+      <tr><td>TRIPWIRE <span class="pill kick">CASSA</span></td><td>P.DECAY</td><td>P.DEPTH</td><td>TRANSNT</td><td>SQUARE</td><td class="w">Doppio inviluppo di pitch e saturazione a onda quadra.</td></tr>
+      <tr><td>RADIATOR <span class="pill kick">CASSA</span></td><td>ENV</td><td>TICK</td><td>OVERTONE</td><td>ROAST</td><td class="w">Cassa saturata con tick e sub rumoroso.</td></tr>
+      <tr><td>KOMBUCHA</td><td>S.RATE</td><td>FEEDBACK</td><td>P.ENV</td><td>DAMP</td><td class="w">Corda pizzicata (Karplus-Strong): plucked, tom, metalli.</td></tr>
+      <tr><td>LPG</td><td>FOLD</td><td>SHAPE</td><td>NOISE</td><td>DAMP</td><td class="w">Wavefolder in un low-pass gate: bongo, percussioni modulari.</td></tr>
+      <tr><td>BUILDER</td><td>OSC WAVE</td><td>OSC GAIN</td><td>N.TILT</td><td>N.GAIN</td><td class="w">Oscillatore morfabile più rumore inclinabile.</td></tr>
+      <tr><td>ADDITIVE</td><td>F.RATIO</td><td>A.RATIO</td><td>PARTIALS</td><td>AMP ENV</td><td class="w">Fino a 24 parziali, da seno puro a campana. Il motore più pesante.</td></tr>
+      <tr><td>CHAOS</td><td>RATIO</td><td>CHAOS</td><td>FILTER</td><td>CH.ENV</td><td class="w">Due oscillatori che si modulano a vicenda, con filtro mobile.</td></tr>
+      <tr><td>VOSIM</td><td>PART 1</td><td>PART 2</td><td>FM</td><td>FM ENV</td><td class="w">Due seni finestrati: timbri vocali e formantici.</td></tr>
+      <tr><td>SUMSYN</td><td>RATIO</td><td>BRIGHT</td><td>PM</td><td>PM ENV</td><td class="w">Sintesi per sommatoria; BRIGHT alto aggiunge wavefolding.</td></tr>
+      <tr><td>RESON</td><td>HARMONIC</td><td>DAMPEN</td><td>MATERIAL</td><td>RING</td><td class="w">Impulso di rumore in un banco di sei risonatori.</td></tr>
+      <tr><td>COMBINAT</td><td>C.RATIO</td><td>FEEDBACK</td><td>P.ENV</td><td>FM</td><td class="w">Seno in un filtro a pettine modulato.</td></tr>
+      <tr><td>TERRAIN</td><td>PITCH 2</td><td>SHAPE 1</td><td>SHAPE 2</td><td>TERRAIN</td><td class="w">Wave terrain e operatori bitwise su due oscillatori.</td></tr>
+      <tr><td>SHAME</td><td>PITCH 2</td><td>FM</td><td>FEEDBACK</td><td>SHAME</td><td class="w">Sample &amp; hold incrociati, FM e feedback: digitale e instabile.</td></tr>
+      <tr><td>ENTANGLE</td><td>PITCH 2</td><td>FM</td><td>FEEDBACK</td><td>TANGLE</td><td class="w">Ring modulation, finestre e terrain su seni.</td></tr>
+      <tr><td>HAYWIRE</td><td>OVERTONE</td><td>P.DEPTH</td><td>BRIGHT</td><td>RATTLE</td><td class="w">Rullante "acustico" con sezione di cordiera.</td></tr>
+      <tr><td>SCRAPYRD</td><td>RATIO</td><td>ZAP</td><td>MATERIAL</td><td>FM</td><td class="w">Otto modi metallici con FM e attacco a zap.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ======================================================= 6 -->
+<section class="chapter" id="c6">
+  <header><span class="mark">QQc6QQ</span><div class="num">06</div><h1>FX — filtro e distorsione</h1><div class="kick">TONE e TONE 2</div><div class="btn"><span class="k">FX</span></div></header>
+
+  <p class="lead">Ogni voce ha un filtro e una distorsione propri, dopo il motore. TONE contiene i controlli che si girano mentre si suona; TONE 2 le scelte che si fanno una volta.</p>
+
+  <div class="page-ref">
+    <figure class="shot"><img src="img/fx_1.png" alt=""><figcaption>FX › TONE.</figcaption></figure>
+    <div class="body">
+      <div class="ttl"><h3>TONE</h3><span class="path">FX › 1ª pagina</span></div>
+      <table class="kn"><tbody>
+        <tr><td>FILTER</td><td class="w">Il tipo di filtro (tabella sotto). <span class="rng">11 tipi</span></td></tr>
+        <tr><td>CUTOFF</td><td class="w">Frequenza di taglio, in hertz. Su un passa-basso, 20.0K è filtro aperto. <span class="rng">20 Hz … 20 kHz</span></td></tr>
+        <tr><td>RESO</td><td class="w">Risonanza: enfasi attorno al taglio; nei filtri a pettine, la quantità di retroazione. <span class="rng">0 … 100</span></td></tr>
+        <tr><td>DISTORT</td><td class="w">Quantità di distorsione, del tipo scelto in TONE 2. <span class="rng">0 … 100</span></td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+  <div class="page-ref">
+    <figure class="shot"><img src="img/fx_2.png" alt=""><figcaption>FX › TONE 2.</figcaption></figure>
+    <div class="body">
+      <div class="ttl"><h3>TONE 2</h3><span class="path">FX › 2ª pagina</span></div>
+      <table class="kn"><tbody>
+        <tr><td>DIST</td><td class="w">Il tipo di distorsione (tabella sotto). <span class="rng">11 tipi</span></td></tr>
+        <tr><td>ORDER</td><td class="w"><strong>PRE</strong>: distorsione prima del filtro (il filtro addolcisce le armoniche aggiunte). <strong>POST</strong>: dopo il filtro (la distorsione satura anche la risonanza). <span class="rng">PRE · POST</span></td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+  <div class="two">
+    <div>
+      <h3>Filtri</h3>
+      <table class="compact"><thead><tr><th>Schermo</th><th class="w">Carattere</th></tr></thead><tbody>
+        <tr><td>SCRM LP · HP · BP</td><td class="w">Scream: risonanza aggressiva che satura nel loop.</td></tr>
+        <tr><td>DARK LP · HP · BP</td><td class="w">Morbido e scuro, risonanza contenuta.</td></tr>
+        <tr><td>COMB FB+ · FB−</td><td class="w">Pettine con retroazione: toni metallici, intonati su CUTOFF.</td></tr>
+        <tr><td>COMB FF+ · FF−</td><td class="w">Pettine senza retroazione: phasing statico.</td></tr>
+        <tr><td>COMB AP</td><td class="w">Allpass: diffusione e risonanze sottili.</td></tr>
+      </tbody></table>
+      <p style="font-size:8pt;color:var(--dim)">LP passa-basso · HP passa-alto · BP passa-banda.</p>
+    </div>
+    <div>
+      <h3>Distorsioni</h3>
+      <table class="compact"><thead><tr><th>Schermo</th><th class="w">Carattere</th></tr></thead><tbody>
+        <tr><td>TAPE · TUBE</td><td class="w">Saturazione calda, simmetrica o asimmetrica.</td></tr>
+        <tr><td>BITCRUSH · RATECRSH</td><td class="w">Riduzione di bit e di frequenza di campionamento.</td></tr>
+        <tr><td>WAVEFOLD · SQUARE</td><td class="w">Ripiegamento dell'onda; squadratura.</td></tr>
+        <tr><td>PHASE · CONTRAST</td><td class="w">Distorsione di fase; CONTRAST esalta i transienti.</td></tr>
+        <tr><td>DROPOUT</td><td class="w">Elimina cicli d'onda interi.</td></tr>
+        <tr><td>MINIGLCH · MEGAGLCH</td><td class="w">Micro-delay instabile, mono o stereo (buffer di ~160 ms).</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+  <div class="note"><b class="h">La lane VEL e la distorsione</b><p>Un passo con VEL a 127 aggiunge una spinta di distorsione a quel colpo: gli accenti suonano più sporchi anche con DISTORT basso.</p></div>
+  <div class="note warn"><b class="h">CPU</b><p>MINIGLCH, MEGAGLCH e i filtri COMB sono le parti di TONE più costose. Su un kit pesante, preferiscili su poche voci.</p></div>
+</section>
+
+<!-- ======================================================= 7 -->
+<section class="chapter" id="c7">
+  <header><span class="mark">QQc7QQ</span><div class="num">07</div><h1>ENV — gli inviluppi</h1><div class="kick">ENV 1, ENV 2, VELOCITY</div><div class="btn"><span class="k">ENV</span></div></header>
+
+  <p class="lead">Ogni voce ha due inviluppi AHD: salgono in ATTACK, restano al massimo per HOLD e scendono in DECAY. Uno dei due controlla il volume (EDIT › ENGINE › AMP ENV), l'altro è libero di modulare qualsiasi controllo.</p>
+
+  <figure>
+    <svg viewBox="0 0 520 120" width="100%" style="display:block">
+      <rect x="0" y="0" width="520" height="120" fill="#f3f5f7" rx="8"/>
+      <line x1="40" y1="96" x2="500" y2="96" stroke="#b9c1c9" stroke-width="1"/>
+      <path d="M40,96 L90,24 L180,24 C240,24 260,70 300,84 C340,94 400,96 480,96" fill="none" stroke="#f26b3a" stroke-width="3"/>
+      <path d="M40,96 L90,24 L180,24 L480,96" fill="none" stroke="#3fb0e6" stroke-width="1.6" stroke-dasharray="5 4"/>
+      <g font-family="Inter" font-size="11" font-weight="700" fill="#15191e" text-anchor="middle">
+        <text x="65" y="112">ATTACK</text><text x="135" y="112">HOLD</text><text x="330" y="112">DECAY</text>
+      </g>
+      <g font-family="Inter" font-size="10" fill="#5b6570">
+        <text x="300" y="44">CURVE 100: discesa esponenziale</text><text x="330" y="64" fill="#1f7fb0">CURVE 0: lineare</text>
+      </g>
+      <line x1="90" y1="18" x2="90" y2="100" stroke="#d9dee3" stroke-dasharray="2 3"/><line x1="180" y1="18" x2="180" y2="100" stroke="#d9dee3" stroke-dasharray="2 3"/>
+    </svg>
+    <figcaption>Le tre fasi di un inviluppo AHD e l'effetto di CURVE sul decadimento.</figcaption>
+  </figure>
+
+  <div class="page-ref">
+    <figure class="shot"><img src="img/env_1.png" alt=""><figcaption>ENV › ENV 1. ENV 2 è identica.</figcaption></figure>
+    <div class="body">
+      <div class="ttl"><h3>ENV 1 · ENV 2</h3><span class="path">ENV › 1ª e 2ª pagina</span></div>
+      <table class="kn"><tbody>
+        <tr><td>ATTACK</td><td class="w">Tempo di salita. Pochi millisecondi danno un colpo secco; di più ammorbidiscono l'attacco. <span class="rng">0,5 ms … 5 s</span></td></tr>
+        <tr><td>HOLD</td><td class="w">Tempo al massimo prima di scendere: dà corpo ai suoni brevi. <span class="rng">ENV 1 fino a 5 s · ENV 2 fino a 20 s</span></td></tr>
+        <tr><td>DECAY</td><td class="w">Tempo di discesa: la lunghezza percepita del suono. <span class="rng">ENV 1 fino a 10 s · ENV 2 fino a 20 s</span></td></tr>
+        <tr><td>CURVE</td><td class="w">Forma della discesa, da lineare (0) a esponenziale (100). <span class="rng">0 … 100</span></td></tr>
+      </tbody></table>
+      <p>Se la voce viene ricolpita mentre suona, l'inviluppo riparte dal livello in cui si trova: niente click.</p>
+    </div>
+  </div>
+
+  <div class="page-ref">
+    <figure class="shot"><img src="img/env_3.png" alt=""><figcaption>ENV › VELOCITY.</figcaption></figure>
+    <div class="body">
+      <div class="ttl"><h3>VELOCITY</h3><span class="path">ENV › 3ª pagina</span></div>
+      <table class="kn"><tbody>
+        <tr><td>ENV1 VEL</td><td class="w">Quanto la dinamica del colpo (lane VEL, pad, note MIDI) riduce il picco di ENV 1. A 0 tutti i colpi sono uguali; a 100 un colpo debole è molto più basso. <span class="rng">0 … 100</span></td></tr>
+        <tr><td>ENV2 VEL</td><td class="w">Lo stesso per ENV 2. <span class="rng">0 … 100</span></td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+  <div class="note tip"><b class="h">ENV 2 come inviluppo di modulazione</b><p>Lascia AMP ENV su ENV 1, metti ENV 2 con DECAY breve e collegalo a CUTOFF o a PITCH con SCL tenuto: ogni colpo avrà il suo "pluck" di filtro o di intonazione, indipendente dalla durata del suono.</p></div>
+  <p>La lane <strong>ENV</strong> del sequencer accorcia o allunga entrambi gli inviluppi passo per passo, fino a quattro volte o a un quarto (capitolo 10).</p>
+</section>
+
+<!-- ======================================================= 8 -->
+<section class="chapter" id="c8">
+  <header><span class="mark">QQc8QQ</span><div class="num">08</div><h1>LFO — gli oscillatori lenti</h1><div class="kick">LFO 1, LFO 1+, LFO 2, LFO 2+</div><div class="btn"><span class="k">LFO</span></div></header>
+
+  <p class="lead">Ogni voce ha due LFO. Da soli non fanno nulla: diventano udibili quando li colleghi a un controllo con la modulazione (capitolo 9). Ogni LFO occupa due pagine: la prima con il suono, la seconda (con il +) con il comportamento.</p>
+
+  <div class="page-ref">
+    <figure class="shot"><img src="img/lfo_1.png" alt=""><figcaption>LFO › LFO 1, in sync: SPEED è una divisione musicale.</figcaption></figure>
+    <div class="body">
+      <div class="ttl"><h3>LFO 1 · LFO 2</h3><span class="path">LFO › 1ª e 3ª pagina</span></div>
+      <table class="kn"><tbody>
+        <tr><td>SPEED</td><td class="w">Velocità. In SYNC una divisione musicale; in FREE in hertz, fino a 440 Hz. <span class="rng">8 BAR … 1/64 · 0,01 … 440 Hz</span></td></tr>
+        <tr><td>AMP</td><td class="w">Ampiezza dell'oscillazione: scala tutte le modulazioni che partono da questo LFO. <span class="rng">0 … 100</span></td></tr>
+        <tr><td>SHAPE</td><td class="w">Modella la forma d'onda scelta in WAVE (tabella). <span class="rng">0 … 100</span></td></tr>
+        <tr><td>WAVE</td><td class="w">La famiglia di forme d'onda. <span class="rng">WAVETBL · TRI TILT · PULSE · SMTH RND</span></td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+  <div class="page-ref">
+    <figure class="shot"><img src="img/lfo_2.png" alt=""><figcaption>LFO › LFO 1+.</figcaption></figure>
+    <div class="body">
+      <div class="ttl"><h3>LFO 1+ · LFO 2+</h3><span class="path">LFO › 2ª e 4ª pagina</span></div>
+      <table class="kn"><tbody>
+        <tr><td>SYNC</td><td class="w"><strong>SYNC</strong>: la velocità segue il tempo del kit. <strong>FREE</strong>: velocità libera in Hz. <span class="rng">FREE · SYNC</span></td></tr>
+        <tr><td>BIPOLAR</td><td class="w"><strong>ON</strong>: oscilla sopra e sotto il valore del controllo. <strong>OFF</strong>: lo sposta solo in una direzione. <span class="rng">OFF · ON</span></td></tr>
+        <tr><td>RESET</td><td class="w">Cosa succede a ogni colpo della voce (tabella sotto). <span class="rng">5 modi</span></td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+  <div class="two">
+    <div>
+      <h3>WAVE e SHAPE</h3>
+      <table class="compact"><thead><tr><th>WAVE</th><th class="w">SHAPE da 0 a 100</th></tr></thead><tbody>
+        <tr><td>WAVETBL</td><td class="w">Seno › triangolo › dente di sega › quadra › casuale.</td></tr>
+        <tr><td>TRI TILT</td><td class="w">Inclina il triangolo da rampa discendente a rampa ascendente.</td></tr>
+        <tr><td>PULSE</td><td class="w">Larghezza dell'impulso.</td></tr>
+        <tr><td>SMTH RND</td><td class="w">Quanto è morbido il passaggio tra un valore casuale e il successivo.</td></tr>
+      </tbody></table>
+    </div>
+    <div>
+      <h3>RESET</h3>
+      <table class="compact"><thead><tr><th>Modo</th><th class="w">A ogni colpo</th></tr></thead><tbody>
+        <tr><td>FREE</td><td class="w">Niente: gira libero, riparte solo con PLAY.</td></tr>
+        <tr><td>ALWAYS</td><td class="w">Riparte da zero.</td></tr>
+        <tr><td>SOFT</td><td class="w">Riparte solo se la voce era in silenzio.</td></tr>
+        <tr><td>S&amp;H</td><td class="w">Legge un valore e lo tiene fino al colpo dopo.</td></tr>
+        <tr><td>1 SHOT</td><td class="w">Fa un solo ciclo, poi si ferma.</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+  <h3>Divisioni musicali</h3>
+  <p>In SYNC, SPEED sceglie fra: <strong>8 BAR, 4 BAR, 2 BAR, 1 BAR, 1/2, 1/4, 1/8, 1/16, 1/32, 1/4T, 1/8T, 1/16T, 1/64</strong> (T = terzina). Gli LFO in sync restano agganciati al tempo anche su sequenze lunghe.</p>
+  <div class="note tip"><b class="h">Un LFO per colpo</b><p>Con RESET su ALWAYS e WAVE su TRI TILT a SHAPE 0, l'LFO diventa una rampa che riparte a ogni colpo: un secondo inviluppo, ma ciclico.</p></div>
+</section>
+
+<!-- ======================================================= 9 -->
+<section class="chapter" id="c9">
+  <header><span class="mark">QQc9QQ</span><div class="num">09</div><h1>SCL — modulazione, macro e lucchetti</h1><div class="kick">MOD, MACRO, LOCKS · SCL tenuto · SAVE tenuto</div><div class="btn"><span class="k">SCL</span></div></header>
+
+  <p class="lead">La modulazione collega una sorgente a un controllo: a ogni colpo, o continuamente, la sorgente sposta il controllo intorno al valore che hai impostato. Ogni voce ha otto sorgenti e 22 destinazioni, con una profondità per ogni coppia.</p>
+
+  <div class="two">
+    <div>
+      <h3>Le otto sorgenti</h3>
+      <table class="compact"><tbody>
+        <tr><td>RANDOM</td><td class="w">Un valore nuovo a ogni colpo.</td></tr>
+        <tr><td>VELOCITY</td><td class="w">La dinamica del colpo.</td></tr>
+        <tr><td>MACRO 1 · 2</td><td class="w">Due manopole libere (SCL › MACRO); MACRO 2 anche per passo.</td></tr>
+        <tr><td>ENV 1 · 2</td><td class="w">I due inviluppi.</td></tr>
+        <tr><td>LFO 1 · 2</td><td class="w">I due LFO.</td></tr>
+      </tbody></table>
+    </div>
+    <div>
+      <h3>Le 22 destinazioni</h3>
+      <p style="font-size:8.3pt">PITCH e le quattro manopole del motore · CUTOFF, RES, DISTORT · ATTACK, HOLD, DECAY di ENV 1 e ENV 2 · SPEED e AMP di LFO 1 e LFO 2 · PAN, GAIN, DELAY e REVERB (le mandate).</p>
+      <p style="font-size:8.3pt;color:var(--dim)">Sullo schermo: E1/E2 per gli inviluppi, L1/L2 per gli LFO; le manopole del motore con il loro nome.</p>
+    </div>
+  </div>
+
+  <h2><span class="tag">GESTO</span>MAP: SCL tenuto + una manopola</h2>
+  <p>È il modo veloce, e quello che userai di più:</p>
+  <ol class="steps">
+    <li>In <strong>SCL › MOD</strong> scegli la sorgente con <span class="k">KNOB 1</span> (per esempio LFO 1). Resta scelta finché non la cambi.</li>
+    <li>Vai sulla pagina del controllo da modulare, per esempio <strong>FX › TONE</strong>.</li>
+    <li><strong>Tieni <span class="k">SCL</span></strong>: il nome della pagina diventa arancio e i valori mostrano le profondità della sorgente al posto dei valori normali.</li>
+    <li>Gira la manopola del controllo: a destra profondità positiva, a sinistra negativa, da −100 a +100.</li>
+    <li>Lascia <span class="k">SCL</span>. Un puntino alla fine della barra ricorda che il controllo è modulato.</li>
+  </ol>
+  <div class="gallery" style="grid-template-columns: repeat(3, 1fr)">
+    <figure class="shot"><img src="img/mod_lfo1.png" alt=""><figcaption>1 · SCL › MOD: sorgente LFO 1.</figcaption></figure>
+    <figure class="shot"><img src="img/map_held.png" alt=""><figcaption>3–4 · SCL tenuto su TONE: CUTOFF a −12.</figcaption></figure>
+    <figure class="shot"><img src="img/tone_mapped.png" alt=""><figcaption>5 · Il puntino a destra della barra di CUTOFF.</figcaption></figure>
+  </div>
+  <p>Per togliere una modulazione: tieni SCL e riporta quella profondità a 0. Funziona su tutte le pagine della voce (EDIT, FX, ENV, LFO, HOME) dove il controllo è una destinazione.</p>
+
+  <div class="page-ref">
+    <figure class="shot"><img src="img/scl_1.png" alt=""><figcaption>SCL › MOD. In basso le destinazioni della sorgente (se ce ne sono).</figcaption></figure>
+    <div class="body">
+      <div class="ttl"><h3>MOD</h3><span class="path">SCL › 1ª pagina</span></div>
+      <table class="kn"><tbody>
+        <tr><td>SOURCE</td><td class="w">La sorgente su cui lavorano questa pagina e il gesto MAP. <span class="rng">8 sorgenti</span></td></tr>
+        <tr><td>TARGET</td><td class="w">La destinazione da regolare da qui. <span class="rng">22 destinazioni</span></td></tr>
+        <tr><td>DEPTH</td><td class="w">La profondità della coppia SOURCE › TARGET. <span class="rng">−100 … +100</span></td></tr>
+        <tr><td>ROUTES</td><td class="w">Quanti collegamenti attivi ha la voce, fra tutte le sorgenti (solo lettura).</td></tr>
+      </tbody></table>
+      <p>La riga in basso elenca le destinazioni già collegate alla sorgente scelta, così vedi a colpo d'occhio cosa fa.</p>
+    </div>
+  </div>
+
+  <div class="page-ref">
+    <figure class="shot"><img src="img/scl_2.png" alt=""><figcaption>SCL › MACRO.</figcaption></figure>
+    <div class="body">
+      <div class="ttl"><h3>MACRO</h3><span class="path">SCL › 2ª pagina</span></div>
+      <table class="kn"><tbody>
+        <tr><td>MACRO 1</td><td class="w">Valore della sorgente MACRO 1. Collegala a più controlli e una sola manopola li muove tutti insieme. <span class="rng">0 … 100</span></td></tr>
+        <tr><td>MACRO 2</td><td class="w">Valore della sorgente MACRO 2. La lane MACRO 2 del sequencer lo sostituisce passo per passo. <span class="rng">0 … 100</span></td></tr>
+        <tr><td>VARIAT</td><td class="w">VARIATION: piccoli scostamenti casuali a ogni colpo su tutti i controlli non bloccati. Più alto, più ogni colpo è diverso. <span class="rng">0 … 100</span></td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+  <h2><span class="tag">GESTO</span>Lucchetti: SAVE tenuto + una manopola</h2>
+  <p>Un controllo bloccato non viene cambiato da VARIATION, dal DADO, dalla Performance e dal caricamento di un preset di voce o da PASTE. Tieni <span class="k">SAVE</span> e gira la manopola del controllo: <span class="s">LOCKED</span>, e l'etichetta diventa rossa. Ripeti per sbloccarlo: <span class="s">UNLOCKED</span>.</p>
+  <div class="page-ref">
+    <figure class="shot"><img src="img/tone_locked.png" alt=""><figcaption>RESO bloccato su FX › TONE.</figcaption></figure>
+    <div class="body">
+      <div class="ttl"><h3>LOCKS</h3><span class="path">SCL › 3ª pagina</span></div>
+      <table class="kn"><tbody>
+        <tr><td>TARGET</td><td class="w">Una delle 22 destinazioni. <span class="rng">22 destinazioni</span></td></tr>
+        <tr><td>LOCK</td><td class="w">A destra blocca, a sinistra sblocca. <span class="rng">FREE · LOCKED</span></td></tr>
+      </tbody></table>
+      <p>Utile per i controlli che non hanno una manopola sotto mano in quel momento, o per controllare cosa è bloccato scorrendo TARGET.</p>
+      <p>Sulle pagine ARP il gesto SAVE + manopola esclude invece quel controllo dal DADO della Performance (<span class="s">OUT OF THE DADO</span>).</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================= 10 -->
+<section class="chapter" id="c10">
+  <header><span class="mark">QQc10QQ</span><div class="num">10</div><h1>SEQ — il sequencer</h1><div class="kick">Generatore euclideo, passi, lane, REC</div><div class="btn"><span class="k">SEQ</span></div></header>
+
+  <p class="lead">Ogni voce ha un sequencer proprio, con la sua lunghezza e la sua velocità. I colpi vengono da due fonti che si sommano: il <strong>generatore euclideo</strong>, che distribuisce un certo numero di colpi nel modo più regolare possibile, e i <strong>trigger manuali</strong> che metti con i tasti bianchi.</p>
+
+  <figure>
+    <svg viewBox="0 0 520 112" width="100%" style="display:block">
+      <rect width="520" height="112" rx="8" fill="#f3f5f7"/>
+      <g font-family="Inter" font-size="10" font-weight="700" fill="#15191e"><text x="14" y="30">STEPS 16 · FILL 4</text><text x="14" y="62">ROTATE 2</text><text x="14" y="94">+ trigger a mano</text></g>
+      <g id="r1" transform="translate(130,16)"></g>
+      <script>
+        (function(){const NS="http://www.w3.org/2000/svg";const rows=[[0,4,8,12],[2,6,10,14],[2,6,10,14]],man=[[],[],[7,15]];
+        rows.forEach((hits,r)=>{for(let i=0;i<16;i++){const e=document.createElementNS(NS,"rect");const on=hits.includes(i),m=man[r].includes(i);
+        e.setAttribute("x",130+i*23);e.setAttribute("y",(on||m)?16+r*32:24+r*32);e.setAttribute("width",17);e.setAttribute("height",(on||m)?18:4);e.setAttribute("rx",2);
+        e.setAttribute("fill",m?"#15191e":on?"#f26b3a":"#c9d0d7");document.currentScript.parentNode.appendChild(e);}});})();
+      </script>
+    </svg>
+    <figcaption>Il generatore distribuisce FILL colpi su STEPS passi; ROTATE li sposta; i trigger manuali (neri) si aggiungono.</figcaption>
+  </figure>
+
+  <h2>Scrivere con i tasti bianchi</h2>
+  <ul>
+    <li><strong>Un tocco</strong> su un tasto bianco aggiunge o toglie un trigger manuale su quel passo. Il tasto si accende; sullo schermo il passo diventa una barra bianca.</li>
+    <li><span class="k">OCT−</span> e <span class="k">OCT+</span> passano alle pagine di passi 17–32, 33–48 e così via fino a 128, se la sequenza è così lunga. La riga in basso dice quali passi stai vedendo: <span class="s">STEPS 17-32 /64</span>.</li>
+    <li>I colpi del generatore non si tolgono con i tasti: si cambiano con EUCLID. Il tasto di un colpo del generatore è acceso, e toccarlo aggiunge un trigger manuale sopra (che non cambia il suono).</li>
+  </ul>
+
+  <h2><span class="tag">GESTO</span>Lane per passo: tasti bianchi tenuti + manopole</h2>
+  <p>Ogni passo ha dieci valori, le <strong>lane</strong>, che cambiano il colpo di quel passo. Tieni uno o più tasti bianchi: lo schermo mostra il gruppo di lane e i valori del primo passo tenuto, e le manopole cambiano quel valore su <em>tutti</em> i passi tenuti. <span class="k">PRESETS</span>, mentre tieni i tasti, passa al gruppo successivo. Rilasciando, il tocco non cambia il trigger del passo.</p>
+  <div class="gallery" style="grid-template-columns: repeat(3, 1fr)">
+    <figure class="shot"><img src="img/lanes_1.png" alt=""><figcaption>Gruppo 1 · STEP: VEL PITCH. I passi tenuti sono incorniciati.</figcaption></figure>
+    <figure class="shot"><img src="img/lanes_2.png" alt=""><figcaption>Gruppo 2 · STEP: SHIFT ENV.</figcaption></figure>
+    <figure class="shot"><img src="img/lanes_3.png" alt=""><figcaption>Gruppo 3 · STEP: SENDS M2.</figcaption></figure>
+  </div>
+  <table class="compact">
+    <thead><tr><th>Lane</th><th>Gruppo · manopola</th><th>Intervallo</th><th class="w">Effetto sul colpo</th></tr></thead>
+    <tbody>
+      <tr><td>VEL</td><td>1 · KNOB 1</td><td class="rng">0 … 127</td><td class="w">Dinamica. A 127 aggiunge una spinta di distorsione.</td></tr>
+      <tr><td>PITCH</td><td>1 · KNOB 2</td><td class="rng">±24 semitoni</td><td class="w">Trasposizione del passo: linee melodiche, tom intonati.</td></tr>
+      <tr><td>RATCH</td><td>1 · KNOB 3</td><td class="rng">1 … 8</td><td class="w">Ripetizioni del colpo dentro il passo: rullate.</td></tr>
+      <tr><td>PROB</td><td>1 · KNOB 4</td><td class="rng">±100</td><td class="w">Negativo: probabilità di saltare il colpo. Positivo: probabilità di raddoppiare il ratchet.</td></tr>
+      <tr><td>SHIFT</td><td>2 · KNOB 1</td><td class="rng">±100</td><td class="w">Anticipa o ritarda il passo fino a mezzo passo.</td></tr>
+      <tr><td>ENV</td><td>2 · KNOB 2</td><td class="rng">±100</td><td class="w">Accorcia o allunga gli inviluppi (da ¼ a 4 volte).</td></tr>
+      <tr><td>PAN</td><td>2 · KNOB 3</td><td class="rng">±100</td><td class="w">Spostamento stereo del colpo.</td></tr>
+      <tr><td>VAR</td><td>2 · KNOB 4</td><td class="rng">0 … 100</td><td class="w">Variation aggiuntiva per quel colpo.</td></tr>
+      <tr><td>SENDS</td><td>3 · KNOB 1</td><td class="rng">±100</td><td class="w">Positivo: mandata extra al delay. Negativo: al riverbero.</td></tr>
+      <tr><td>MACRO 2</td><td>3 · KNOB 2</td><td class="rng">0 … 100</td><td class="w">Sostituisce MACRO 2 per quel colpo: un controllo diverso a ogni passo.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Le pagine del sequencer</h2>
+  <div class="page-ref">
+    <figure class="shot"><img src="img/seq_1.png" alt=""><figcaption>SEQ › EUCLID.</figcaption></figure>
+    <div class="body">
+      <div class="ttl"><h3>EUCLID</h3><span class="path">SEQ › 1ª pagina</span></div>
+      <table class="kn"><tbody>
+        <tr><td>STEPS</td><td class="w">Lunghezza del pattern euclideo. <span class="rng">1 … 64</span></td></tr>
+        <tr><td>FILL</td><td class="w">Colpi distribuiti sui passi; non supera STEPS. <span class="rng">0 … STEPS</span></td></tr>
+        <tr><td>PATTERN</td><td class="w">Permutazioni: sposta i colpi singolarmente per ritmi meno regolari. 1 è l'euclideo puro. <span class="rng">1 … 64</span></td></tr>
+        <tr><td>ROTATE</td><td class="w">Ruota il pattern in avanti o indietro. <span class="rng">−32 … +32</span></td></tr>
+      </tbody></table>
+    </div>
+  </div>
+  <div class="page-ref">
+    <figure class="shot"><img src="img/seq_2.png" alt=""><figcaption>SEQ › TIME.</figcaption></figure>
+    <div class="body">
+      <div class="ttl"><h3>TIME</h3><span class="path">SEQ › 2ª pagina</span></div>
+      <table class="kn"><tbody>
+        <tr><td>SPEED</td><td class="w">Durata di un passo. <span class="rng">1/1 1/2 1/4 1/8 1/16 1/32 1/4T 1/8T 1/16T 1/32T</span></td></tr>
+        <tr><td>MULT</td><td class="w">Moltiplica la velocità del passo. <span class="rng">/4 /3 /2 1X 2X 3X 4X</span></td></tr>
+        <tr><td>LENGTH</td><td class="w">Lunghezza della sequenza, oltre la quale riparte. <span class="rng">1 … 128</span></td></tr>
+        <tr><td>SNAP</td><td class="w"><strong>ON</strong>: LENGTH si arrotonda a un multiplo di STEPS. <strong>OFF</strong>: lunghezze libere, per i poliritmi (7 contro 16). <span class="rng">OFF · ON</span></td></tr>
+      </tbody></table>
+    </div>
+  </div>
+  <div class="page-ref">
+    <figure class="shot"><img src="img/seq_3.png" alt=""><figcaption>SEQ › GROOVE.</figcaption></figure>
+    <div class="body">
+      <div class="ttl"><h3>GROOVE</h3><span class="path">SEQ › 3ª pagina</span></div>
+      <table class="kn"><tbody>
+        <tr><td>SHIFT</td><td class="w">Anticipa o ritarda l'intera sequenza fino a mezzo passo. <span class="rng">±100</span></td></tr>
+        <tr><td>SWING</td><td class="w">Sposta i passi dispari; negativo li anticipa. <span class="rng">±100</span></td></tr>
+        <tr><td>SHAPE</td><td class="w">Curva il tempo dentro il pattern: i colpi accelerano o rallentano. <span class="rng">±100</span></td></tr>
+        <tr><td>DENSITY</td><td class="w">Negativo toglie colpi a caso; positivo ne aggiunge sulle pause. <span class="rng">±100</span></td></tr>
+      </tbody></table>
+    </div>
+  </div>
+  <div class="page-ref">
+    <figure class="shot"><img src="img/seq_4.png" alt=""><figcaption>SEQ › MORE.</figcaption></figure>
+    <div class="body">
+      <div class="ttl"><h3>MORE</h3><span class="path">SEQ › 4ª pagina</span></div>
+      <table class="kn"><tbody>
+        <tr><td>INVERT</td><td class="w">Scambia colpi e pause del generatore. <span class="rng">OFF · ON</span></td></tr>
+        <tr><td>RESET</td><td class="w">Fa ripartire la sequenza ogni RES LEN passi. <span class="rng">OFF · ON</span></td></tr>
+        <tr><td>RES LEN</td><td class="w">Ogni quanti passi ripartire. <span class="rng">1 … 128</span></td></tr>
+        <tr><td>HUMANIZE</td><td class="w">Globale: piccoli spostamenti casuali, uguali per le voci che suonano sullo stesso passo, così il groove resta unito. È lo stesso controllo di GLO › TEMPO. <span class="rng">0 … 100</span></td></tr>
+      </tbody></table>
+    </div>
+  </div>
+  <div class="page-ref">
+    <figure class="shot"><img src="img/seq_5.png" alt=""><figcaption>SEQ › LANE.</figcaption></figure>
+    <div class="body">
+      <div class="ttl"><h3>LANE</h3><span class="path">SEQ › 5ª pagina</span></div>
+      <table class="kn"><tbody>
+        <tr><td>LANE</td><td class="w">Quale delle dieci lane regolare. È anche la lane che il DADO randomizza sulle pagine SEQ. <span class="rng">VEL … MACRO 2</span></td></tr>
+        <tr><td>MODE</td><td class="w">Come avanza la lane (tabella sotto). <span class="rng">SYNC · FREE · TRIG · RETRIG</span></td></tr>
+        <tr><td>LENGTH</td><td class="w">Lunghezza propria della lane, per i modi diversi da SYNC. <span class="rng">1 … 128</span></td></tr>
+        <tr><td>ROTATE</td><td class="w">Ruota i valori della lane di un passo per scatto, nei due sensi.</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+  <table class="compact" style="margin-top:-1mm">
+    <thead><tr><th>MODE</th><th class="w">Avanzamento della lane</th></tr></thead>
+    <tbody>
+      <tr><td>SYNC</td><td class="w">Segue la sequenza principale passo per passo.</td></tr>
+      <tr><td>FREE</td><td class="w">Avanza a ogni passo ma con la sua LENGTH: poliritmi di parametri (una lane PITCH di 5 su un ritmo di 16).</td></tr>
+      <tr><td>TRIG</td><td class="w">Avanza solo quando la voce suona davvero: ogni colpo prende il valore successivo.</td></tr>
+      <tr><td>RETRIG</td><td class="w">Come TRIG, ma riparte dall'inizio a ogni giro della sequenza.</td></tr>
+    </tbody>
+  </table>
+  <div class="page-ref">
+    <figure class="shot"><img src="img/seq_6.png" alt=""><figcaption>SEQ › TOOLS: comandi.</figcaption></figure>
+    <div class="body">
+      <div class="ttl"><h3>TOOLS</h3><span class="path">SEQ › 6ª pagina</span></div>
+      <table class="kn"><tbody>
+        <tr><td>ROT TRIG</td><td class="w">Ruota i trigger manuali di un passo per scatto, nei due sensi.</td></tr>
+        <tr><td>CLR LANE</td><td class="w">Riporta ai valori iniziali la lane scelta in LANE (a destra). <span class="s">LANE CLEARED</span></td></tr>
+        <tr><td>CLR TRIG</td><td class="w">Toglie tutti i trigger manuali della voce (a destra). <span class="s">TRIGS CLEARED</span></td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+  <h2>REC: suonare e registrare dal vivo</h2>
+  <p><span class="k r">REC</span> cambia il modo dei tasti bianchi, in giro: <strong>STEPS › PADS › REC › STEPS</strong>. La riga in basso dello schermo ricorda il modo.</p>
+  <div class="gallery" style="grid-template-columns: repeat(3, 1fr)">
+    <figure class="shot"><img src="img/pads.png" alt=""><figcaption>PADS: <span class="s b">PADS: 1-8 VOICES, 9-16 PITCH</span></figcaption></figure>
+    <figure class="shot"><img src="img/rec.png" alt=""><figcaption>REC: i pad scrivono trigger mentre suona.</figcaption></figure>
+    <div style="font-size:8.2pt">
+      <p><strong>PADS.</strong> I bianchi 1–8 suonano le voci 1–8 a dinamica 100. I bianchi 9–16 suonano la voce scelta sulla scala maggiore Do Re Mi Fa Sol La Si Do; <span class="k">OCT−</span> e <span class="k">OCT+</span> cambiano l'ottava (da un'ottava sotto a due sopra).</p>
+      <p><strong>REC.</strong> Come PADS; in più, mentre il sequencer suona, ogni pad 1–8 scrive un trigger manuale sul passo in corso della sua voce.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================= 11 -->
+<section class="chapter" id="c11">
+  <header><span class="mark">QQc11QQ</span><div class="num">11</div><h1>HOME — mixer e routing</h1><div class="kick">MIX, ROUTING, MUTE e SOLO</div><div class="btn"><span class="k">HOME</span></div></header>
+
+  <p class="lead">HOME è la striscia di canale della voce scelta: quanto suona, dove sta nello stereo e quanto manda agli effetti. ROUTING collega le voci fra loro e decide quali seguono la Performance.</p>
+
+  <div class="page-ref">
+    <figure class="shot"><img src="img/home_1.png" alt=""><figcaption>HOME › MIX.</figcaption></figure>
+    <div class="body">
+      <div class="ttl"><h3>MIX</h3><span class="path">HOME › 1ª pagina</span></div>
+      <table class="kn"><tbody>
+        <tr><td>GAIN</td><td class="w">Volume della voce, in dB. <span class="rng">−60 … +12 dB</span></td></tr>
+        <tr><td>PAN</td><td class="w">Posizione stereo; C è il centro. <span class="rng">L … C … R</span></td></tr>
+        <tr><td>DELAY</td><td class="w">Mandata allo Shatter Delay. −INF è nessuna mandata. <span class="rng">−INF … 0 dB</span></td></tr>
+        <tr><td>REVERB</td><td class="w">Mandata all'Headspace Reverb. <span class="rng">−INF … 0 dB</span></td></tr>
+      </tbody></table>
+      <p>Tutti e quattro sono destinazioni di modulazione: un LFO lento su PAN, RANDOM su DELAY per echi solo ogni tanto.</p>
+    </div>
+  </div>
+  <div class="page-ref">
+    <figure class="shot"><img src="img/home_2.png" alt=""><figcaption>HOME › ROUTING.</figcaption></figure>
+    <div class="body">
+      <div class="ttl"><h3>ROUTING</h3><span class="path">HOME › 2ª pagina</span></div>
+      <table class="kn"><tbody>
+        <tr><td>CHOKE</td><td class="w">Quando questa voce suona, zittisce la voce indicata: hi-hat chiuso che taglia l'aperto. <span class="rng">--- · 1 … 8</span></td></tr>
+        <tr><td>TRIGGER</td><td class="w">Quando questa voce suona, fa suonare anche la voce indicata: due voci stratificate con una sola sequenza. Le catene non possono chiudersi in cerchio. <span class="rng">--- · 1 … 8</span></td></tr>
+        <tr><td>PERF</td><td class="w">La voce segue la Performance (ARP). <span class="rng">OFF · ON</span></td></tr>
+        <tr><td>FLIP</td><td class="w">La Performance agisce su questa voce al contrario: se le altre si allungano, questa si accorcia. <span class="rng">OFF · ON</span></td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+  <h2>MUTE e SOLO</h2>
+  <p>Mute e solo non hanno una pagina: sono i tasti neri <span class="k b">MUTE</span> e <span class="k b">SOLO</span>. Un tocco agisce sulla voce scelta; tenendoli e toccando i tasti <span class="k b">V1</span>…<span class="k b">V8</span> agisci su più voci senza cambiare la voce scelta. Sullo schermo una voce mutata è grigia, una voce in solo ha il nome del motore evidenziato. Mute e solo si possono comandare anche via MIDI, anche in modo momentaneo (capitolo 16).</p>
+  <div class="note tip"><b class="h">Ascoltare una voce da sola, al volo</b><p>Tieni SOLO, tocca V3, lascia: senti solo la voce 3. Ripeti per tornare al mix.</p></div>
+</section>
+
+<!-- ======================================================= 12 -->
+<section class="chapter" id="c12">
+  <header><span class="mark">QQc12QQ</span><div class="num">12</div><h1>ARP — la Performance</h1><div class="kick">Controllare tutte le voci insieme</div><div class="btn"><span class="k">ARP</span></div></header>
+
+  <p class="lead">La Performance è un livello sopra le voci: ogni suo controllo si somma al controllo corrispondente di tutte le voci con PERF attivo. A 0 non cambia nulla; girando a destra o a sinistra sposti tutte le voci nella stessa direzione, per esempio allunghi tutti i decadimenti o apri tutti i filtri.</p>
+
+  <p>I controlli PF vanno da −100 a +100 e sono 22, su sei pagine; la settima pagina ha i comandi.</p>
+  <table class="compact">
+    <thead><tr><th>Pagina</th><th>KNOB 1</th><th>KNOB 2</th><th>KNOB 3</th><th>KNOB 4</th></tr></thead>
+    <tbody>
+      <tr><td>PF ENV</td><td>ATTACK</td><td>HOLD</td><td>DECAY</td><td>CURVE</td></tr>
+      <tr><td>PF SYNTH</td><td>PITCH</td><td>SYNTH 1</td><td>SYNTH 2</td><td>SYNTH 3</td></tr>
+      <tr><td>PF MOD</td><td>SYNTH 4</td><td>MACRO 1</td><td>MACRO 2</td><td>VARIAT</td></tr>
+      <tr><td>PF TONE</td><td>MOD AMP</td><td>DISTORT</td><td>CUTOFF</td><td>RES</td></tr>
+      <tr><td>PF SEQ</td><td>STEPS</td><td>FILL</td><td>PATTERN</td><td>DENSITY</td></tr>
+      <tr><td>PF SEQ 2</td><td>PROB</td><td>RATCHET</td><td>DEPTH</td><td>ENABLED</td></tr>
+      <tr><td>PF GLOBAL</td><td>DADO</td><td>COMMIT</td><td>RESET</td><td>—</td></tr>
+    </tbody>
+  </table>
+  <div class="gallery">
+    <figure class="shot"><img src="img/arp_1.png" alt=""><figcaption>PF ENV</figcaption></figure>
+    <figure class="shot"><img src="img/arp_4.png" alt=""><figcaption>PF TONE</figcaption></figure>
+    <figure class="shot"><img src="img/arp_6.png" alt=""><figcaption>PF SEQ 2</figcaption></figure>
+    <figure class="shot"><img src="img/arp_7.png" alt=""><figcaption>PF GLOBAL</figcaption></figure>
+  </div>
+  <h3>I controlli particolari</h3>
+  <table class="kn"><tbody>
+    <tr><td>ATTACK…CURVE</td><td class="w">Agiscono su entrambi gli inviluppi di ogni voce.</td></tr>
+    <tr><td>SYNTH 1–4</td><td class="w">Le quattro manopole del motore di ogni voce, qualunque motore sia.</td></tr>
+    <tr><td>MOD AMP</td><td class="w">Scala tutte le profondità di modulazione delle voci, da 0 a due volte.</td></tr>
+    <tr><td>STEPS…RATCHET</td><td class="w">Agiscono sul sequencer: i ritmi di tutte le voci si infittiscono o si diradano insieme.</td></tr>
+    <tr><td>DEPTH</td><td class="w">Scala l'intera Performance; negativo la inverte. <span class="rng">−100 … +100</span></td></tr>
+    <tr><td>ENABLED</td><td class="w">Accende o spegne tutta la Performance, per confrontare prima e dopo. <span class="rng">OFF · ON</span></td></tr>
+    <tr><td>DADO</td><td class="w">Ampiezza del DADO della Performance (il tasto nero DADO su una pagina ARP). <span class="rng">0 … 100</span></td></tr>
+    <tr><td>COMMIT</td><td class="w">Scrive il suono attuale nei controlli delle voci e riporta la Performance a zero. <span class="s">PERFORMANCE COMMITTED</span></td></tr>
+    <tr><td>RESET</td><td class="w">Riporta a zero tutti i controlli PF senza toccare le voci. <span class="s">PERFORMANCE RESET</span></td></tr>
+  </tbody></table>
+
+  <div class="note tip"><b class="h">Flusso consigliato</b><p>Su una pagina ARP premi il tasto nero <span class="k b">DADO</span> finché trovi una variazione interessante, dosala con DEPTH, poi COMMIT per renderla definitiva. I controlli che non vuoi far toccare al DADO si escludono con SAVE tenuto + manopola; i lucchetti delle voci li escludono anche dalla Performance.</p></div>
+</section>
+
+<!-- ======================================================= 13 -->
+<section class="chapter" id="c13">
+  <header><span class="mark">QQc13QQ</span><div class="num">13</div><h1>GLO — tempo, effetti e master</h1><div class="kick">TEMPO, DELAY, REVERB, MASTER</div><div class="btn"><span class="k">GLO</span></div></header>
+
+  <p class="lead">GLO contiene tutto quello che è unico nel kit: il tempo e il clock, i due effetti in mandata e il bus master. Nove pagine, nell'ordine in cui scorre il segnale.</p>
+
+  <div class="flow">
+    <div class="b"><b>8 voci</b><small>HOME › MIX</small></div><div class="a">›</div>
+    <div class="b hl"><b>Shatter Delay</b><small>mandate DELAY · &gt; REVERB</small></div><div class="a">›</div>
+    <div class="b hl"><b>Headspace Reverb</b><small>mandate REVERB</small></div><div class="a">›</div>
+    <div class="b"><b>Master</b><small>MAXIMIZE · EQ · CLIP · GAIN</small></div><div class="a">›</div>
+    <div class="b"><b>Uscita</b><small>MASTER · USB</small></div>
+  </div>
+
+  <div class="page-ref">
+    <figure class="shot"><img src="img/glo_1.png" alt=""><figcaption>GLO › TEMPO.</figcaption></figure>
+    <div class="body">
+      <div class="ttl"><h3>TEMPO</h3><span class="path">GLO › 1ª pagina</span></div>
+      <table class="kn"><tbody>
+        <tr><td>BPM</td><td class="w">Il tempo del kit (come la manopola SELECT). <span class="rng">40 … 300</span></td></tr>
+        <tr><td>CLOCK</td><td class="w"><strong>INT</strong>: il tempo è BPM. <strong>EXT</strong>: segue il clock MIDI (capitolo 16). La scelta resta anche dopo lo spegnimento. <span class="rng">INT · EXT</span></td></tr>
+        <tr><td>HUMANIZE</td><td class="w">Spostamenti casuali dei colpi, comuni a tutte le voci (lo stesso di SEQ › MORE). <span class="rng">0 … 100</span></td></tr>
+        <tr><td>DADO</td><td class="w">Ampiezza di tutte le randomizzazioni del kit: DADO di voce, di lane, di tutte le voci. <span class="rng">0 … 100</span></td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+  <h2>Shatter Delay</h2>
+  <p>Un delay che cambia tempo all'istante, senza glissati di intonazione. Gira a metà frequenza di campionamento per stare nella memoria dell'FM-1: le ripetizioni sono un po' più scure di quelle del plugin.</p>
+  <div class="page-ref long">
+    <figure class="shot"><img src="img/glo_2.png" alt=""><figcaption>GLO › DELAY.</figcaption></figure>
+    <div class="body">
+      <table class="kn"><tbody>
+        <tr><td colspan="2" style="font-weight:700;color:var(--dim);font-size:7pt;letter-spacing:.1em">DELAY</td></tr>
+        <tr><td>SYNC</td><td class="w">FREE: tempo in ms. SYNC: una divisione musicale. <span class="rng">FREE · SYNC</span></td></tr>
+        <tr><td>DIVISION</td><td class="w">La divisione in SYNC. <span class="rng">8 BAR … 1/64</span></td></tr>
+        <tr><td>TIME</td><td class="w">Il tempo in FREE. <span class="rng">1 … 1480 ms</span></td></tr>
+        <tr><td>FEEDBACK</td><td class="w">Quante ripetizioni. <span class="rng">0 … 100</span></td></tr>
+        <tr><td colspan="2" style="font-weight:700;color:var(--dim);font-size:7pt;letter-spacing:.1em;padding-top:2.4mm">DELAY 2</td></tr>
+        <tr><td>GLITCH</td><td class="w">Variazioni casuali del tempo, da vibrato leggero a ritmi spezzati. <span class="rng">0 … 100</span></td></tr>
+        <tr><td>FB TILT</td><td class="w">Scurisce o schiarisce le ripetizioni. <span class="rng">±100</span></td></tr>
+        <tr><td>DUCKING</td><td class="w">Abbassa il delay mentre le voci suonano. <span class="rng">0 … 100</span></td></tr>
+        <tr><td>S.RATE</td><td class="w">Rallenta l'elaborazione: suono lo-fi, tempi più lunghi. <span class="rng">0 … 100</span></td></tr>
+        <tr><td colspan="2" style="font-weight:700;color:var(--dim);font-size:7pt;letter-spacing:.1em;padding-top:2.4mm">DELAY 3</td></tr>
+        <tr><td>STEREO</td><td class="w">Glitch indipendente per canale. <span class="rng">OFF · ON</span></td></tr>
+        <tr><td>PONG</td><td class="w">Ripetizioni alternate sinistra/destra. <span class="rng">OFF · ON</span></td></tr>
+        <tr><td>&gt; REVERB</td><td class="w">Quanto delay va nel riverbero. <span class="rng">0 … 100</span></td></tr>
+        <tr><td>GAIN</td><td class="w">Volume del delay. <span class="rng">−24 … +12 dB</span></td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+  <h2>Headspace Reverb</h2>
+  <div class="page-ref long">
+    <figure class="shot"><img src="img/glo_5.png" alt=""><figcaption>GLO › REVERB.</figcaption></figure>
+    <div class="body">
+      <table class="kn"><tbody>
+        <tr><td colspan="2" style="font-weight:700;color:var(--dim);font-size:7pt;letter-spacing:.1em">REVERB</td></tr>
+        <tr><td>MODE</td><td class="w">DARK, BRIGHT, HALL o TIN CAN (stanza minuscola e metallica).</td></tr>
+        <tr><td>DECAY</td><td class="w">Durata della coda. <span class="rng">0,1 … 20 s</span></td></tr>
+        <tr><td>PREDELAY</td><td class="w">Ritardo prima della coda. <span class="rng">0,1 … 499 ms</span></td></tr>
+        <tr><td>GAIN</td><td class="w">Volume del riverbero. <span class="rng">−24 … +12 dB</span></td></tr>
+        <tr><td colspan="2" style="font-weight:700;color:var(--dim);font-size:7pt;letter-spacing:.1em;padding-top:2.4mm">REVERB 2</td></tr>
+        <tr><td>PRE SYNC</td><td class="w">PREDELAY in ms (FREE) o in divisioni (SYNC).</td></tr>
+        <tr><td>PRE DIV</td><td class="w">La divisione del predelay in SYNC.</td></tr>
+        <tr><td>S.RATE</td><td class="w">Grana più grossa e spazio più grande. <span class="rng">0 … 100</span></td></tr>
+        <tr><td>IN TILT</td><td class="w">Equalizzazione prima del riverbero. <span class="rng">±100</span></td></tr>
+        <tr><td colspan="2" style="font-weight:700;color:var(--dim);font-size:7pt;letter-spacing:.1em;padding-top:2.4mm">REVERB 3</td></tr>
+        <tr><td>OUT TILT</td><td class="w">Equalizzazione dopo il riverbero. <span class="rng">±100</span></td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+  <h2>Master</h2>
+  <div class="page-ref long">
+    <figure class="shot"><img src="img/glo_8.png" alt=""><figcaption>GLO › MASTER.</figcaption></figure>
+    <div class="body">
+      <table class="kn"><tbody>
+        <tr><td colspan="2" style="font-weight:700;color:var(--dim);font-size:7pt;letter-spacing:.1em">MASTER</td></tr>
+        <tr><td>MAXIMIZE</td><td class="w">Compressore aggressivo: alza le parti deboli e le code. <span class="rng">0 … 100</span></td></tr>
+        <tr><td>LOW · MID · HIGH</td><td class="w">Equalizzatore a tre bande. <span class="rng">±18 dB</span></td></tr>
+        <tr><td colspan="2" style="font-weight:700;color:var(--dim);font-size:7pt;letter-spacing:.1em;padding-top:2.4mm">MASTER 2</td></tr>
+        <tr><td>GAIN</td><td class="w">Volume finale del kit, prima della manopola MASTER. <span class="rng">−36 … +12 dB</span></td></tr>
+        <tr><td>CLIP</td><td class="w">Cosa succede ai picchi: NONE, SOFT (saturazione morbida), HARD (taglio netto), FOLD (ripiegamento).</td></tr>
+      </tbody></table>
+      <p>GAIN e CLIP fanno parte del suono del kit e si salvano con lui; la manopola MASTER del pannello no.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================= 14 -->
+<section class="chapter" id="c14">
+  <header><span class="mark">QQc14QQ</span><div class="num">14</div><h1>SAVE — kit e preset di voce</h1><div class="kick">KITS, VOICES, autosave, il kit "Dael"</div><div class="btn"><span class="k">SAVE</span></div></header>
+
+  <p class="lead">La memoria dell'FM-1 tiene 16 kit e 16 preset di voce. Ogni salvataggio scrive una copia nuova e conserva la precedente finché la nuova non è completa: se togli la corrente a metà, resta il kit di prima.</p>
+
+  <div class="page-ref">
+    <figure class="shot"><img src="img/save_1.png" alt=""><figcaption>SAVE › KITS. In basso lo slot scelto e i comandi.</figcaption></figure>
+    <div class="body">
+      <div class="ttl"><h3>KITS</h3><span class="path">SAVE › 1ª pagina</span></div>
+      <table class="kn"><tbody>
+        <tr><td>SLOT</td><td class="w">Lo slot in cui salvare. <span class="rng">1 … 16</span></td></tr>
+        <tr><td>LETTER</td><td class="w">La posizione nel nome da modificare. <span class="rng">1 … 11</span></td></tr>
+        <tr><td>CHAR</td><td class="w">Il carattere in quella posizione. <span class="rng">spazio · A–Z · 0–9 · - · #</span></td></tr>
+        <tr><td>NEW</td><td class="w">Nuovo kit: a destra una volta INIT, due volte il kit di riferimento DAEL; conferma con OCT+. A sinistra annulla.</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+  <h3>Caricare, salvare, nominare</h3>
+  <ul>
+    <li><strong>Caricare</strong>: tocca il tasto bianco dello slot. I tasti tenui sono gli slot usati, quello pieno lo slot scelto. <span class="s">KIT LOADED</span></li>
+    <li><strong>Salvare</strong>: scegli lo slot con KNOB 1, premi <span class="k">OCT+</span>. Se lo slot è usato: <span class="s">USED: OCT+ AGAIN TO OVERWRITE</span>, e un secondo OCT+ sovrascrive. <span class="s">KIT SAVED</span></li>
+    <li><strong>Nominare</strong>: KNOB 2 sceglie la lettera, KNOB 3 il carattere; il nome è scritto in alto a sinistra mentre lo componi. Un kit senza nome viene salvato come <span class="s">KIT 3</span> (con il numero dello slot).</li>
+    <li><strong>Uscire</strong>: <span class="k">OCT−</span> o un bottone di pagina.</li>
+  </ul>
+
+  <div class="page-ref">
+    <figure class="shot"><img src="img/save_2.png" alt=""><figcaption>SAVE › VOICES.</figcaption></figure>
+    <div class="body">
+      <div class="ttl"><h3>VOICES</h3><span class="path">SAVE › 2ª pagina · EDIT › VOICE › PRESETS</span></div>
+      <table class="kn"><tbody>
+        <tr><td>SLOT</td><td class="w">Il preset in cui salvare. <span class="rng">1 … 16</span></td></tr>
+      </tbody></table>
+      <p>Un preset contiene il <strong>suono</strong> di una voce: motore, manopole, tone, inviluppi, LFO e modulazioni. Non contiene la sequenza, il mixer e il routing, quindi puoi cambiare suono senza perdere il ritmo.</p>
+      <ul>
+        <li>Tasto bianco: carica il preset nella voce scelta (i controlli bloccati restano). <span class="s">VOICE LOADED</span></li>
+        <li><span class="k">OCT+</span>: salva la voce scelta nello slot (due volte se usato). <span class="s">VOICE SAVED</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>L'autosave</h2>
+  <p>Quando il kit è cambiato, la macchina è ferma e non tocchi niente per 4 secondi, il kit va in un'area di salvataggio automatico; all'accensione Drummatic riparte da lì. Anche caricare un kit lo rende il punto di partenza della prossima accensione. L'autosave si spegne nel menu di sistema (AUTOSV).</p>
+  <div class="note warn"><b class="h">Scrivere nella flash ferma l'audio</b><p>Ogni scrittura nella memoria (salvataggio, autosave, impostazioni) interrompe l'audio per qualche decina di millisecondi. Per questo l'autosave aspetta che la macchina sia ferma: salva i kit a sequencer fermo.</p></div>
+
+  <h2>Il kit di riferimento "Dael"</h2>
+  <p>SAVE › KITS › NEW girato a destra due volte, poi <span class="k">OCT+</span>: <span class="s">DAEL REFERENCE KIT</span>. È l'intro di "Dael" ricostruita: 90 BPM, −20 cent, una battuta. Colpo e buzz sull'1, buzz che cresce sul 4, rumore sul 5, zap sul 6, pila metallica sull'8, hat sul 9 e sul 13; la voce 8 è la cassa del riferimento cassa/basso, fuori dal pattern. I livelli delle voci sono entro 0,6 dB RMS dal riferimento, il mix a −20,4 dBFS RMS. È un buon punto di partenza da cui costruire.</p>
+</section>
+
+<!-- ======================================================= 15 -->
+<section class="chapter" id="c15">
+  <header><span class="mark">QQc15QQ</span><div class="num">15</div><h1>Il menu di sistema e il DADO</h1><div class="kick">HOME tenuto · la randomizzazione pagina per pagina</div></header>
+
+  <div class="page-ref">
+    <figure class="shot"><img src="img/menu.png" alt=""><figcaption>Il menu: HOME tenuto mezzo secondo.</figcaption></figure>
+    <div class="body">
+      <div class="ttl"><h3>MENU</h3><span class="path">HOME tenuto</span></div>
+      <p>Impostazioni dello strumento, non del kit: restano uguali qualunque kit carichi. Si esce con <span class="k">HOME</span> o con un bottone di pagina; le impostazioni vengono salvate in quel momento.</p>
+      <table class="kn"><tbody>
+        <tr><td>PALETTE</td><td class="w">I colori dello schermo. <span class="rng">GREY · GREEN · AMBER · ICE · VIOLET · ROSE · PAPER · HI-CON · NIGHT · MONO</span></td></tr>
+        <tr><td>LEDS</td><td class="w"><strong>GLOW</strong>: i LED "disponibili" sono tenui. <strong>DARK</strong>: si accendono solo i LED attivi. <span class="rng">GLOW · DARK</span></td></tr>
+        <tr><td>USB OUT</td><td class="w"><strong>FIXED</strong>: l'audio USB esce a livello pieno, indipendente dalla manopola MASTER (ideale per registrare). <strong>MASTER</strong>: la manopola regola anche l'USB. <span class="rng">FIXED · MASTER</span></td></tr>
+        <tr><td>AUTOSV</td><td class="w">Autosave del kit. <span class="rng">ON · OFF</span></td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+  <h2>Il DADO</h2>
+  <p>Il tasto nero <span class="k b">DADO</span> inventa valori nuovi. Cosa cambia dipende dalla pagina in cui sei:</p>
+  <table>
+    <thead><tr><th>Pagina</th><th class="w">Cosa randomizza</th><th>Messaggio</th></tr></thead>
+    <tbody>
+      <tr><td>EDIT FX ENV LFO SCL HOME</td><td class="w">Il suono della voce scelta.</td><td><span class="s">DADO: VOICE</span></td></tr>
+      <tr><td>SEQ</td><td class="w">La lane scelta in SEQ › LANE, sulla voce scelta.</td><td><span class="s">DADO: LANE</span></td></tr>
+      <tr><td>ARP</td><td class="w">I controlli della Performance non esclusi.</td><td><span class="s">DADO: PERFORMANCE</span></td></tr>
+      <tr><td>GLO</td><td class="w">Il suono di tutte le otto voci.</td><td><span class="s">DADO: ALL VOICES</span></td></tr>
+      <tr><td>DADO tenuto + V1…V8</td><td class="w">Il suono di ogni voce toccata, da qualunque pagina.</td><td><span class="s">DADO: VOICE</span></td></tr>
+    </tbody>
+  </table>
+  <ul>
+    <li>L'ampiezza dei cambiamenti è <strong>GLO › TEMPO › DADO</strong> (per la Performance, ARP › PF GLOBAL › DADO).</li>
+    <li>Il DADO non tocca mai sequenza, routing, choke, trigger, pan, volume e mandate, e tiene i decadimenti entro valori utilizzabili.</li>
+    <li>I controlli con il lucchetto restano com'erano.</li>
+  </ul>
+  <div class="note tip"><b class="h">Esplorare senza perdere niente</b><p>Prima di lanciare il dado su un suono che ti piace, salvalo come preset di voce o copialo con EDIT › VOICE › COPY: se il risultato non ti convince, PASTE lo riporta indietro.</p></div>
+</section>
+
+<!-- ======================================================= 16 -->
+<section class="chapter" id="c16">
+  <header><span class="mark">QQc16QQ</span><div class="num">16</div><h1>MIDI e clock</h1><div class="kick">Undici canali, via USB e TRS</div></header>
+
+  <p class="lead">Drummatic riceve il MIDI dalla porta USB e dall'ingresso TRS insieme. I canali seguono la stessa specifica del plugin: un sequencer o un controller che comanda Drummatic nel DAW comanda allo stesso modo l'FM-1.</p>
+
+  <div class="two">
+    <div>
+      <h3>Suonare le voci</h3>
+      <table class="compact"><thead><tr><th>Canale</th><th class="w">Note → azione</th></tr></thead><tbody>
+        <tr><td>1</td><td class="w">Do, Do#, Re, Re#, Mi, Fa, Fa#, Sol (qualsiasi ottava) suonano le voci 1–8. La velocity è la dinamica.</td></tr>
+        <tr><td>2–9</td><td class="w">La voce 1–8 suonata in modo cromatico: il Do3 (nota 60) è la sua intonazione di base.</td></tr>
+      </tbody></table>
+      <h3>Trasporto, mute e solo · canale 10</h3>
+      <table class="compact"><thead><tr><th>Note</th><th class="w">Azione</th></tr></thead><tbody>
+        <tr><td>0 · 1 · 2</td><td class="w">Play/stop alternato · play · stop.</td></tr>
+        <tr><td>12–19</td><td class="w">Mute on/off delle voci 1–8.</td></tr>
+        <tr><td>24–31</td><td class="w">Solo on/off delle voci 1–8.</td></tr>
+        <tr><td>36–43</td><td class="w">Mute momentaneo (finché la nota è tenuta).</td></tr>
+        <tr><td>48–55</td><td class="w">Solo momentaneo.</td></tr>
+        <tr><td>60–67</td><td class="w">Choke immediato della voce.</td></tr>
+      </tbody></table>
+    </div>
+    <div>
+      <h3>Kit e randomizzazione · canale 11</h3>
+      <table class="compact"><thead><tr><th>Note</th><th class="w">Azione</th></tr></thead><tbody>
+        <tr><td>0 · 1</td><td class="w">Kit precedente · successivo (fra gli slot usati).</td></tr>
+        <tr><td>2</td><td class="w">Un kit a caso.</td></tr>
+        <tr><td>3</td><td class="w">Randomizza tutte le voci.</td></tr>
+        <tr><td>12 · 13 · 14</td><td class="w">Performance: DADO · RESET · COMMIT.</td></tr>
+        <tr><td>24–31</td><td class="w">Randomizza la voce 1–8.</td></tr>
+      </tbody></table>
+      <h3>Il clock esterno</h3>
+      <p>In <strong>GLO › TEMPO › CLOCK › EXT</strong> Drummatic segue START, STOP e il clock MIDI (24 impulsi per quarto) e ricava il tempo dagli impulsi, con piccole correzioni continue per restare agganciato. In alto lo schermo scrive EXT al posto di BPM e SELECT non cambia il tempo.</p>
+      <ul>
+        <li>Il clock viene accettato da una sorgente alla volta, USB o TRS: la prima che lo manda. L'altra subentra dopo mezzo secondo senza clock.</li>
+        <li><span class="k">PLAY</span> arma la partenza: si parte al prossimo START (<span class="s">CLOCK EXT: WAITING FOR START</span>).</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================= 17 -->
+<section class="chapter" id="c17">
+  <header><span class="mark">QQc17QQ</span><div class="num">17</div><h1>Installazione, aggiornamento e soluzione dei problemi</h1><div class="kick">Flasher, UBOOT, ripristino, carico della CPU</div></header>
+
+  <h2>Installare o aggiornare</h2>
+  <p>Il firmware è un file <strong>drummatic-fm1-<i>versione</i>.fwsc</strong>. Si installa via USB in uno di questi modi:</p>
+  <ul>
+    <li><strong>Autechre Machine Plus Flasher</strong> (Windows): "Un altro file .fwsc", scegli il file, spunta le tre verifiche, Installa.</li>
+    <li><strong>DrummaticFlasher</strong> (Windows): ha il firmware dentro; collega l'FM-1 e premi Installa.</li>
+    <li><strong>Riga di comando</strong> (Windows, macOS, Linux): <code style="font-size:7.6pt">python3 fm1_install.py drummatic-fm1-0.1.fwsc</code>, dopo <code style="font-size:7.6pt">pip3 install mido python-rtmidi</code>.</li>
+  </ul>
+  <ol class="steps">
+    <li>Chiudi le applicazioni che usano il MIDI dell'FM-1 (DAW, editor, altri strumenti software).</li>
+    <li>Collega l'FM-1 direttamente al computer con un cavo USB dati, senza hub.</li>
+    <li>Avvia l'installazione e non scollegare l'FM-1 finché la barra non è completa.</li>
+    <li>L'FM-1 si riavvia da solo con il nuovo firmware. Se il programma dice che non è tornato in tempo, spegnilo e riaccendilo: il firmware è già scritto.</li>
+  </ol>
+
+  <h2>UBOOT e ripristino</h2>
+  <ul>
+    <li><strong>OCT− + OCT+ tenuti 5 secondi</strong>: lo schermo scrive <span class="s">UBOOT</span> e l'FM-1 entra nella modalità di aggiornamento, da cui si installa qualsiasi firmware.</li>
+    <li><strong>Protezione all'avvio</strong>: se due accensioni di fila si bloccano nei primi 30 secondi, il firmware entra da solo in UBOOT.</li>
+    <li><strong>Tornare a un altro firmware</strong>: reinstalla Autechre Machine Plus con il suo Flasher, oppure il firmware ufficiale V15 di M-VAVE.</li>
+  </ul>
+
+  <h2>Il carico della CPU</h2>
+  <p>L'FM-1 ha un processore piccolo. La percentuale in alto sullo schermo è il carico misurato: il kit di accensione ne usa una parte modesta, ma otto voci pesanti in stereo con filtri a pettine, glitch, delay e riverbero insieme possono superarlo. Sopra l'85 % per due blocchi audio di fila, il firmware chiude la voce più bassa con una dissolvenza di 3 ms per non gracchiare.</p>
+  <table class="compact">
+    <thead><tr><th>Più pesanti</th><th class="w">Consiglio</th></tr></thead>
+    <tbody>
+      <tr><td>ADDITIVE · SCRAPYRD · MODAL · RESON</td><td class="w">I motori più cari: usali su poche voci, o con meno PARTIALS (ADDITIVE).</td></tr>
+      <tr><td>STEREO</td><td class="w">Raddoppia il costo del motore: tienilo sulle voci che ne beneficiano davvero.</td></tr>
+      <tr><td>MINIGLCH · MEGAGLCH · COMB</td><td class="w">Le parti di TONE più pesanti.</td></tr>
+      <tr><td>Delay e riverbero</td><td class="w">Si spengono da soli quando non ricevono nulla: costano solo se le mandate sono aperte.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Soluzione dei problemi</h2>
+  <table>
+    <thead><tr><th>Sintomo</th><th class="w">Causa probabile e soluzione</th></tr></thead>
+    <tbody>
+      <tr><td>Premo PLAY e non parte</td><td class="w">CLOCK è su EXT: aspetta lo START MIDI. Riportalo su INT in GLO › TEMPO.</td></tr>
+      <tr><td>SELECT non cambia il tempo</td><td class="w">Stesso motivo: con il clock esterno il tempo arriva da fuori.</td></tr>
+      <tr><td>Una voce non si sente</td><td class="w">È mutata (grigia) o un'altra è in solo (LED SOLO acceso); oppure GAIN è basso, o un'altra voce la zittisce con CHOKE.</td></tr>
+      <tr><td>Tocco un tasto bianco e non succede nulla</td><td class="w">Il passo è oltre la lunghezza della sequenza (tasto spento): allunga LENGTH in SEQ › TIME. Oppure i tasti sono in PADS: premi REC fino a STEPS.</td></tr>
+      <tr><td>Il DADO non cambia un controllo</td><td class="w">Il controllo ha il lucchetto (etichetta rossa): toglilo con SAVE tenuto + manopola.</td></tr>
+      <tr><td>Le voci si spengono da sole</td><td class="w">La CPU è sopra l'85 %: alleggerisci il kit (vedi sopra).</td></tr>
+      <tr><td><span class="s">KIT TOO BIG</span></td><td class="w">Il kit non sta in uno slot: svuota le lane che non usi con SEQ › TOOLS › CLR LANE.</td></tr>
+      <tr><td>Piccoli buchi nell'audio a macchina ferma</td><td class="w">È l'autosave che scrive nella flash. Normale; si spegne nel menu (AUTOSV).</td></tr>
+      <tr><td>L'audio USB è troppo basso o troppo alto</td><td class="w">Menu › USB OUT: FIXED è il livello pieno, MASTER segue la manopola.</td></tr>
+      <tr><td>L'FM-1 non si accende più normalmente</td><td class="w">Tieni OCT− e OCT+ per 5 secondi per UBOOT, poi reinstalla il firmware.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ======================================================= A -->
+<section class="chapter qr" id="c18">
+  <header><span class="mark">QQc18QQ</span><div class="num">A</div><h1>Riferimento rapido</h1><div class="kick">Tutte le pagine e tutte le combinazioni</div></header>
+
+  <div class="two">
+    <div>
+      <h4>Pagine della voce</h4>
+      <table class="compact"><thead><tr><th>Pagina</th><th>K1</th><th>K2</th><th>K3</th><th>K4</th></tr></thead><tbody>
+        <tr><td>EDIT SYNTH</td><td colspan="4">le 4 manopole del motore</td></tr>
+        <tr><td>EDIT ENGINE</td><td>ENGINE</td><td>PITCH</td><td>STEREO</td><td>AMP ENV</td></tr>
+        <tr><td>EDIT VOICE</td><td>COPY</td><td>PASTE</td><td>RESET</td><td>PRESETS</td></tr>
+        <tr><td>FX TONE</td><td>FILTER</td><td>CUTOFF</td><td>RESO</td><td>DISTORT</td></tr>
+        <tr><td>FX TONE 2</td><td>DIST</td><td>ORDER</td><td></td><td></td></tr>
+        <tr><td>ENV 1 · 2</td><td>ATTACK</td><td>HOLD</td><td>DECAY</td><td>CURVE</td></tr>
+        <tr><td>ENV VELOCITY</td><td>ENV1 VEL</td><td>ENV2 VEL</td><td></td><td></td></tr>
+        <tr><td>LFO 1 · 2</td><td>SPEED</td><td>AMP</td><td>SHAPE</td><td>WAVE</td></tr>
+        <tr><td>LFO 1+ · 2+</td><td>SYNC</td><td>BIPOLAR</td><td>RESET</td><td></td></tr>
+        <tr><td>SCL MOD</td><td>SOURCE</td><td>TARGET</td><td>DEPTH</td><td>ROUTES</td></tr>
+        <tr><td>SCL MACRO</td><td>MACRO 1</td><td>MACRO 2</td><td>VARIAT</td><td></td></tr>
+        <tr><td>SCL LOCKS</td><td>TARGET</td><td>LOCK</td><td></td><td></td></tr>
+        <tr><td>SEQ EUCLID</td><td>STEPS</td><td>FILL</td><td>PATTERN</td><td>ROTATE</td></tr>
+        <tr><td>SEQ TIME</td><td>SPEED</td><td>MULT</td><td>LENGTH</td><td>SNAP</td></tr>
+        <tr><td>SEQ GROOVE</td><td>SHIFT</td><td>SWING</td><td>SHAPE</td><td>DENSITY</td></tr>
+        <tr><td>SEQ MORE</td><td>INVERT</td><td>RESET</td><td>RES LEN</td><td>HUMANIZE</td></tr>
+        <tr><td>SEQ LANE</td><td>LANE</td><td>MODE</td><td>LENGTH</td><td>ROTATE</td></tr>
+        <tr><td>SEQ TOOLS</td><td>ROT TRIG</td><td>CLR LANE</td><td>CLR TRIG</td><td></td></tr>
+        <tr><td>HOME MIX</td><td>GAIN</td><td>PAN</td><td>DELAY</td><td>REVERB</td></tr>
+        <tr><td>HOME ROUTING</td><td>CHOKE</td><td>TRIGGER</td><td>PERF</td><td>FLIP</td></tr>
+      </tbody></table>
+    </div>
+    <div>
+      <h4>Pagine del kit</h4>
+      <table class="compact"><thead><tr><th>Pagina</th><th>K1</th><th>K2</th><th>K3</th><th>K4</th></tr></thead><tbody>
+        <tr><td>PF ENV</td><td>ATTACK</td><td>HOLD</td><td>DECAY</td><td>CURVE</td></tr>
+        <tr><td>PF SYNTH</td><td>PITCH</td><td>SYNTH 1</td><td>SYNTH 2</td><td>SYNTH 3</td></tr>
+        <tr><td>PF MOD</td><td>SYNTH 4</td><td>MACRO 1</td><td>MACRO 2</td><td>VARIAT</td></tr>
+        <tr><td>PF TONE</td><td>MOD AMP</td><td>DISTORT</td><td>CUTOFF</td><td>RES</td></tr>
+        <tr><td>PF SEQ</td><td>STEPS</td><td>FILL</td><td>PATTERN</td><td>DENSITY</td></tr>
+        <tr><td>PF SEQ 2</td><td>PROB</td><td>RATCHET</td><td>DEPTH</td><td>ENABLED</td></tr>
+        <tr><td>PF GLOBAL</td><td>DADO</td><td>COMMIT</td><td>RESET</td><td></td></tr>
+        <tr><td>GLO TEMPO</td><td>BPM</td><td>CLOCK</td><td>HUMANIZE</td><td>DADO</td></tr>
+        <tr><td>GLO DELAY</td><td>SYNC</td><td>DIVISION</td><td>TIME</td><td>FEEDBACK</td></tr>
+        <tr><td>GLO DELAY 2</td><td>GLITCH</td><td>FB TILT</td><td>DUCKING</td><td>S.RATE</td></tr>
+        <tr><td>GLO DELAY 3</td><td>STEREO</td><td>PONG</td><td>&gt; REVERB</td><td>GAIN</td></tr>
+        <tr><td>GLO REVERB</td><td>MODE</td><td>DECAY</td><td>PREDELAY</td><td>GAIN</td></tr>
+        <tr><td>GLO REVERB 2</td><td>PRE SYNC</td><td>PRE DIV</td><td>S.RATE</td><td>IN TILT</td></tr>
+        <tr><td>GLO REVERB 3</td><td>OUT TILT</td><td></td><td></td><td></td></tr>
+        <tr><td>GLO MASTER</td><td>MAXIMIZE</td><td>LOW</td><td>MID</td><td>HIGH</td></tr>
+        <tr><td>GLO MASTER 2</td><td>GAIN</td><td>CLIP</td><td></td><td></td></tr>
+        <tr><td>SAVE KITS</td><td>SLOT</td><td>LETTER</td><td>CHAR</td><td>NEW</td></tr>
+        <tr><td>SAVE VOICES</td><td>SLOT</td><td></td><td></td><td></td></tr>
+        <tr><td>MENU</td><td>PALETTE</td><td>LEDS</td><td>USB OUT</td><td>AUTOSV</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+  <h4>Combinazioni</h4>
+  <table class="compact"><tbody>
+    <tr><td>SCL tenuto + manopola</td><td class="w">MAP: profondità della sorgente di SCL › MOD su quel controllo.</td><td>SAVE tenuto + manopola</td><td class="w">Lucchetto (ARP: fuori dal DADO).</td></tr>
+    <tr><td>HOME tenuto</td><td class="w">Menu di sistema.</td><td>OCT− + OCT+ 5 s</td><td class="w">UBOOT.</td></tr>
+    <tr><td>Bianchi tenuti + manopole</td><td class="w">Lane dei passi; PRESETS: gruppo di lane.</td><td>MUTE / SOLO / DADO + V1–V8</td><td class="w">Su ogni voce toccata.</td></tr>
+    <tr><td>REC</td><td class="w">STEPS › PADS › REC.</td><td>OCT+</td><td class="w">Conferma (salva, RESET, NEW).</td></tr>
+  </tbody></table>
+
+  <div class="end">Drummatic FM-1 · Manuale dell'interfaccia · firmware v0.1 · ottobre 2026. Motore audio: port di Drummatic 0.2.3. Piattaforma FM-1 da Felucca di Leo Kuroshita (GPL-3.0). M-VAVE e FM-1 sono marchi dei rispettivi proprietari.</div>
+</section>
+
+</body>
+</html>
