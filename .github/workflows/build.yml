@@ -3,6 +3,7 @@ name: Build
 on:
   push:
     branches: [main]
+    tags: ["v*"]
   workflow_dispatch:
 
 jobs:
@@ -41,3 +42,52 @@ jobs:
         with:
           name: Drummatic-macOS
           path: dist/Drummatic-macOS.zip
+
+  windows:
+    # cross-compilazione con MinGW-w64 (mingw-toolchain.cmake), come da README
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Strumenti
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q ninja-build g++-mingw-w64-x86-64-posix \
+            libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxext-dev libxcomposite-dev libfreetype-dev libfontconfig1-dev
+
+      - name: Compila
+        run: |
+          cmake -S . -B build-win -G Ninja -DCMAKE_TOOLCHAIN_FILE=$PWD/mingw-toolchain.cmake -DCMAKE_BUILD_TYPE=Release
+          cmake --build build-win -j3
+
+      - name: Impacchetta
+        run: |
+          OUT=dist/Drummatic-Windows
+          mkdir -p "$OUT"
+          cp build-win/Manipolo_artefacts/Release/Standalone/Drummatic.exe "$OUT/"
+          cp -R build-win/Manipolo_artefacts/Release/VST3/Drummatic.vst3 "$OUT/"
+          cp README.md "$OUT/LEGGIMI.md"
+          cp docs/Drummatic-Manuale.pdf "$OUT/"
+          cd dist && zip -qr Drummatic-Windows.zip Drummatic-Windows
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Drummatic-Windows
+          path: dist/Drummatic-Windows.zip
+
+  release:
+    # un tag v* (es. v0.2.3): release su GitHub con i due pacchetti
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [macos, windows]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/Drummatic-macOS/Drummatic-macOS.zip
+            dist/Drummatic-Windows/Drummatic-Windows.zip

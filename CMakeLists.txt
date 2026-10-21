@@ -2,7 +2,13 @@ cmake_minimum_required(VERSION 3.22)
 project(Drummatic VERSION 0.2.3)
 set(CMAKE_CXX_STANDARD 17)
 
-add_subdirectory(JUCE)
+if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/JUCE/CMakeLists.txt)
+    add_subdirectory(JUCE)
+else()
+    include(FetchContent)
+    FetchContent_Declare(juce GIT_REPOSITORY https://github.com/juce-framework/JUCE.git GIT_TAG 7.0.12 GIT_SHALLOW TRUE)
+    FetchContent_MakeAvailable(juce)
+endif()
 
 juce_add_plugin(Manipolo
     COMPANY_NAME "Emilio Falciatori"
