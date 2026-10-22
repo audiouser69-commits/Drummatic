@@ -2,7 +2,7 @@
 
 | File | Contenuto |
 | --- | --- |
-| `Drummatic-0.2.3-Windows.zip` | Drummatic 0.2.3 per Windows 10/11 a 64 bit: `Drummatic.exe` (standalone), `Drummatic.vst3`, il manuale PDF |
+| `Drummatic-0.2.4-Windows.zip` | Drummatic 0.2.4 per Windows 10/11 a 64 bit: `Drummatic.exe` (standalone), `Drummatic.vst3`, il manuale PDF |
 
 Installazione: estrai lo zip, copia `Drummatic.vst3` in `C:\Program Files\Common Files\VST3\` e riesegui la scansione
 in Ableton; `Drummatic.exe` si avvia da dove vuoi (SmartScreen: Ulteriori informazioni → Esegui comunque).
