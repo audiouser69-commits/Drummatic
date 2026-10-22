@@ -84,6 +84,12 @@ Flasher per Windows).
   (sysroot con alsa-lib e freetype per aarch64), oppure nativo su Linux con `-DDRUMMATIC_HW=ON`.
   `DrummaticHWTest` simula il pannello e salva le schermate di tutte le pagine.
 
+## Novità 0.2.4
+- Risolto: l'audio poteva sparire all'improvviso dopo aver avviato Drummatic con il suo PLAY. Bastava che il DAW
+  segnalasse anche per un attimo di essere in riproduzione (o partisse e si fermasse) perché il plugin passasse a
+  "segui il DAW": al successivo stop del DAW restava muto finché non si premeva di nuovo PLAY. Ora il PLAY del plugin
+  vale finché non premi STOP: col DAW in riproduzione segue la sua posizione, col DAW fermo continua da solo.
+
 ## Novità 0.2.3
 - START ed END del sampler modulabili in modalità MAP trascinando i marcatori sulla forma d'onda (es. lane MACRO 2 → START per affettare un loop).
 - Tempi visualizzati in modo pulito ("50 ms").

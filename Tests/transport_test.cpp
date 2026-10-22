@@ -28,6 +28,18 @@ int main()
     // blocco gigante oltre quello annunciato
     std::vector<float> L (8192), R (8192); tp.hostPlaying = true;
     dm.process (L.data(), R.data(), 8192, tp);
-    std::printf ("play=%.3f fermo=%.4f dopo-riavvio-DAW=%.3f\n", a, b, c);
-    return (a > 0.05f && b < 1e-4f && c > 0.05f) ? 0 : 1;
+    // PLAY del plugin con il DAW fermo: un attimo di play del DAW, o un suo avvio e stop, non deve zittirlo
+    dm.setTransportMode (DrumMachine::AlwaysPlay);
+    runBlocks (dm, tp, 100, false);
+    runBlocks (dm, tp, 1, true);
+    runBlocks (dm, tp, 200, false);
+    const float d = runBlocks (dm, tp, 100, false);
+    runBlocks (dm, tp, 100, true);                        // il DAW parte: segue la sua posizione
+    runBlocks (dm, tp, 200, false);                       // il DAW si ferma: il plugin continua
+    const float e = runBlocks (dm, tp, 100, false);
+    dm.setTransportMode (DrumMachine::Stopped);
+    runBlocks (dm, tp, 200, false);
+    const float f = runBlocks (dm, tp, 100, false);
+    std::printf ("play=%.3f fermo=%.4f dopo-riavvio-DAW=%.3f plugin-play-dopo-blip=%.3f dopo-stop-DAW=%.3f stop-plugin=%.4f\n", a, b, c, d, e, f);
+    return (a > 0.05f && b < 1e-4f && c > 0.05f && d > 0.05f && e > 0.05f && f < 1e-4f) ? 0 : 1;
 }

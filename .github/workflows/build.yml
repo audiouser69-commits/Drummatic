@@ -55,6 +55,11 @@ jobs:
           sudo apt-get install -y -q ninja-build g++-mingw-w64-x86-64-posix \
             libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxext-dev libxcomposite-dev libfreetype-dev libfontconfig1-dev
 
+      - name: Test del motore (trasporto, silenzi improvvisi)
+        run: |
+          g++ -O2 -std=c++17 Tests/transport_test.cpp -o transport_test && ./transport_test
+          g++ -O2 -std=c++17 Tests/silence_test.cpp -o silence_test && ./silence_test 5 1 && ./silence_test 5 2
+
       - name: Compila
         run: |
           cmake -S . -B build-win -G Ninja -DCMAKE_TOOLCHAIN_FILE=$PWD/mingw-toolchain.cmake -DCMAKE_BUILD_TYPE=Release

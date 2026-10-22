@@ -145,8 +145,11 @@ public:
         if (mode == FollowDaw && tp.hostPlaying && tp.hostHasPosition) { play = true; beat0 = tp.ppq; }
         else if (mode == AlwaysPlay)
         {
-            if (tp.hostPlaying && tp.hostHasPosition) { transportMode = FollowDaw; play = true; beat0 = tp.ppq; }
-            else play = true;
+            // PLAY del plugin: suona finché non si preme STOP. Col DAW in riproduzione segue la sua posizione;
+            // quando il DAW si ferma continua col clock interno da dove era (prima passava a "segui il DAW" e al primo
+            // stop del DAW, anche solo un attimo di play riportato dall'host, restava muto fino a un nuovo PLAY)
+            play = true;
+            if (tp.hostPlaying && tp.hostHasPosition) beat0 = tp.ppq;
         }
         const double beatsPerSample = bpm / 60.0 / sr;
         const double beat1 = beat0 + beatsPerSample * n;
