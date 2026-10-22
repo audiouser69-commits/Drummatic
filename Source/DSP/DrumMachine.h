@@ -92,6 +92,7 @@ public:
             if (note == 0) transportMode = (transportMode.load() == Stopped || (! running.load())) ? AlwaysPlay : Stopped;
             else if (note == 1) transportMode = AlwaysPlay;
             else if (note == 2) transportMode = Stopped;
+            if (note <= 2 && transportMode.load() == Stopped) { stopReason = 2; stopNote = note; }
             else if (note >= 12 && note < 20) mute[note - 12] = ! mute[note - 12].load();
             else if (note >= 24 && note < 32) solo[note - 24] = ! solo[note - 24].load();
             else if (note >= 36 && note < 44) momMute[note - 36] = true;
@@ -222,14 +223,22 @@ public:
             float dl, dr, rl, rr;
             delay.process (dL[i], dR[i], dl, dr, dTime, gs.dFeedback, gs.dGlitch, gs.dFbTilt, gs.dDucking, gs.dSRate, gs.dGain, gs.dStereo, gs.dPong);
             reverb.process (rL[i] + dl * gs.dToRev, rR[i] + dr * gs.dToRev, rl, rr, rPre, gs.rDecay, gs.rSRate, gs.rInTilt, gs.rOutTilt, gs.rGain, gs.rMode);
+            // uno stato guasto negli effetti o nel master zittirebbe tutto per sempre: si azzera quel blocco
+            if (! finite (dl) || ! finite (dr) || std::abs (dl) + std::abs (dr) > 256.0f) { delay.reset(); dl = dr = 0; fxRecoveries.fetch_add (1); }
+            if (! finite (rl) || ! finite (rr) || std::abs (rl) + std::abs (rr) > 256.0f) { reverb.reset(); rl = rr = 0; fxRecoveries.fetch_add (1); }
             float L = outL[i] + dl + rl, R = outR[i] + dr + rr;
             master.process (L, R, gs.maximize, gs.eqLow, gs.eqMid, gs.eqHigh, gs.masterDb, gs.clip);
-            outL[i] = finite (L) ? L : 0.0f; outR[i] = finite (R) ? R : 0.0f;
+            if (! finite (L) || ! finite (R) || ! finite (master.env)) { master.reset(); L = R = 0; fxRecoveries.fetch_add (1); }
+            outL[i] = L; outR[i] = R;
         }
         (void) xd;
     }
 
-    void setTransportMode (int m) { transportMode = m; }
+    // perché il sequencer è fermo (lo mostra l'interfaccia): 0 nessun motivo, 1 STOP del plugin, 2 nota MIDI ch 10
+    std::atomic<int> stopReason { 0 }, stopNote { -1 };
+    std::atomic<int> fxRecoveries { 0 };
+    int voiceRecoveries() const { int n = 0; for (auto& v : voices) n += v.recoveries.load (std::memory_order_relaxed); return n; }
+    void setTransportMode (int m, int reason = 1) { if (m == Stopped) { stopReason = reason; stopNote = -1; } transportMode = m; }
 
 private:
     struct Ev { int offset = 0; int voice = 0; TriggerInfo info; bool choke = false; };

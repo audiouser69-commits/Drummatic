@@ -25,7 +25,7 @@ ManipoloEditor::ManipoloEditor (ManipoloProcessor& p)
 
     addAndMakeVisible (playBtn); addAndMakeVisible (stopBtn);
     playBtn.onClick = [this] { proc.dm.setTransportMode (mp::DrumMachine::AlwaysPlay); };
-    stopBtn.onClick = [this] { proc.dm.setTransportMode (mp::DrumMachine::Stopped); };
+    stopBtn.onClick = [this] { proc.dm.setTransportMode (mp::DrumMachine::Stopped, 1); };
     playBtn.setTooltip ("Avvia il sequencer (in un DAW segue comunque il trasporto)");
     stopBtn.setTooltip ("Ferma il sequencer e smetti di seguire il DAW. Premi PLAY per riarmare");
 
@@ -109,7 +109,20 @@ void ManipoloEditor::timerCallback()
     playBtn.setToggleState (running || blink, juce::dontSendNotification);
     stopBtn.setToggleState (mode == mp::DrumMachine::Stopped, juce::dontSendNotification);
     bpm.setVisible (! proc.hostDrivesTransport.load());
-    kitName.setText (proc.currentKit.existsAsFile() ? proc.currentKit.getFileNameWithoutExtension() : juce::String ("Kit senza nome"), juce::dontSendNotification);
+    // la barra del kit dice perché non suona, se il sequencer è fermo mentre il DAW suona, o se l'audio è stato ripristinato
+    juce::String status;
+    const int rec = proc.dm.voiceRecoveries() + proc.dm.fxRecoveries.load();
+    const auto now = juce::Time::getMillisecondCounter();
+    if (rec != lastRecoveries) { lastRecoveries = rec; recoveryShownAt = now; }
+    if (mode == mp::DrumMachine::Stopped && proc.hostPlaying.load())
+        status = proc.dm.stopReason.load() == 2 ? "FERMO: nota MIDI " + juce::String (proc.dm.stopNote.load()) + " sul canale 10 - premi PLAY"
+                                                : juce::String ("FERMO: premuto STOP - premi PLAY");
+    else if (recoveryShownAt != 0 && now - recoveryShownAt < 4000)
+        status = "AUDIO RIPRISTINATO";
+    kitName.setText (status.isNotEmpty() ? status
+                     : proc.currentKit.existsAsFile() ? proc.currentKit.getFileNameWithoutExtension() : juce::String ("Kit senza nome"),
+                     juce::dontSendNotification);
+    kitName.setColour (juce::Label::textColourId, status.isNotEmpty() ? juce::Colour (0xffff6b4a) : ui::col::text);
 }
 
 void ManipoloEditor::paint (juce::Graphics& g)

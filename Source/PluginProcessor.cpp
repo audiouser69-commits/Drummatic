@@ -145,7 +145,7 @@ void ManipoloProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
             tp.hostPlaying = pos->getIsPlaying();
         }
     }
-    hostDrivesTransport = tp.hostHasPosition;
+    hostDrivesTransport = tp.hostHasPosition; hostPlaying = tp.hostPlaying;
     pullSettings (tp.bpm);
 
     {

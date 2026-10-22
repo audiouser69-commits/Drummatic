@@ -111,11 +111,32 @@ public:
 
     void choke() { env1.choke(); env2.choke(); sampler.playing = false; chokeFade = 1.0f; choking = true; }
     void onTransportStart() { lfo[0].onTransportStart(); lfo[1].onTransportStart(); }
+    // Un valore non finito (o fuori misura) uscito dal motore, dal filtro o dalla distorsione: lo stato interno di
+    // quel blocco può restare guasto e zittire la voce per sempre. Si azzera tutto il percorso della voce.
+    std::atomic<int> recoveries { 0 };
+    bool needRecover = false;
+    void recover (int eng)
+    {
+        needRecover = false;
+        for (auto& f : filt) f.reset();
+        for (auto& d : dist) d.reset();
+        for (auto& d : dcBlock) d.z = 0;
+        if (eng >= 0 && eng < kNumSynthEngines)          // (raro: un'allocazione sul thread audio è accettabile qui)
+            for (int c = 0; c < 2; ++c)
+            {
+                engines[c][eng] = makeEngine (eng); engines[c][eng]->prepare (sr);
+                engines[c][eng]->rng = Rng (0x1000u + (uint32_t) (eng * 7 + c * 131) + (uint32_t) recoveries.load());
+            }
+        lfo[0].phase = lfo[1].phase = 0;
+        for (auto& x : lfoVal) x = 0;
+        recoveries.fetch_add (1, std::memory_order_relaxed);
+    }
     bool isActive() const { return env1.active() || env2.active() || sampler.playing; }
 
     // Genera nSamples in outL/outR (sommati), più mandate effetto
     void render (const VoiceSettings& s, float* outL, float* outR, float* dlyL, float* dlyR, float* revL, float* revR, int n)
     {
+        if (needRecover) recover (s.engine);
         float peak = 0;
         for (int i = 0; i < n; ++i)
         {
@@ -157,7 +178,8 @@ public:
                 float v = *ch[c];
                 if (s.post) { v = filt[c].process (v, s.filterMode, cur[T_Cutoff], cur[T_Res]); v = dist[c].process (v, s.distMode, curDist); }
                 else { v = dist[c].process (v, s.distMode, curDist); v = filt[c].process (v, s.filterMode, cur[T_Cutoff], cur[T_Res]); }
-                *ch[c] = finite (v) ? v : 0.0f;
+                if (! finite (v) || std::abs (v) > 64.0f) { v = 0.0f; needRecover = true; }
+                *ch[c] = v;
             }
             if (choking) { chokeFade *= 0.997f; L *= chokeFade; R *= chokeFade; if (chokeFade < 0.001f) { choking = false; for (auto& f : filt) f.reset(); } }
 

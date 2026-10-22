@@ -87,6 +87,6 @@ int main (int argc, char** argv)
             nextKit = t + sr * (2 + (long long) (r.next() % 6));
         }
     }
-    std::printf ("%d min, seme %u: %s\n", minutes, seed, found ? "PROBLEMI" : "ok");
+    std::printf ("%d min, seme %u: %s (ripristini: voci %d, effetti %d)\n", minutes, seed, found ? "PROBLEMI" : "ok", dm.voiceRecoveries(), dm.fxRecoveries.load());
     return found ? 1 : 0;
 }

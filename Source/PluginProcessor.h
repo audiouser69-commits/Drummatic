@@ -59,7 +59,7 @@ public:
     static juce::File userFolder();
     juce::File currentKit;
 
-    std::atomic<bool> hostDrivesTransport { false };
+    std::atomic<bool> hostDrivesTransport { false }, hostPlaying { false };
     juce::AudioFormatManager formats;
 
 private:

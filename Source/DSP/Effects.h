@@ -136,6 +136,7 @@ struct MasterBus
     float sr = 48000, env = 0;
     Svf lowL, lowR, midL, midR, highL, highR;
     void prepare (float s) { sr = s; }
+    void reset() { env = 0; for (auto* f : { &lowL, &lowR, &midL, &midR, &highL, &highR }) f->reset(); }
     void process (float& L, float& R, float maximize, float lowDb, float midDb, float highDb, float gainDb, int clip)
     {
         // MAXIMIZE: compressore aggressivo con make-up (alza i segnali deboli e le code)

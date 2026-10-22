@@ -89,6 +89,10 @@ Flasher per Windows).
   segnalasse anche per un attimo di essere in riproduzione (o partisse e si fermasse) perché il plugin passasse a
   "segui il DAW": al successivo stop del DAW restava muto finché non si premeva di nuovo PLAY. Ora il PLAY del plugin
   vale finché non premi STOP: col DAW in riproduzione segue la sua posizione, col DAW fermo continua da solo.
+- Autoriparazione: se un motore, un filtro, una distorsione, il delay, il riverbero o il master producono un valore
+  non valido, quel blocco viene azzerato al volo invece di restare guasto e zittire tutto.
+- Diagnosi sullo schermo: se il sequencer è fermo mentre il DAW suona, al posto del nome del kit compare il motivo
+  ("FERMO: premuto STOP" oppure "FERMO: nota MIDI … sul canale 10") e, dopo un'autoriparazione, "AUDIO RIPRISTINATO".
 
 ## Novità 0.2.3
 - START ed END del sampler modulabili in modalità MAP trascinando i marcatori sulla forma d'onda (es. lane MACRO 2 → START per affettare un loop).

@@ -70,6 +70,7 @@ public:
     bool keyPressed (const juce::KeyPress&) override;
 
 private:
+    int lastRecoveries = 0; juce::uint32 recoveryShownAt = 0;
     ManipoloProcessor& proc;
     ui::Look look;
     ui::Context ctx;

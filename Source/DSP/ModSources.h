@@ -123,6 +123,8 @@ struct Lfo
     // avanza di dt secondi alla frequenza hz; restituisce valore già scalato (amp, uni/bipolare)
     float advance (float dt, float hz)
     {
+        if (! std::isfinite (phase)) phase = 0;              // (uno stato guasto non resta per sempre)
+        if (! std::isfinite (hz)) hz = 0;
         if (! (resetMode == OneShot && oneShotDone))
         {
             phase += (double) hz * dt;

@@ -73,3 +73,11 @@ if (DRUMMATIC_HW)
     target_compile_definitions(DrummaticHWTest PRIVATE JUCE_WEB_BROWSER=0 JUCE_USE_CURL=0 JucePlugin_Name="Drummatic")
     target_link_libraries(DrummaticHWTest PRIVATE juce::juce_audio_utils juce::juce_audio_formats juce::juce_recommended_config_flags)
 endif()
+
+if (MANIPOLO_TESTS)
+    # il plugin intero per minuti, con random e parametri girati a caso: cerca i silenzi improvvisi
+    juce_add_console_app(DrummaticSilenceTest PRODUCT_NAME "DrummaticSilenceTest")
+    target_sources(DrummaticSilenceTest PRIVATE Tests/silence_proc_test.cpp Source/Params.cpp Source/PluginProcessor.cpp Source/PluginEditor.cpp)
+    target_compile_definitions(DrummaticSilenceTest PRIVATE JUCE_WEB_BROWSER=0 JUCE_USE_CURL=0 JucePlugin_Name="Drummatic")
+    target_link_libraries(DrummaticSilenceTest PRIVATE juce::juce_audio_utils juce::juce_audio_formats juce::juce_recommended_config_flags)
+endif()
