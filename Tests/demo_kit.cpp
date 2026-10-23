@@ -107,6 +107,25 @@ int main (int argc, char** argv)
         set (3, "start", 0.05f); set (3, "end", 0.6f);
     }
 
+    // 0.4: strato LAZER sulla voce 6 (Laser Bounce con BRK TAPZ), tappeto Grain Cloud sotto la voce 8, coda String sulla 5,
+    // REPEAT sulla 2 e una performance di glitch programmata nel sequencer della Performance
+    set (5, "lzOn", 1); set (5, "lzEng", 6); set (5, "lzsweep", -0.5f); set (5, "lzstime", 0.25f); set (5, "lztimbre", 0.35f);
+    set (5, "lzlevel", -10.0f); set (5, "tzOn", 1); set (5, "tzTaps", 9); set (5, "tzShape", 0.6f); set (5, "tzMix", 0.5f);
+    set (7, "lzOn", 1); set (7, "lzEng", 15); set (7, "lzdecay", 6.0f); set (7, "lzspread", 0.9f); set (7, "lzlevel", -16.0f); set (7, "lzdens", 0.35f);
+    p.dm.vshared[7].depth[S_Lfo1][T_LzColor] = 0.3f;
+    set (4, "tail", 3); set (4, "tailLvl", 0.4f); set (4, "tailDec", 0.8f);
+    set (1, "rpCount", 3); set (1, "rpGaps", 0.3f); set (1, "rpRev", 0.35f); set (1, "rpCrush", 0.3f);
+    p.apvts.getParameter ("ps_on")->setValueNotifyingHost (1.0f);
+    {
+        auto& s = p.perfSeq;
+        s.lock[3][mpp::PF_RpMix] = 1.0f; s.lock[3][mpp::PF_RpGaps] = 0.4f;
+        s.lock[6][mpp::PF_LzEngine] = 0.25f; s.lock[6][mpp::PF_LzTimbre] = 0.6f; s.lock[6][mpp::PF_TzMix] = 0.9f;
+        s.lock[7][mpp::PF_Ratchet] = 0.75f; s.lock[7][mpp::PF_Distort] = 0.5f; s.glide[7] = 0.6f;
+        s.lock[11][mpp::PF_Cutoff] = -0.5f; s.lock[11][mpp::PF_LzLevel] = 0.8f; s.glide[11] = 0.8f; s.prob[11] = 0.75f;
+        s.lock[14][mpp::PF_RpMix] = 1.0f; s.lock[14][mpp::PF_RpCrush] = 0.9f; s.lock[14][mpp::PF_RpRev] = 0.6f;
+        s.lock[15][mpp::PF_TzShape] = -0.9f; s.lock[15][mpp::PF_TzMix] = 1.0f;
+    }
+
     // FX / master
     p.apvts.getParameter ("d_fb")->setValueNotifyingHost (p.apvts.getParameter ("d_fb")->convertTo0to1 (0.4f));
     p.apvts.getParameter ("d_glitch")->setValueNotifyingHost (0.2f);

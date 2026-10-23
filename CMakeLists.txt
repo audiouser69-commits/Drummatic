@@ -83,7 +83,7 @@ if (MANIPOLO_TESTS)
 
     juce_add_console_app(DrummaticUiShots PRODUCT_NAME "DrummaticUiShots")
     target_sources(DrummaticUiShots PRIVATE Tests/ui_shots.cpp Source/Params.cpp Source/PluginProcessor.cpp Source/PluginEditor.cpp)
-    target_compile_definitions(DrummaticUiShots PRIVATE JUCE_WEB_BROWSER=0 JUCE_USE_CURL=0 JucePlugin_Name="Drummatic")
+    target_compile_definitions(DrummaticUiShots PRIVATE JUCE_WEB_BROWSER=0 JUCE_USE_CURL=0 JUCE_DISPLAY_SPLASH_SCREEN=0 JucePlugin_Name="Drummatic")
     target_link_libraries(DrummaticUiShots PRIVATE juce::juce_audio_utils juce::juce_audio_formats juce::juce_recommended_config_flags)
 endif()
 

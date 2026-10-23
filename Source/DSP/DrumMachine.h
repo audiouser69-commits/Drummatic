@@ -85,7 +85,7 @@ public:
         else if (channel >= 2 && channel <= 9)
         {
             TriggerInfo ti; ti.velocity = vel; ti.pitchSt = (float) (note - 60);
-            // KIT MODE: ogni tasto suona un motore LAZER diverso (Do2/36 = motore 1), senza trasporre
+            // KIT MODE: ogni tasto suona un motore LAZER diverso (nota 36 = motore 1), senza trasporre
             if (vs[channel - 2].lzKit) { ti.lzEngine = ((note - 36) % kNumLzEngines + kNumLzEngines) % kNumLzEngines; ti.pitchSt = 0; }
             addEvent (offset, channel - 2, ti);
         }

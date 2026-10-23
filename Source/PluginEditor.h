@@ -71,6 +71,9 @@ public:
     void resized() override;
     bool keyPressed (const juce::KeyPress&) override;
     void showPageForTest (int p) { showPage (p); }
+    void selectVoiceForTest (int v) { selectVoice (v); }
+    void armForTest (int src) { ctx.armedSource = src; voicePage.armedChanged(); lazerPage.armedChanged(); }
+    void seqForTest (int lane, bool allView) { seqPage.showForTest (lane, allView); }
 
 private:
     int lastRecoveries = 0; juce::uint32 recoveryShownAt = 0;

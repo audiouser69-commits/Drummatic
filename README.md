@@ -82,7 +82,7 @@ Shift+clic o doppio clic su una voce a sinistra = ascolto.
   SPREAD stereo, MIX, tempo sincronizzato o in ms.
 - **BRK REPEAT**: stutter che registra una fetta del colpo e la ripete (REPEATS) con buchi casuali (GAPS), reverse
   e bitcrush casuali (CRUSH): fill spezzati.
-- **KIT MODE**: sul canale MIDI della voce (2-9) ogni tasto suona un motore diverso (Do2/36 = motore 1).
+- **KIT MODE**: sul canale MIDI della voce (2-9) ogni tasto suona un motore diverso (nota 36, C1 in Ableton = motore 1).
 - **TRASCINA WAV**: trascina il colpo della voce direttamente nel DAW come file WAV (clic = salva in
   `Documenti/Drummatic/Renders`).
 

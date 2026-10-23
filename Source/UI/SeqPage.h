@@ -196,6 +196,12 @@ class SeqPage : public juce::Component, private juce::Timer
 {
 public:
     std::function<void (int)> onSelectVoice;
+    // per le schermate del manuale
+    void showForTest (int lane, bool allView)
+    {
+        laneBtns[lane]->setToggleState (true, juce::sendNotification); editor.lane = lane; updateLaneControls();
+        allBtn.setToggleState (allView, juce::dontSendNotification); showAll (allView);
+    }
     explicit SeqPage (Context& c) : ctx (c), editor (c), all (c), invert (c, "INVERT"), snap (c, "SNAP"), resetOn (c, "RESET"),
                                    speed (c), mult (c)
     {

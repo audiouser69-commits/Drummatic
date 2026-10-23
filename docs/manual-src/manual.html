@@ -106,6 +106,9 @@ figure.m img, figure.m figcaption { width: 66% !important; }
 .split { display: grid; grid-template-columns: 1fr 72mm; gap: 6mm; align-items: center; break-inside: avoid; }
 .split figure { margin: 0; } .split figure img { width: 100%; border: none; }
 .split figure figcaption { width: 100%; }
+/* ---------- capitolo LAZER ---------- */
+table.fam td:nth-child(2) { width: 30mm; font-size: 7.8pt; color: #39414a; }
+table.fam td:nth-child(3) { font-size: 8.2pt; }
 </style>
 </head>
 <body>
@@ -128,13 +131,13 @@ figure.m img, figure.m figcaption { width: 66% !important; }
     </g>
   </svg>
   <div class="brand">
-    <div class="eyebrow">Drum synth · Sampler · Sequencer euclideo</div>
+    <div class="eyebrow">Drum synth · Sampler · Glitch · Sequencer euclideo</div>
     <h1>DRUMMATIC</h1>
     <div class="sub">Manuale utente</div>
   </div>
   <div class="shot"><img src="img/p_voice.jpg" alt=""></div>
   <div class="meta">
-    <b>Versione 0.2.3</b> · ottobre 2026<br>
+    <b>Versione 0.4.0</b> · ottobre 2026<br>
     Windows (standalone + VST3) · macOS (standalone + VST3, universale)<br>
     Emilio Falciatori
   </div>
@@ -152,11 +155,14 @@ figure.m img, figure.m figcaption { width: 66% !important; }
     <li class="ch"><span class="n">5</span><span class="t">Il sequencer</span><span class="p" data-toc="c5"></span></li>
     <li class="ch"><span class="n">6</span><span class="t">Il sampler in pratica</span><span class="p" data-toc="cS"></span></li>
     <li class="sec"><span class="t">Pannello · Primi passi · Blend e inviluppo · START/END · Motori · Sequencer · Sei tecniche · MIDI</span></li>
-    <li class="ch"><span class="n">7</span><span class="t">Mixer, effetti e master</span><span class="p" data-toc="c6"></span></li>
-    <li class="ch"><span class="n">8</span><span class="t">Performance</span><span class="p" data-toc="c7"></span></li>
-    <li class="ch"><span class="n">9</span><span class="t">Kit, preset e randomizzazione</span><span class="p" data-toc="c8"></span></li>
-    <li class="ch"><span class="n">10</span><span class="t">Controllo MIDI e tastiera</span><span class="p" data-toc="c9"></span></li>
-    <li class="ch"><span class="n">11</span><span class="t">Risoluzione dei problemi</span><span class="p" data-toc="c10"></span></li>
+    <li class="ch"><span class="n">7</span><span class="t">Lo strato LAZER</span><span class="p" data-toc="cL"></span></li>
+    <li class="sec"><span class="t">Motori · 12 manopole · 16 famiglie · Tappeto di fondo · TAIL · BRK TAPZ · BRK REPEAT · KIT MODE · Trascina WAV</span></li>
+    <li class="ch"><span class="n">8</span><span class="t">Mixer, effetti e master</span><span class="p" data-toc="c6"></span></li>
+    <li class="ch"><span class="n">9</span><span class="t">Performance</span><span class="p" data-toc="c7"></span></li>
+    <li class="sec"><span class="t">Controlli · Voci e globali · Sequencer della Performance · Una performance di glitch programmata</span></li>
+    <li class="ch"><span class="n">10</span><span class="t">Kit, preset e randomizzazione</span><span class="p" data-toc="c8"></span></li>
+    <li class="ch"><span class="n">11</span><span class="t">Controllo MIDI e tastiera</span><span class="p" data-toc="c9"></span></li>
+    <li class="ch"><span class="n">12</span><span class="t">Risoluzione dei problemi</span><span class="p" data-toc="c10"></span></li>
     <li class="ch"><span class="n">A</span><span class="t">Appendice: tabelle di riferimento e cronologia versioni</span><span class="p" data-toc="c11"></span></li>
   </ol>
 </section>
@@ -164,7 +170,7 @@ figure.m img, figure.m figcaption { width: 66% !important; }
 <!-- ================= 1 INTRODUZIONE ================= -->
 <section class="chapter" id="c1">
   <header><div class="num">01</div><div><h1>Introduzione</h1><p class="lede">Cos'è Drummatic e come è organizzato</p></div></header>
-  <p><span data-mark="c1"></span>Drummatic è una drum machine ibrida a <strong>otto voci</strong>. Ogni voce unisce un sintetizzatore con 25 motori di sintesi, un campionatore con quattro motori di riproduzione, un filtro e una distorsione, un sistema di modulazione completo e un proprio <strong>sequencer euclideo</strong>. Le voci passano in un mixer con delay e riverbero in mandata e in un bus master con compressione, equalizzazione e clipping.</p>
+  <p><span data-mark="c1"></span>Drummatic è una drum machine ibrida a <strong>otto voci</strong>. Ogni voce unisce un sintetizzatore con 25 motori di sintesi, un campionatore con quattro motori di riproduzione, uno strato glitch <strong>LAZER</strong> con 64 motori, code ed effetti di ripetizione, un filtro e una distorsione, un sistema di modulazione completo e un proprio <strong>sequencer euclideo</strong>. Le voci passano in un mixer con delay e riverbero in mandata e in un bus master con compressione, equalizzazione e clipping.</p>
   <p>Drummatic funziona come <strong>applicazione standalone</strong> e come <strong>plugin VST3</strong> per Ableton Live e gli altri DAW compatibili, su Windows e macOS. Lo stato completo (suoni, sequenze, modulazioni, campioni) viene salvato con il progetto del DAW.</p>
 
   <h2>Concetti chiave</h2>
@@ -173,6 +179,8 @@ figure.m img, figure.m figcaption { width: 66% !important; }
     <div class="card"><h4>Modulazione a mappatura</h4><p>Otto sorgenti (Random, Velocity, Macro 1–2, Env 1–2, LFO 1–2) si collegano a quasi ogni manopola: premi MAP su una sorgente e trascina le manopole.</p></div>
     <div class="card"><h4>Sequenze generative</h4><p>Ogni voce ha un generatore euclideo con permutazioni, swing e curve di tempo, più dieci lane per passo con lunghezze indipendenti per poliritmi.</p></div>
     <div class="card"><h4>Controllo globale</h4><p>La pagina Performance sposta insieme i parametri di tutte le voci; COMMIT scrive il risultato nelle voci quando ti piace.</p></div>
+    <div class="card"><h4>Glitch e atmosfera</h4><p>Lo strato LAZER aggiunge a ogni voce laser, zap, metalli e tappeti di fondo, con code e due effetti di ripetizione (BRK TAPZ e BRK REPEAT).</p></div>
+    <div class="card"><h4>Performance programmata</h4><p>Il sequencer della Performance cambia i controlli globali passo dopo passo: i glitch arrivano esattamente dove li hai scritti.</p></div>
   </div>
 
   <h2>Requisiti</h2>
@@ -219,6 +227,7 @@ figure.m img, figure.m figcaption { width: 66% !important; }
       <tr><td>Kit</td><td><code>Documenti/Drummatic/Kits</code> · file <code>.mkit</code></td></tr>
       <tr><td>Preset di voce</td><td><code>Documenti/Drummatic/Voices</code> · file <code>.mvoice</code></td></tr>
       <tr><td>Campioni</td><td><code>Documenti/Drummatic/Samples</code> (cartella predefinita del browser campioni)</td></tr>
+      <tr><td>Colpi esportati</td><td><code>Documenti/Drummatic/Renders</code> · file <code>.wav</code> creati da TRASCINA WAV (capitolo 7)</td></tr>
     </tbody>
   </table>
   <p class="small">Se avevi già salvato kit con le versioni precedenti (cartella <code>Documenti/Manipolo</code>), al primo avvio vengono copiati automaticamente nella nuova cartella.</p>
@@ -230,8 +239,8 @@ figure.m img, figure.m figcaption { width: 66% !important; }
   <figure class="s"><img src="img/p_voice.jpg" alt=""><figcaption><b>Pagina VOICE.</b> A sinistra le otto voci, al centro la voce selezionata (qui la 7: Scrapyard più un campione in Granular), a destra il bus master.</figcaption></figure>
   <p><span data-mark="c3"></span>La finestra è divisa in quattro zone fisse e in un'area centrale che cambia con la pagina scelta.</p>
   <div class="callouts">
-    <div><b>Barra superiore</b>PLAY e STOP, tempo (solo standalone), le quattro pagine, il browser dei kit, TASTI e RANDOM.</div>
-    <div><b>Colonna voci</b>Clic per selezionare. Il LED si accende quando la voce suona. M e S per mute e solo. Shift+clic o doppio clic per ascoltarla.</div>
+    <div><b>Barra superiore</b>PLAY e STOP, tempo (solo standalone), le cinque pagine, il browser dei kit, TASTI e RANDOM.</div>
+    <div><b>Colonna voci</b>Clic per selezionare. Sotto il numero il motore attivo (+ S con il sampler, + L con il LAZER). Il LED si accende quando la voce suona. M e S per mute e solo. Shift+clic o doppio clic per ascoltarla.</div>
     <div><b>Master</b>MAXIMIZE, equalizzatore a tre bande, tipo di clipping, GAIN finale e profondità della randomizzazione.</div>
   </div>
   <h2>Le pagine</h2>
@@ -239,9 +248,10 @@ figure.m img, figure.m figcaption { width: 66% !important; }
     <thead><tr><th>Pagina</th><th>Contenuto</th></tr></thead>
     <tbody>
       <tr><td>VOICE</td><td>Il suono della voce selezionata: synth, sampler, blend, tone, modulazione, inviluppi, LFO, variation e mix.</td></tr>
+      <tr><td>LAZER</td><td>Lo strato glitch della voce selezionata: 64 motori, 12 manopole, coda, BRK TAPZ e BRK REPEAT.</td></tr>
       <tr><td>SEQ</td><td>Il sequencer della voce selezionata, con le lane per passo, e la vista ALL con tutte le sequenze.</td></tr>
       <tr><td>MIX / FX</td><td>Una striscia di canale per voce, Shatter Delay e Headspace Reverb.</td></tr>
-      <tr><td>PERFORM</td><td>Controlli globali che agiscono su tutte le voci insieme.</td></tr>
+      <tr><td>PERFORM</td><td>Controlli globali che agiscono su tutte le voci insieme e il sequencer della Performance.</td></tr>
     </tbody>
   </table>
   <h2>Usare le manopole</h2>
@@ -250,7 +260,7 @@ figure.m img, figure.m figcaption { width: 66% !important; }
     <tbody>
       <tr><td>Trascina su/giù</td><td>Cambia il valore.</td></tr>
       <tr><td>Alt + clic</td><td>Riporta il controllo al valore predefinito.</td></tr>
-      <tr><td>Tasto destro</td><td>Blocca o sblocca il controllo (lucchetto, segnato da una <strong>L</strong> rossa). Vedi capitolo 9.</td></tr>
+      <tr><td>Tasto destro</td><td>Blocca o sblocca il controllo (lucchetto, segnato da una <strong>L</strong> rossa). Vedi capitolo 10.</td></tr>
       <tr><td>In modalità MAP</td><td>Il trascinamento imposta la profondità di modulazione invece del valore; doppio clic la azzera.</td></tr>
     </tbody>
   </table>
@@ -260,7 +270,7 @@ figure.m img, figure.m figcaption { width: 66% !important; }
 <!-- ================= 4 LA VOCE ================= -->
 <section class="chapter" id="c4">
   <header><div class="num">04</div><div><h1>La voce</h1><p class="lede">Synth, sampler, tone e modulazione</p></div></header>
-  <p><span data-mark="c4"></span>Il percorso del segnale di ogni voce è: <strong>Synth + Sampler → Blend → blocco DC → Filtro / Distorsione (ordine selezionabile) → Gain e Pan → uscita e mandate</strong>.</p>
+  <p><span data-mark="c4"></span>Il percorso del segnale di ogni voce è: <strong>Synth + Sampler → Blend, + LAZER e coda → blocco DC → Filtro / Distorsione (ordine selezionabile) → BRK REPEAT → BRK TAPZ → Gain e Pan → uscita e mandate</strong>. Lo strato LAZER, la coda e i due effetti BRK sono descritti nel capitolo 7.</p>
 
   <h2>Synth</h2>
   <p>Il pulsante <span class="ctl">SYNTH</span> attiva il sintetizzatore; il menu sceglie il motore. <span class="ctl">PITCH</span> trasporta in semitoni (±48); le altre quattro manopole cambiano nome e funzione secondo il motore. <span class="ctl">ENV 2</span> fa usare al synth l'inviluppo 2 invece dell'1 per il volume; <span class="ctl">STEREO</span> genera un secondo canale leggermente desintonizzato.</p>
@@ -620,9 +630,129 @@ figure.m img, figure.m figcaption { width: 66% !important; }
   <p class="small">Doppio clic su una manopola o su un marcatore in modalità MAP azzera quella modulazione. Il kit d'esempio con tutte le voci di questo capitolo si chiama <em>Drummatic Demo</em>.</p>
 </section>
 
+<!-- ================= LAZER ================= -->
+<section class="chapter" id="cL">
+  <header><div class="num">07</div><div><h1>Lo strato LAZER</h1><p class="lede">64 motori glitch, code, BRK TAPZ e BRK REPEAT</p></div></header>
+  <p><span data-mark="cL"></span>Ogni voce ha un terzo strato sonoro, il <strong>LAZER</strong>, che si somma a synth e sampler. È pensato per glitch, zap, metalli, sweep e laser, ma anche per i <strong>tappeti di fondo</strong> che danno un'atmosfera ai glitch. Si regola nella pagina <span class="ctl">LAZER</span>, per la voce selezionata nella colonna di sinistra.</p>
+  <figure class="s"><img src="img/p_lazer.jpg" alt=""><figcaption><b>Pagina LAZER, voce 6.</b> In alto il motore (Laser Sweeps › Laser Bounce) e le 12 manopole condivise; in basso la coda (TAIL), BRK TAPZ e BRK REPEAT.</figcaption></figure>
+  <figure class="wide"><img src="img/f_lzflow.svg" alt=""><figcaption><b>Dove si inserisce lo strato LAZER.</b> LAZER e coda passano nel filtro e nella distorsione della voce, insieme a synth e sampler; i due effetti BRK lavorano sul risultato, prima di volume, pan e mandate.</figcaption></figure>
+
+  <h2>Accendere lo strato e scegliere il motore</h2>
+  <table>
+    <thead><tr><th>Controllo</th><th>Funzione</th></tr></thead>
+    <tbody>
+      <tr><td>LAZER</td><td>Accende lo strato per questa voce. Scegliere un motore lo accende da solo e fa sentire subito un colpo.</td></tr>
+      <tr><td>Famiglia · 1 2 3 4</td><td>Il menu sceglie una delle 16 famiglie, i quattro tasti la variante: 16 × 4 = 64 motori.</td></tr>
+      <tr><td>&lt; &gt; · DADO</td><td>Motore precedente o successivo nell'elenco · motore casuale.</td></tr>
+      <tr><td>ATMOSFERA</td><td>Sceglie a caso un motore di fondo (Grain Clouds, Shimmer Drones, Static &amp; Radio o Bowed Ping) e lo imposta lungo, largo e basso di volume: DECAY 8 s, SPREAD 80%, LEVEL −12 dB.</td></tr>
+      <tr><td>Inviluppo</td><td><em>Own</em>: inviluppo proprio, regolato da DECAY. <em>Env 1</em> / <em>Env 2</em>: segue un inviluppo della voce, utile per legare il LAZER al synth.</td></tr>
+      <tr><td>KIT MODE</td><td>Ogni tasto MIDI suona un motore diverso (vedi più avanti).</td></tr>
+      <tr><td>TRASCINA WAV</td><td>Trascina il colpo della voce nel DAW come file WAV; un clic lo salva soltanto.</td></tr>
+    </tbody>
+  </table>
+  <p>Il LAZER parte da Do 2 (131 Hz) e <strong>non</strong> segue il PITCH del synth: si intona con TUNE, con la lane PITCH del sequencer e con le note MIDI dei canali 2–9.</p>
+
+  <h2>Le 12 manopole condivise</h2>
+  <p>Tutti i 64 motori usano le stesse dodici manopole, ma ognuno le interpreta a modo suo: girando TIMBRE su un FM Metal cambi l'indice di modulazione, su un Grain Cloud la lunghezza dei grani. Le manopole sono modulabili con MAP (la riga MAP in basso vale per questa pagina come per VOICE), si bloccano con il tasto destro e sono toccate da VARIATION e dal DADO della voce.</p>
+  <table>
+    <thead><tr><th>Manopola</th><th>Funzione</th><th>Intervallo</th></tr></thead>
+    <tbody>
+      <tr><td>TUNE</td><td>Intonazione di base dello strato.</td><td>±24 semitoni</td></tr>
+      <tr><td>SWEEP</td><td>Quanto si sposta il pitch a ogni colpo; negativo = verso il basso.</td><td>±4 ottave</td></tr>
+      <tr><td>S.TIME</td><td>Durata dello sweep.</td><td>2 ms – 4 s</td></tr>
+      <tr><td>TIMBRE · COLOR · MOD</td><td>Il carattere del motore: vedi la tabella delle famiglie.</td><td>0–100%</td></tr>
+      <tr><td>RATE</td><td>Velocità del movimento interno (LFO, passi, impulsi, chiusura dell'inviluppo del timbro).</td><td>0–100%</td></tr>
+      <tr><td>GRIT</td><td>Saturazione e sporcizia; nelle famiglie digitali riduce i bit o scurisce.</td><td>0–100%</td></tr>
+      <tr><td>DENSITY</td><td>Quantità: grani al secondo, voci, impulsi, passi muti.</td><td>0–100%</td></tr>
+      <tr><td>SPREAD</td><td>Larghezza stereo.</td><td>0–100%</td></tr>
+      <tr><td>DECAY</td><td>Durata dell'inviluppo proprio (con <em>Own</em>).</td><td>5 ms – 20 s</td></tr>
+      <tr><td>LEVEL</td><td>Volume dello strato.</td><td>−∞ … +6 dB</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Le 16 famiglie</h2>
+  <table class="fam">
+    <thead><tr><th>Famiglia</th><th>Varianti</th><th>Carattere e manopole principali</th></tr></thead>
+    <tbody>
+      <tr><td>FM Metals</td><td>Bell Metal · Gong · Anvil · Tin Can</td><td>FM a tre operatori con rapporti inarmonici. TIMBRE = indice FM, RATE = quanto in fretta si chiude, COLOR = rapporto del secondo modulatore, DENSITY = modulazione incrociata, GRIT = feedback.</td></tr>
+      <tr><td>Laser Sweeps</td><td>Laser Down · Laser Up · Laser Bounce · Laser Zigzag</td><td>Il laser classico: sweep esponenziale, verso l'alto, a rimbalzo o a gradini. TIMBRE = forma (seno → dente di sega → quadra), DENSITY = 1–3 voci desintonizzate, COLOR = filtro, MOD = vibrato a RATE.</td></tr>
+      <tr><td>Wavefold Zaps</td><td>Fold Zap · Tri Fold · Double Fold · FM Fold</td><td>Onda ripiegata da un wavefolder. TIMBRE = quanto si ripiega, MOD = quanto il ripiegamento segue l'inviluppo, RATE = velocità dell'inviluppo, COLOR = asimmetria (rapporto FM in FM Fold).</td></tr>
+      <tr><td>Grain Clouds ◆</td><td>Sine Cloud · Dust Cloud · Blip Cloud · Chord Cloud</td><td>Nuvola di grani: seni, rumore filtrato, blip FM o note di un accordo. DENSITY = grani al secondo (4–400), TIMBRE = lunghezza del grano, MOD = dispersione di pitch, RATE = deriva, COLOR = brillantezza, SPREAD = panorama dei grani.</td></tr>
+      <tr><td>Sub Thumps</td><td>808 Sub · Square Sub · Double Thump · Pulse Sub</td><td>Colpi di sub con caduta di pitch (SWEEP e S.TIME). TIMBRE = click (saturazione in Square Sub), COLOR = drive, RATE = distanza del secondo colpo o velocità della pulsazione.</td></tr>
+      <tr><td>Bit Zaps</td><td>Bit Laser · Rate Sweep · Byte Crush · 8-Bit Blip</td><td>Oscillatori digitali a bassa risoluzione. COLOR = riduzione della frequenza di campionamento (in Rate Sweep segue lo sweep), GRIT = bit, MOD = bit in Byte Crush, TIMBRE = larghezza d'impulso in 8-Bit Blip.</td></tr>
+      <tr><td>Ring Mods</td><td>Ring Sine · Ring Saw · Ring Square · Ring Noise</td><td>Due sorgenti moltiplicate tra loro. TIMBRE = rapporto della seconda (0,5–8), MOD = la seconda scende mentre la prima sale, COLOR = filtro.</td></tr>
+      <tr><td>Noise Bursts</td><td>Band · Low · High · Comb Burst</td><td>Rumore in un filtro risonante passa-banda, passa-basso, passa-alto o a pettine. COLOR = frequenza, SWEEP la sposta, TIMBRE = risonanza, MOD = LFO del filtro a RATE.</td></tr>
+      <tr><td>Comb Pings</td><td>Pluck Ping · Metal Ping · Bowed Ping ◆ · Twin Comb</td><td>Risonatori a corda/tubo eccitati dal colpo. TIMBRE = lunghezza della risonanza, COLOR = brillantezza, DENSITY = eccitazione più corta. Bowed Ping è "strofinato": suona finché dura l'inviluppo. Twin Comb: MOD = rapporto del secondo risonatore.</td></tr>
+      <tr><td>Chirps</td><td>Accel · Decel · Geiger · Bounce Chirp</td><td>Treni di piccoli impulsi che accelerano, rallentano, cadono a caso o rimbalzano. RATE = impulsi al secondo (3–180), DENSITY = quanto accelera o rallenta, TIMBRE = durata dell'impulso, MOD = pitch casuale per impulso.</td></tr>
+      <tr><td>Formants</td><td>Vowel Zap · Talk Box · Choir Blip · Robot</td><td>Vocali sintetiche. TIMBRE = vocale (A → U), MOD = movimento della vocale (con l'inviluppo o, in Talk Box e Robot, con un LFO a RATE), COLOR = sposta le formanti.</td></tr>
+      <tr><td>Glitch Steps</td><td>S&amp;H · Scale · Octave · Stutter Steps</td><td>Note casuali a gradini (sample &amp; hold): libere, sulla scala minore, a ottave o con passi ripetuti. RATE = velocità, MOD = ampiezza (fino a ±36 st), DENSITY = passi muti, TIMBRE = forma d'onda, COLOR = filtro.</td></tr>
+      <tr><td>Data Corrupt</td><td>Bytebeat A · B · C · Corrupt Tape</td><td>Formule "bytebeat": dati trasformati in suono. TIMBRE, COLOR e MOD cambiano la formula, DENSITY la velocità, GRIT scurisce; Corrupt Tape aggiunge buchi casuali (RATE).</td></tr>
+      <tr><td>Phase Distort</td><td>PD Saw · PD Square · PD Reso · PD Pulse</td><td>Distorsione di fase in stile CZ: dal seno a timbri brillanti e risonanti. TIMBRE = quantità, MOD = quanto segue l'inviluppo, RATE = velocità, COLOR = forma in PD Pulse.</td></tr>
+      <tr><td>Shimmer Drones ◆</td><td>Fifth · Octave · Minor · Cluster Drone</td><td>Accordi lunghi di oscillatori che derivano lentamente. DENSITY = 2–6 voci, TIMBRE = seno → dente di sega, MOD = luccichio e desintonia, RATE = velocità della deriva, COLOR = filtro.</td></tr>
+      <tr><td>Static &amp; Radio ◆</td><td>Vinyl Dust · Shortwave · Hum &amp; Buzz · Modem</td><td>Rumori di fondo: polvere di vinile (DENSITY = crepitii, TIMBRE = fruscio), sintonia di onde corte (MOD = deriva), ronzio elettrico a 50 Hz (TUNE lo intona), toni di modem (RATE = velocità).</td></tr>
+    </tbody>
+  </table>
+  <p class="small">◆ = motori di fondo: non ripartono da zero a ogni colpo, quindi con un DECAY lungo formano un tappeto continuo.</p>
+
+  <h2>Un tappeto di fondo per i glitch</h2>
+  <ol class="steps">
+    <li>Scegli una voce libera (per esempio la 8), spegni SYNTH nella pagina VOICE e premi <span class="ctl">ATMOSFERA</span> nella pagina LAZER, oppure scegli tu un Grain Cloud, uno Shimmer Drone o uno Static &amp; Radio.</li>
+    <li>Nella pagina SEQ dai alla voce pochi colpi lunghi: STEPS 32 e FILL 1 la fanno ripartire una volta ogni due battute.</li>
+    <li>Porta DECAY fra 6 e 12 s e SPREAD sopra il 70%; tieni LEVEL basso (−12 … −18 dB) e aggiungi REVERB nella striscia della voce.</li>
+    <li>Per farlo respirare: MAP su LFO 1 e trascina COLOR o DENSITY; con LFO lento (2–8 battute) il tappeto cambia colore senza attirare l'attenzione.</li>
+  </ol>
+
+  <h2>TAIL: la coda di ogni colpo</h2>
+  <p>La coda si aggiunge a ogni colpo della voce, anche con il LAZER spento, e segue TUNE. <span class="ctl">LEVEL</span> ne regola il volume, <span class="ctl">DECAY</span> la durata (0,05–12 s), <span class="ctl">TONE</span> la brillantezza o l'intonazione.</p>
+  <table>
+    <thead><tr><th>Coda</th><th>Suono</th></tr></thead>
+    <tbody>
+      <tr><td>Bell · Metal · Glass</td><td>Parziali di campana, lastra metallica, vetro.</td></tr>
+      <tr><td>String</td><td>Corda pizzicata che risuona sotto il colpo.</td></tr>
+      <tr><td>808 Boom</td><td>Coda di sub in stile TR-808.</td></tr>
+      <tr><td>Tube</td><td>Rumore in due risonatori stretti: tubo, fischio.</td></tr>
+      <tr><td>Drone Pad · Noise Wash</td><td>Un pad o un soffio che si apre dopo il colpo: utili per l'atmosfera.</td></tr>
+      <tr><td>Reverse Swell</td><td>Un rigonfiamento che cresce e si interrompe di colpo, come un suono al contrario.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>BRK TAPZ: ripetizioni che accelerano o rallentano</h2>
+  <figure class="wide"><img src="img/f_tapz.svg" alt=""><figcaption><b>BRK TAPZ con 12 ripetizioni e primo intervallo di 1/8.</b> SHAPE positivo accorcia ogni intervallo (accelerando), negativo lo allunga; DECAY decide quanto cala ogni ripetizione.</figcaption></figure>
+  <table>
+    <thead><tr><th>Controllo</th><th>Funzione</th></tr></thead>
+    <tbody>
+      <tr><td>BRK TAPZ</td><td>Accende l'effetto per la voce.</td></tr>
+      <tr><td>SYNC · tempo · TIME</td><td>Primo intervallo a tempo (da 1/128 a 1/4) o in millisecondi (5–1000 ms).</td></tr>
+      <tr><td>TAPS</td><td>Numero di ripetizioni, da 1 a 32 (al massimo 6 s in tutto).</td></tr>
+      <tr><td>SHAPE</td><td>Positivo accelera (la pallina che rimbalza), negativo rallenta, al centro intervalli costanti.</td></tr>
+      <tr><td>DECAY · SPREAD · MIX</td><td>Quanto resta di ogni ripetizione · alternanza sinistra/destra · volume delle ripetizioni.</td></tr>
+    </tbody>
+  </table>
+  <p>Il riquadro sopra le manopole disegna le ripetizioni in tempo reale.</p>
+
+  <h2>BRK REPEAT: stutter e fill spezzati</h2>
+  <figure class="wide"><img src="img/f_repeat.svg" alt=""><figcaption><b>BRK REPEAT.</b> A ogni colpo registra una fetta e la ripete; ogni ripetizione può diventare un buco, andare al contrario o essere ridotta di bit.</figcaption></figure>
+  <table>
+    <thead><tr><th>Controllo</th><th>Funzione</th></tr></thead>
+    <tbody>
+      <tr><td>SYNC · tempo · SLICE</td><td>Lunghezza della fetta a tempo (da 1/128 a 1/4) o in millisecondi (5–500 ms).</td></tr>
+      <tr><td>REPEATS</td><td>Quante volte viene ripetuta (1–16).</td></tr>
+      <tr><td>GAPS · REVERSE · CRUSH</td><td>Probabilità che una ripetizione sia muta, al contrario o con bitcrush (CRUSH ne decide anche la quantità).</td></tr>
+      <tr><td>MIX</td><td>Al 100% lo stutter sostituisce il colpo; più in basso si sentono insieme.</td></tr>
+    </tbody>
+  </table>
+  <div class="tip"><b>Fill su richiesta</b>Lascia REPEAT spento nella voce e accendilo solo su alcuni passi con il sequencer della Performance (controllo RPT MIX, capitolo 9): il rullante resta pulito e si spezza solo dove vuoi tu.</div>
+
+  <h2>KIT MODE</h2>
+  <p>Con <span class="ctl">KIT MODE</span> acceso, le note del canale MIDI della voce (canale 2 per la voce 1, … canale 9 per la voce 8) non traspongono più: ogni tasto suona un motore diverso. La nota 36 (C1 in Ableton, la prima nota del Drum Rack) suona il motore 1, la nota 37 il motore 2 e così via fino alla nota 99 (motore 64); oltre si ricomincia. Così puoi suonare i 64 motori da una tastiera o scriverli in una clip MIDI, mentre le 12 manopole restano quelle della voce.</p>
+
+  <h2>Trascinare un colpo nel DAW</h2>
+  <p>Premi e trascina <span class="ctl">TRASCINA WAV</span> su una traccia audio di Ableton: Drummatic rende un colpo della voce a piena velocity (synth, sampler, LAZER, coda, TONE, BRK TAPZ e BRK REPEAT, senza delay, riverbero e master) e lo deposita come file WAV a 24 bit. Un semplice clic salva il file senza trascinarlo e apre la cartella <code>Documenti/Drummatic/Renders</code>.</p>
+</section>
+
 <!-- ================= 6 MIXER ================= -->
 <section class="chapter" id="c6">
-  <header><div class="num">07</div><div><h1>Mixer, effetti e master</h1><p class="lede">Strisce di canale, routing, delay, riverbero e bus master</p></div></header>
+  <header><div class="num">08</div><div><h1>Mixer, effetti e master</h1><p class="lede">Strisce di canale, routing, delay, riverbero e bus master</p></div></header>
   <figure><img src="img/p_mix.jpg" alt=""><figcaption><b>Pagina MIX / FX.</b> Otto strisce di canale a sinistra, Shatter Delay e Headspace Reverb a destra.</figcaption></figure>
 
   <h2><span data-mark="c6"></span>Strisce di canale</h2>
@@ -681,7 +811,7 @@ figure.m img, figure.m figcaption { width: 66% !important; }
 
 <!-- ================= 7 PERFORMANCE ================= -->
 <section class="chapter" id="c7">
-  <header><div class="num">08</div><div><h1>Performance</h1><p class="lede">Controllare tutte le voci insieme</p></div></header>
+  <header><div class="num">09</div><div><h1>Performance</h1><p class="lede">Controllare tutte le voci insieme e programmare i glitch</p></div></header>
   <figure class="xs"><img src="img/p_perf.jpg" alt=""><figcaption><b>Pagina PERFORM.</b> A sinistra ENABLE e FLIP per voce, al centro le sezioni di controllo, a destra i comandi globali.</figcaption></figure>
   <p><span data-mark="c7"></span>Ogni manopola della pagina Performance <strong>si somma</strong> al valore corrispondente di tutte le voci abilitate. Al centro (0%) non cambia nulla; ruotandola a destra o a sinistra sposti tutte le voci nella stessa direzione.</p>
   <table>
@@ -693,8 +823,11 @@ figure.m img, figure.m figcaption { width: 66% !important; }
       <tr><td>MODULATION</td><td>MACRO 1, MACRO 2, VARIATION e MOD AMP (scala tutte le profondità di modulazione, da 0 a 2×).</td></tr>
       <tr><td>TONE</td><td>DISTORT, CUTOFF, RES.</td></tr>
       <tr><td>SEQUENCER</td><td>STEPS, FILL, PATTERN, DENSITY, PROB, RATCHET.</td></tr>
+      <tr><td>LAZER</td><td>LEVEL, ENGINE (sposta il motore di ±32 posizioni), TIMBRE, COLOR, DENSITY, DECAY dello strato LAZER.</td></tr>
+      <tr><td>BRK TAPZ / REPEAT</td><td>TZ MIX e TZ SHAPE di BRK TAPZ; RPT MIX, GAPS, REVERSE e CRUSH di BRK REPEAT.</td></tr>
     </tbody>
   </table>
+  <div class="note"><b>Accendere i glitch dalla Performance</b>Un valore positivo su LEVEL, TZ MIX o RPT MIX <strong>accende</strong> lo strato corrispondente anche nelle voci dove è spento (LEVEL lo porta da −12 dB in su, i MIX diventano il volume dell'effetto). A zero o in negativo le voci tornano come sono: è il modo più semplice per far partire uno stutter o un laser solo in certi momenti.</div>
   <h2>Voci e controlli globali</h2>
   <p><span class="ctl">ENABLE</span> include o esclude una voce; <span class="ctl">FLIP</span> le applica l'effetto al contrario (per esempio, alzando DECAY le altre voci si allungano e questa si accorcia). Nel riquadro GLOBAL:</p>
   <table>
@@ -708,13 +841,44 @@ figure.m img, figure.m figcaption { width: 66% !important; }
     </tbody>
   </table>
   <div class="tip"><b>Flusso consigliato</b>Usa DADO finché trovi una variazione interessante, regola DEPTH per dosarla e premi COMMIT per renderla definitiva. Tasto destro su una manopola Performance la esclude dal DADO; i lucchetti delle singole voci escludono quei controlli anche dalla Performance.</div>
+
+  <h2>Sequencer della Performance</h2>
+  <figure><img src="img/p_perfseq.jpg" alt=""><figcaption><b>Il sequencer della Performance.</b> Sedici passi da 1/4: le barre ambra contano i controlli bloccati in ogni passo, la linea verde indica un GLIDE, il numero rosso una PROB sotto il 100%; il riquadro verde è il passo che suona, quello bianco il passo selezionato.</figcaption></figure>
+  <p>In fondo alla pagina PERFORM c'è un sequencer che <strong>programma la Performance</strong>: in ogni passo puoi <strong>bloccare</strong> uno o più controlli Performance su un valore. Quando il passo suona, quei controlli valgono il valore scritto; quelli non bloccati seguono la manopola. È una sequenza di "scene" che cambia battuta dopo battuta, mentre il groove continua: il modo per organizzare una performance di glitch programmata.</p>
+  <table>
+    <thead><tr><th>Controllo</th><th>Funzione</th></tr></thead>
+    <tbody>
+      <tr><td>SEQ ON</td><td>Accende il sequencer. Segue il trasporto di Drummatic (PLAY o il DAW).</td></tr>
+      <tr><td>PASSI · durata</td><td>Da 1 a 64 passi; ogni passo dura da 1/1 a 1/32T (di default 1/4: 16 passi = 4 battute).</td></tr>
+      <tr><td>REC</td><td>Con il sequencer in riproduzione, ogni manopola Performance che muovi viene scritta nel passo che sta suonando.</td></tr>
+      <tr><td>CATTURA</td><td>Scrive nel passo selezionato i valori attuali delle manopole Performance diverse da 0.</td></tr>
+      <tr><td>CANCELLA</td><td>Toglie tutti i blocchi del passo selezionato (lo fa anche il tasto destro su un passo).</td></tr>
+      <tr><td>DADO GLITCH</td><td>Genera una sequenza casuale di glitch: su circa metà dei passi blocca da 1 a 4 controlli fra LAZER, TAPZ, REPEAT, DISTORT, CUTOFF, RATCHET e MACRO 1, con qualche GLIDE e qualche PROB. Non tocca i controlli con il lucchetto (tasto destro sulla manopola Performance).</td></tr>
+      <tr><td>SVUOTA</td><td>Cancella tutta la sequenza.</td></tr>
+      <tr><td>Vista / Disegna</td><td>Con <em>blocchi per passo</em> vedi quanti controlli sono bloccati in ogni passo. Scegliendo un controllo (es. <em>BRK RPT MIX</em>) vedi e <strong>disegni</strong> i suoi valori: trascina in verticale sui passi, Alt+clic toglie il blocco.</td></tr>
+      <tr><td>GLIDE</td><td>Per il passo selezionato: per quale parte del passo scivolare dai valori del passo precedente invece di saltare.</td></tr>
+      <tr><td>PROB</td><td>Per il passo selezionato: probabilità che scatti. Se non scatta resta la scena precedente.</td></tr>
+    </tbody>
+  </table>
+  <p>Il sequencer si somma a tutto il resto: DEPTH, FLIP ed ENABLE delle voci agiscono anche sui valori bloccati, e COMMIT scrive nelle voci le manopole, non la sequenza. La sequenza si salva con il kit e con il progetto del DAW.</p>
+
+  <h2>Una performance di glitch programmata</h2>
+  <ol class="steps">
+    <li>Prepara il groove nelle voci e, se vuoi, un tappeto di fondo con il LAZER (capitolo 7). Lascia BRK REPEAT e BRK TAPZ <strong>spenti</strong> nelle voci: li accenderà la Performance.</li>
+    <li>Nella pagina PERFORM accendi <span class="ctl">SEQ ON</span>, PASSI 16, durata 1/4 (quattro battute). Premi PLAY.</li>
+    <li>Scegli <em>Disegna: BRK RPT MIX</em> e alza il passo 4 e il passo 15: su quei battiti tutte le voci abilitate si spezzano in stutter. Con <em>BRK GAPS</em> e <em>BRK REVERSE</em> sugli stessi passi lo stutter diventa più sporco.</li>
+    <li>Con <em>Disegna: LAZER ENGINE</em> e <em>LAZER TIMBRE</em> cambia il motore e il timbro dei laser sul passo 7; con <em>BRK TZ MIX</em> aggiungi le ripetizioni accelerate sull'ultimo passo, come chiusura del giro.</li>
+    <li>Sul passo 12 abbassa <em>TONE CUTOFF</em> e dai un GLIDE del 70%: il filtro si chiude in scivolata prima della ripresa. Una PROB del 75% su qualche passo rende la performance diversa a ogni giro.</li>
+    <li>In alternativa premi <span class="ctl">DADO GLITCH</span> finché trovi una sequenza che ti piace, poi correggila a mano o con REC.</li>
+  </ol>
+  <p class="small">Il kit d'esempio <em>Drummatic Demo</em> contiene una performance di questo tipo già programmata.</p>
 </section>
 
 <!-- ================= 8 KIT E PRESET ================= -->
 <section class="chapter" id="c8">
-  <header><div class="num">09</div><div><h1>Kit, preset e randomizzazione</h1><p class="lede">Salvare, richiamare e generare suoni</p></div></header>
+  <header><div class="num">10</div><div><h1>Kit, preset e randomizzazione</h1><p class="lede">Salvare, richiamare e generare suoni</p></div></header>
   <h2><span data-mark="c8"></span>Kit</h2>
-  <p>Un kit (<code>.mkit</code>) contiene tutto: le otto voci, le sequenze, le modulazioni, i riferimenti ai campioni, effetti, master e Performance. Usa <span class="ctl">SALVA KIT</span> e <span class="ctl">CARICA KIT</span> nella barra superiore; le frecce ai lati del nome scorrono i kit della cartella <code>Kits</code> in ordine alfabetico.</p>
+  <p>Un kit (<code>.mkit</code>) contiene tutto: le otto voci con lo strato LAZER, le sequenze, le modulazioni, i riferimenti ai campioni, effetti, master, Performance e sequencer della Performance. I kit salvati con versioni precedenti alla 0.4 si caricano con LAZER, coda, BRK TAPZ e BRK REPEAT spenti, quindi suonano come prima. Usa <span class="ctl">SALVA KIT</span> e <span class="ctl">CARICA KIT</span> nella barra superiore; le frecce ai lati del nome scorrono i kit della cartella <code>Kits</code> in ordine alfabetico.</p>
   <p>Nel DAW non serve salvare il kit: lo stato completo viene memorizzato con il progetto.</p>
   <h2>Preset di voce</h2>
   <p>Un preset di voce (<code>.mvoice</code>) contiene il suono di una singola voce, comprese modulazioni e campione, ma <strong>non</strong> la sequenza, il routing, il choke e il trigger: puoi cambiare suono senza perdere il ritmo.</p>
@@ -726,16 +890,18 @@ figure.m img, figure.m figcaption { width: 66% !important; }
       <tr><td>RANDOM (barra)</td><td>I parametri sonori di tutte le voci.</td></tr>
       <tr><td>DADO (lane)</td><td>I valori della lane visibile nel sequencer.</td></tr>
       <tr><td>DADO (Performance)</td><td>I controlli della pagina Performance.</td></tr>
+      <tr><td>DADO (LAZER) · ATMOSFERA</td><td>Il motore LAZER della voce · un motore di fondo con coda lunga.</td></tr>
+      <tr><td>DADO GLITCH</td><td>Una sequenza casuale nel sequencer della Performance.</td></tr>
     </tbody>
   </table>
-  <p>L'ampiezza dei cambiamenti dipende da <span class="ctl">RND DEPTH</span> nel master. La randomizzazione non tocca mai sequenza, routing, choke, trigger, pan, volume e mandate, e tiene i decadimenti entro valori utilizzabili.</p>
+  <p>L'ampiezza dei cambiamenti dipende da <span class="ctl">RND DEPTH</span> nel master. La randomizzazione non tocca mai sequenza, routing, choke, trigger, pan, volume e mandate, né accende o spegne LAZER, BRK TAPZ, BRK REPEAT e KIT MODE (ne cambia però motore, manopole e coda), e tiene i decadimenti entro valori utilizzabili.</p>
   <h2>Lucchetti</h2>
   <p>Tasto destro su una manopola della voce la blocca: compare una <strong>L</strong> rossa. Un controllo bloccato è escluso da VARIATION, dalla randomizzazione, dalla Performance e dal caricamento di preset e kit. Ripeti il tasto destro per sbloccarlo.</p>
 </section>
 
 <!-- ================= 9 MIDI ================= -->
 <section class="chapter" id="c9">
-  <header><div class="num">10</div><div><h1>Controllo MIDI e tastiera</h1><p class="lede">Suonare e comandare Drummatic da note MIDI</p></div></header>
+  <header><div class="num">11</div><div><h1>Controllo MIDI e tastiera</h1><p class="lede">Suonare e comandare Drummatic da note MIDI</p></div></header>
   <p><span data-mark="c9"></span>Drummatic risponde alle note MIDI su undici canali. Nel DAW crea una clip MIDI sulla traccia di Drummatic e scegli il canale di uscita del controller o della clip.</p>
   <h2>Suonare le voci</h2>
   <table>
@@ -743,6 +909,7 @@ figure.m img, figure.m figcaption { width: 66% !important; }
     <tbody>
       <tr><td>1</td><td>Do, Do#, Re, Re#, Mi, Fa, Fa#, Sol (qualsiasi ottava)</td><td>Suonano le voci 1–8.</td></tr>
       <tr><td>2–9</td><td>Tutte</td><td>Suonano la voce 1–8 in modo cromatico; il Do centrale (nota 60) è l'intonazione di base.</td></tr>
+      <tr><td>2–9 con KIT MODE</td><td>36–99</td><td>Ogni nota suona un motore LAZER diverso della voce (36 = motore 1, 99 = motore 64), senza trasporre.</td></tr>
     </tbody>
   </table>
   <h2>Trasporto, mute e solo (canale 10)</h2>
@@ -774,7 +941,7 @@ figure.m img, figure.m figcaption { width: 66% !important; }
     <tbody>
       <tr><td>Q</td><td>Suona la voce selezionata.</td></tr>
       <tr><td>W · S</td><td>Voce precedente · successiva.</td></tr>
-      <tr><td>A · D</td><td>Pagina precedente · successiva.</td></tr>
+      <tr><td>A · D</td><td>Pagina precedente · successiva (VOICE, LAZER, SEQ, MIX / FX, PERFORM).</td></tr>
       <tr><td>Spazio</td><td>Play/stop (solo standalone).</td></tr>
     </tbody>
   </table>
@@ -782,7 +949,7 @@ figure.m img, figure.m figcaption { width: 66% !important; }
 
 <!-- ================= 10 PROBLEMI ================= -->
 <section class="chapter" id="c10">
-  <header><div class="num">11</div><div><h1>Risoluzione dei problemi</h1><p class="lede">Le situazioni più comuni e come uscirne</p></div></header>
+  <header><div class="num">12</div><div><h1>Risoluzione dei problemi</h1><p class="lede">Le situazioni più comuni e come uscirne</p></div></header>
   <table>
     <thead><tr><th>Sintomo</th><th>Causa probabile e soluzione</th></tr></thead>
     <tbody>
@@ -795,6 +962,11 @@ figure.m img, figure.m figcaption { width: 66% !important; }
       <tr><td>macOS dice che l'app è danneggiata</td><td>È il blocco di Gatekeeper per software non notarizzato: esegui il comando <code>xattr</code> del capitolo 2.</td></tr>
       <tr><td>Crepitii o interruzioni</td><td>Aumenta la dimensione del buffer audio. Su Windows usa il driver ASIO del DAW o WASAPI esclusivo.</td></tr>
       <tr><td>Le scorciatoie non funzionano</td><td>Accendi TASTI nella barra superiore e clicca dentro la finestra di Drummatic.</td></tr>
+      <tr><td>Il LAZER non si sente</td><td>Controlla che LAZER sia acceso e LEVEL alto. Con inviluppo <em>Env 1</em> o <em>Env 2</em> lo strato dura quanto quell'inviluppo: con un DECAY cortissimo sparisce. Ricorda che il LAZER non segue il PITCH del synth: usa TUNE.</td></tr>
+      <tr><td>Il tappeto di fondo si interrompe</td><td>Allunga DECAY (fino a 20 s) o dai alla voce più colpi; con un FILL alto il tappeto riparte spesso ma non si azzera.</td></tr>
+      <tr><td>Le ripetizioni TAPZ non finiscono</td><td>Abbassa DECAY o TAPS; con SHAPE negativo e TIME lungo le ripetizioni possono durare fino a 6 s.</td></tr>
+      <tr><td>Il sequencer della Performance non cambia nulla</td><td>SEQ ON deve essere acceso e il trasporto in riproduzione; i passi devono avere blocchi; ENABLED (GLOBAL) e l'ENABLE delle voci devono essere attivi; DEPTH non deve essere a 0.</td></tr>
+      <tr><td>Il carico della CPU sale molto</td><td>BRK TAPZ con 32 ripetizioni su tutte le voci è la parte più pesante: riduci TAPS o usalo su poche voci.</td></tr>
     </tbody>
   </table>
   <h2>Limiti noti</h2>
@@ -803,6 +975,8 @@ figure.m img, figure.m figcaption { width: 66% !important; }
     <li>La modulazione viene calcolata ogni 16 campioni (circa 0,3 ms): gli LFO molto veloci sono un'approssimazione della modulazione audio-rate.</li>
     <li>Il motore Cloner usa un banco di filtri a 8 bande invece di un'analisi spettrale completa.</li>
     <li>Le versioni macOS e Windows non sono firmate da un'autorità di certificazione: il sistema operativo mostra un avviso al primo avvio.</li>
+    <li>TRASCINA WAV rende la voce "asciutta": senza delay, riverbero e master.</li>
+    <li>Il firmware Drummatic per M-VAVE FM-1 non contiene ancora lo strato LAZER e il sequencer della Performance.</li>
   </ul>
 </section>
 
@@ -810,13 +984,16 @@ figure.m img, figure.m figcaption { width: 66% !important; }
 <section class="chapter" id="c11">
   <header><div class="num">A</div><div><h1>Appendice</h1><p class="lede">Riferimenti rapidi e cronologia delle versioni</p></div></header>
   <h2><span data-mark="c11"></span>Destinazioni di modulazione</h2>
-  <p>PITCH e le quattro manopole del synth; PITCH, le quattro manopole del sampler, START ed END (in modalità MAP si trascinano i marcatori sulla forma d'onda); BLEND; CUTOFF, RESONANCE, DISTORT; ATTACK, HOLD e DECAY di entrambi gli inviluppi; SPEED e AMP di entrambi gli LFO; PAN, VOICE GAIN, DELAY e REVERB.</p>
+  <p>PITCH e le quattro manopole del synth; PITCH, le quattro manopole del sampler, START ed END (in modalità MAP si trascinano i marcatori sulla forma d'onda); BLEND; CUTOFF, RESONANCE, DISTORT; ATTACK, HOLD e DECAY di entrambi gli inviluppi; SPEED e AMP di entrambi gli LFO; PAN, VOICE GAIN, DELAY e REVERB; le 12 manopole del LAZER (TUNE, SWEEP, S.TIME, TIMBRE, COLOR, MOD, RATE, GRIT, DENSITY, SPREAD, DECAY, LEVEL).</p>
   <h2>Divisioni musicali</h2>
-  <p>LFO, delay e predelay del riverbero: 8 bar, 4 bar, 2 bar, 1 bar, 1/2, 1/4, 1/8, 1/16, 1/32, 1/4T, 1/8T, 1/16T, 1/64.<br>Velocità del sequencer: 1/1, 1/2, 1/4, 1/8, 1/16, 1/32, 1/4T, 1/8T, 1/16T, 1/32T, con moltiplicatore /4, /3, /2, 1×, 2×, 3×, 4×.</p>
+  <p>LFO, delay e predelay del riverbero: 8 bar, 4 bar, 2 bar, 1 bar, 1/2, 1/4, 1/8, 1/16, 1/32, 1/4T, 1/8T, 1/16T, 1/64.<br>Velocità del sequencer: 1/1, 1/2, 1/4, 1/8, 1/16, 1/32, 1/4T, 1/8T, 1/16T, 1/32T, con moltiplicatore /4, /3, /2, 1×, 2×, 3×, 4×. Le stesse durate valgono per il passo del sequencer della Performance.<br>BRK TAPZ (primo intervallo) e BRK REPEAT (fetta): 1/128, 1/64, 1/32T, 1/32, 1/16T, 1/16, 1/8T, 1/8, 1/4.</p>
   <h2>Cronologia delle versioni</h2>
   <table>
     <thead><tr><th>Versione</th><th>Novità</th></tr></thead>
     <tbody>
+      <tr><td>0.4.0</td><td>Strato LAZER: 64 motori glitch in 16 famiglie con 12 manopole condivise, 9 code, BRK TAPZ, BRK REPEAT, KIT MODE e TRASCINA WAV; nuova pagina LAZER. Sequencer della Performance con blocchi per passo, GLIDE, PROB, REC e DADO GLITCH; 12 nuovi controlli Performance per i glitch. Banchi LAZER e GLITCH sulla macchina hardware.</td></tr>
+      <tr><td>0.3.0</td><td>App per la macchina hardware Drummatic (Raspberry Pi 5 + circuito di controllo).</td></tr>
+      <tr><td>0.2.4</td><td>L'audio non sparisce più dopo aver avviato Drummatic con il suo PLAY; autoriparazione dei blocchi audio; il motivo dello stop compare al posto del nome del kit.</td></tr>
       <tr><td>0.2.3</td><td>START ed END modulabili in modalità MAP direttamente sulla forma d'onda; nuovo capitolo sul sampler; formato dei tempi corretto (es. "50 ms").</td></tr>
       <tr><td>0.2.2</td><td>Nuovo nome Drummatic e cartella <code>Documenti/Drummatic</code> con migrazione automatica; versione macOS universale; corretta l'evidenziazione delle pagine.</td></tr>
       <tr><td>0.2.1</td><td>L'audio non si ferma più premendo spazio con il plugin in primo piano; pulsante TASTI; il play del DAW riarma sempre il sequencer; la randomizzazione non cambia più routing ed ENABLE/FLIP; correzioni a choke e Dropout.</td></tr>
@@ -824,7 +1001,7 @@ figure.m img, figure.m figcaption { width: 66% !important; }
       <tr><td>0.1</td><td>Prima versione: 8 voci, 15 motori, sampler Classic, sequencer euclideo con lane, mixer, delay, riverbero e master, controllo MIDI.</td></tr>
     </tbody>
   </table>
-  <div class="end">Drummatic · Manuale utente · versione 0.2.3 · ottobre 2026. Nome, interfaccia e codice sono originali.</div>
+  <div class="end">Drummatic · Manuale utente · versione 0.4.0 · ottobre 2026. Nome, interfaccia e codice sono originali.</div>
 </section>
 
 </body>

@@ -143,7 +143,9 @@ struct LazerEngine
             }
             case 1: // ---------------- LASER SWEEPS
             {
-                const float fl = f * 2.0f * sweepMul (P, v) * (1.0f + M * 0.3f * std::sin (kTwoPi * phStep (ph[5], rateHz * 4.0f, sr)));
+                // Laser Up: stessa curva lineare ma verso l'alto (lo SWEEP negativo predefinito diventa una salita)
+                const float swL = v == 1 ? 1.0f / sweepMul (P, 1) : sweepMul (P, v);
+                const float fl = f * 2.0f * swL * (1.0f + M * 0.3f * std::sin (kTwoPi * phStep (ph[5], rateHz * 4.0f, sr)));
                 const int voices = 1 + (int) (D * 2.99f);
                 float s = 0, s2 = 0;
                 for (int k = 0; k < voices; ++k)

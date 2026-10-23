@@ -110,7 +110,7 @@ public:
         };
         rndEng.setTooltip ("Motore casuale");
         rndAtmos.setTooltip ("Motore di fondo casuale (Grain Clouds, Shimmer Drones, Static & Radio): coda lunga e larga per l'atmosfera");
-        lzKit.setTooltip ("KIT MODE: sul canale MIDI della voce (2-9) ogni tasto suona un motore diverso: Do2 (36) = motore 1 ... 64 motori");
+        lzKit.setTooltip ("KIT MODE: sul canale MIDI della voce (2-9) ogni tasto suona un motore diverso: nota 36 (C1 in Ableton) = motore 1 ... nota 99 = motore 64");
         lzEnv.setTooltip ("Inviluppo del LAZER: proprio (DECAY) oppure ENV 1 / ENV 2 della voce");
         for (int s = 0; s < mp::kNumSources; ++s) { maps.push_back (std::make_unique<MapButton> (ctx, s)); addAndMakeVisible (*maps.back()); }
         engineName.setFont (font (16, true)); engineName.setColour (juce::Label::textColourId, col::accent);
