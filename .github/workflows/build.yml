@@ -59,6 +59,7 @@ jobs:
         run: |
           g++ -O2 -std=c++17 Tests/transport_test.cpp -o transport_test && ./transport_test
           g++ -O2 -std=c++17 Tests/silence_test.cpp -o silence_test && ./silence_test 5 1 && ./silence_test 5 2
+          g++ -O2 -std=c++17 Tests/lazer_test.cpp -o lazer_test && ./lazer_test
 
       - name: Compila
         run: |

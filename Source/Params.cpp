@@ -63,6 +63,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout createLayout()
             if (t >= T_E2Attack && t <= T_E2Decay) label = "ENV2 " + label;
             if (t == T_L1Speed || t == T_L1Amp) label = "LFO1 " + label;
             if (t == T_L2Speed || t == T_L2Amp) label = "LFO2 " + label;
+            if (t >= T_LzTune) label = "LAZER " + label;
             group->addChild (std::make_unique<APF> (juce::ParameterID { vid (v, targetId (t)), 1 }, pre + label, targetRange (t), def,
                 juce::AudioParameterFloatAttributes().withStringFromValueFunction ([t] (float x, int) { return formatTarget (t, x); })));
         }
@@ -98,6 +99,38 @@ juce::AudioProcessorValueTreeState::ParameterLayout createLayout()
         group->addChild (choice (vid (v, "route"), pre + "Routing", { "Main 1-2", "Out 3-4", "Out 5-6", "Out 7-8", "Out 9-10", "Out 11-12", "Out 13-14", "Out 15-16" }, 0));
         group->addChild (boolp (vid (v, "pfEnable"), pre + "Performance Enable", true));
         group->addChild (boolp (vid (v, "pfFlip"), pre + "Performance Flip", false));
+        // ---- strato LAZER, coda, BRK TAPZ, BRK REPEAT (0.4) ----
+        auto secs = [] (const juce::String& id, const juce::String& name, float lo, float hi, float def, float skew)
+        {
+            return std::make_unique<APF> (juce::ParameterID { id, 1 }, name, juce::NormalisableRange<float> (lo, hi, 0, skew), def,
+                juce::AudioParameterFloatAttributes().withStringFromValueFunction ([] (float x, int) { return formatTime (x); }));
+        };
+        group->addChild (boolp (vid (v, "lzOn"), pre + "Lazer On", false));
+        group->addChild (choice (vid (v, "lzEng"), pre + "Lazer Engine", lazerNames(), 4));
+        group->addChild (choice (vid (v, "lzEnv"), pre + "Lazer Envelope", { "Own", "Env 1", "Env 2" }, 0));
+        group->addChild (boolp (vid (v, "lzKit"), pre + "Lazer Kit Mode", false));
+        group->addChild (choice (vid (v, "tail"), pre + "Tail", tailNames(), 0));
+        group->addChild (pct (vid (v, "tailLvl"), pre + "Tail Level", 0.5f));
+        group->addChild (secs (vid (v, "tailDec"), pre + "Tail Decay", 0.05f, 12.0f, 1.2f, 0.35f));
+        group->addChild (pct (vid (v, "tailTone"), pre + "Tail Tone", 0.5f));
+        group->addChild (boolp (vid (v, "tzOn"), pre + "Tapz On", false));
+        group->addChild (intp (vid (v, "tzTaps"), pre + "Tapz Taps", 1, 32, 8));
+        group->addChild (boolp (vid (v, "tzSync"), pre + "Tapz Sync", true));
+        group->addChild (choice (vid (v, "tzDiv"), pre + "Tapz Time (sync)", brkDivs(), 7));
+        group->addChild (secs (vid (v, "tzTime"), pre + "Tapz Time", 0.005f, 1.0f, 0.12f, 0.4f));
+        group->addChild (pct (vid (v, "tzShape"), pre + "Tapz Shape", 0.5f, -1, 1));
+        group->addChild (pct (vid (v, "tzDecay"), pre + "Tapz Decay", 0.6f));
+        group->addChild (pct (vid (v, "tzSpread"), pre + "Tapz Spread", 0.5f));
+        group->addChild (pct (vid (v, "tzMix"), pre + "Tapz Mix", 0.6f));
+        group->addChild (boolp (vid (v, "rpOn"), pre + "Repeat On", false));
+        group->addChild (boolp (vid (v, "rpSync"), pre + "Repeat Sync", true));
+        group->addChild (choice (vid (v, "rpDiv"), pre + "Repeat Slice (sync)", brkDivs(), 5));
+        group->addChild (secs (vid (v, "rpTime"), pre + "Repeat Slice", 0.005f, 0.5f, 0.06f, 0.4f));
+        group->addChild (intp (vid (v, "rpCount"), pre + "Repeat Count", 1, 16, 4));
+        group->addChild (pct (vid (v, "rpGaps"), pre + "Repeat Gaps", 0.2f));
+        group->addChild (pct (vid (v, "rpRev"), pre + "Repeat Reverse", 0.2f));
+        group->addChild (pct (vid (v, "rpCrush"), pre + "Repeat Crush", 0.0f));
+        group->addChild (pct (vid (v, "rpMix"), pre + "Repeat Mix", 1.0f));
         // sequencer
         group->addChild (intp (vid (v, "steps"), pre + "Steps", 1, 64, 16));
         group->addChild (intp (vid (v, "fill"), pre + "Fill", 0, 64, d.fill));
@@ -157,10 +190,14 @@ juce::AudioProcessorValueTreeState::ParameterLayout createLayout()
 
     auto perf = std::make_unique<juce::AudioProcessorParameterGroup> ("perf", "Performance", "|");
     for (int i = 0; i < kNumPerf; ++i)
-        perf->addChild (pct (perfId (i), juce::String ("Perf ") + perfLabel (i) + (i >= PF_SynPitch && i <= PF_Syn4 ? " (Synth)" : (i >= PF_SmpPitch && i <= PF_Smp4 ? " (Sampler)" : "")), 0.0f, -1, 1));
+        perf->addChild (pct (perfId (i), juce::String ("Perf ") + perfLabel (i) + (i >= PF_SynPitch && i <= PF_Syn4 ? " (Synth)" : (i >= PF_SmpPitch && i <= PF_Smp4 ? " (Sampler)" : (i >= PF_LzLevel && i <= PF_LzDecay ? " (Lazer)" : ""))), 0.0f, -1, 1));
     perf->addChild (pct ("pf_depth", "Perf Depth", 1.0f, -1, 1));
     perf->addChild (boolp ("pf_enabled", "Perf Enabled", true));
     perf->addChild (pct ("pf_rnd", "Perf Randomize Depth", 0.1f));
+    // sequencer della Performance
+    perf->addChild (boolp ("ps_on", "Perf Seq On", false));
+    perf->addChild (intp ("ps_len", "Perf Seq Length", 1, kPerfSeqSteps, 16));
+    { juce::StringArray s; for (int i = 0; i < kNumSpeeds; ++i) s.add (speedName (i)); perf->addChild (choice ("ps_speed", "Perf Seq Speed", s, 2)); }
     layout.add (std::move (perf));
     return layout;
 }

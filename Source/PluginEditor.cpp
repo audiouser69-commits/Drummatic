@@ -3,25 +3,27 @@
 using namespace ui;
 
 ManipoloEditor::ManipoloEditor (ManipoloProcessor& p)
-    : AudioProcessorEditor (p), proc (p), ctx (p), column (ctx), voicePage (ctx), seqPage (ctx), mixerPage (ctx), perfPage (ctx)
+    : AudioProcessorEditor (p), proc (p), ctx (p), column (ctx), voicePage (ctx), lazerPage (ctx), seqPage (ctx), mixerPage (ctx), perfPage (ctx)
 {
     setLookAndFeel (&look);
     juce::LookAndFeel::setDefaultLookAndFeel (&look);
-    ctx.onArmedChanged = [this] { voicePage.armedChanged(); };
+    ctx.onArmedChanged = [this] { voicePage.armedChanged(); lazerPage.armedChanged(); };
 
     addAndMakeVisible (column);
     column.onSelect = [this] (int v) { selectVoice (v); };
-    addChildComponent (voicePage); addChildComponent (seqPage); addChildComponent (mixerPage); addChildComponent (perfPage);
+    addChildComponent (voicePage); addChildComponent (lazerPage); addChildComponent (seqPage); addChildComponent (mixerPage); addChildComponent (perfPage);
     seqPage.onSelectVoice = [this] (int v) { selectVoice (v); };
 
-    for (auto* b : { &tabVoice, &tabSeq, &tabMix, &tabPerf })
+    for (auto* b : { &tabVoice, &tabLazer, &tabSeq, &tabMix, &tabPerf })
     {
         addAndMakeVisible (*b); b->setRadioGroupId (7); b->setClickingTogglesState (true);
     }
     tabVoice.onClick = [this] { showPage (0); };
-    tabSeq.onClick = [this] { showPage (1); };
-    tabMix.onClick = [this] { showPage (2); };
-    tabPerf.onClick = [this] { showPage (3); };
+    tabLazer.onClick = [this] { showPage (1); };
+    tabSeq.onClick = [this] { showPage (2); };
+    tabMix.onClick = [this] { showPage (3); };
+    tabPerf.onClick = [this] { showPage (4); };
+    tabLazer.setTooltip ("64 motori glitch, coda, BRK TAPZ e BRK REPEAT della voce selezionata");
 
     addAndMakeVisible (playBtn); addAndMakeVisible (stopBtn);
     playBtn.onClick = [this] { proc.dm.setTransportMode (mp::DrumMachine::AlwaysPlay); };
@@ -86,18 +88,19 @@ ManipoloEditor::~ManipoloEditor()
 void ManipoloEditor::selectVoice (int v)
 {
     ctx.voice = v;
-    voicePage.rebind(); seqPage.rebind(); mixerPage.rebind();
+    voicePage.rebind(); lazerPage.rebind(); seqPage.rebind(); mixerPage.rebind();
     column.repaint(); mixerPage.repaint();
 }
 
 void ManipoloEditor::showPage (int p)
 {
     page = p;
-    voicePage.setVisible (p == 0); seqPage.setVisible (p == 1); mixerPage.setVisible (p == 2); perfPage.setVisible (p == 3);
+    voicePage.setVisible (p == 0); lazerPage.setVisible (p == 1); seqPage.setVisible (p == 2); mixerPage.setVisible (p == 3); perfPage.setVisible (p == 4);
     tabVoice.setToggleState (p == 0, juce::dontSendNotification);
-    tabSeq.setToggleState (p == 1, juce::dontSendNotification);
-    tabMix.setToggleState (p == 2, juce::dontSendNotification);
-    tabPerf.setToggleState (p == 3, juce::dontSendNotification);
+    tabLazer.setToggleState (p == 1, juce::dontSendNotification);
+    tabSeq.setToggleState (p == 2, juce::dontSendNotification);
+    tabMix.setToggleState (p == 3, juce::dontSendNotification);
+    tabPerf.setToggleState (p == 4, juce::dontSendNotification);
 }
 
 void ManipoloEditor::timerCallback()
@@ -147,7 +150,7 @@ void ManipoloEditor::resized()
     playBtn.setBounds (header.removeFromLeft (56)); header.removeFromLeft (3);
     stopBtn.setBounds (header.removeFromLeft (56)); header.removeFromLeft (10);
     bpm.setBounds (header.removeFromLeft (110)); header.removeFromLeft (10);
-    for (auto* b : { &tabVoice, &tabSeq, &tabMix, &tabPerf }) { b->setBounds (header.removeFromLeft (80)); header.removeFromLeft (3); }
+    for (auto* b : { &tabVoice, &tabLazer, &tabSeq, &tabMix, &tabPerf }) { b->setBounds (header.removeFromLeft (72)); header.removeFromLeft (3); }
     header.removeFromLeft (10);
     rndAll.setBounds (header.removeFromRight (72)); header.removeFromRight (6);
     keysBtn.setBounds (header.removeFromRight (52)); header.removeFromRight (6);
@@ -171,7 +174,7 @@ void ManipoloEditor::resized()
         rndDepth.setBounds (in.removeFromBottom (78));
     }
     column.setBounds (r.removeFromLeft (150).reduced (4, 0));
-    for (auto* p : { (juce::Component*) &voicePage, (juce::Component*) &seqPage, (juce::Component*) &mixerPage, (juce::Component*) &perfPage }) p->setBounds (r);
+    for (auto* p : { (juce::Component*) &voicePage, (juce::Component*) &lazerPage, (juce::Component*) &seqPage, (juce::Component*) &mixerPage, (juce::Component*) &perfPage }) p->setBounds (r);
 }
 
 bool ManipoloEditor::keyPressed (const juce::KeyPress& k)
@@ -182,8 +185,8 @@ bool ManipoloEditor::keyPressed (const juce::KeyPress& k)
     if (c == 'q') { proc.dm.auditionVoice (ctx.voice); return true; }
     if (c == 'w') { selectVoice ((ctx.voice + mp::kNumVoices - 1) % mp::kNumVoices); return true; }
     if (c == 's') { selectVoice ((ctx.voice + 1) % mp::kNumVoices); return true; }
-    if (c == 'a') { showPage ((page + 3) % 4); return true; }
-    if (c == 'd') { showPage ((page + 1) % 4); return true; }
+    if (c == 'a') { showPage ((page + 4) % 5); return true; }
+    if (c == 'd') { showPage ((page + 1) % 5); return true; }
     if (k == juce::KeyPress::spaceKey && proc.wrapperType == juce::AudioProcessor::wrapperType_Standalone)
     {
         proc.dm.setTransportMode (proc.dm.running.load() ? mp::DrumMachine::Stopped : mp::DrumMachine::AlwaysPlay);

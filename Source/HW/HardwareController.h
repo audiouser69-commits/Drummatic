@@ -59,7 +59,17 @@ inline std::vector<PageDef> makePages()
                S::vt (T_P4, "SYNTH 4"), S::vt (T_Blend, "BLEND"), S::vt (T_Gain, "GAIN"), S::vt (T_Pan, "PAN") },
         Bank { S::vp ("synthOn", "SYNTH ON"), S::vp ("env2", "AMP ENV2"), S::vp ("stereo", "STEREO"), S::vp ("variation", "VARIATION"),
                S::vp ("macro1", "MACRO 1"), S::vp ("macro2", "MACRO 2"), S::vp ("choke", "CHOKE"), S::vp ("link", "TRIGGER") } };
+    // strato LAZER, coda e BRK (0.4)
+    P[P_Voice].banks.push_back (Bank { S::vp ("lzOn", "LAZER ON"), S::vp ("lzEng", "MOTORE"), S::vt (T_LzTune, "TUNE"), S::vt (T_LzSweep, "SWEEP"),
+                                       S::vt (T_LzSTime, "S.TIME"), S::vt (T_LzTimbre, "TIMBRE"), S::vt (T_LzColor, "COLOR"), S::vt (T_LzMod, "MOD") });
+    P[P_Voice].banks.push_back (Bank { S::vt (T_LzRate, "RATE"), S::vt (T_LzGrit, "GRIT"), S::vt (T_LzDensity, "DENSITY"), S::vt (T_LzSpread, "SPREAD"),
+                                       S::vt (T_LzDecay, "DECAY"), S::vt (T_LzLevel, "LEVEL"), S::vp ("lzEnv", "INVILUPPO"), S::vp ("lzKit", "KIT MODE") });
+    P[P_Voice].banks.push_back (Bank { S::vp ("tail", "CODA"), S::vp ("tailLvl", "CODA LIV."), S::vp ("tailDec", "CODA DECAY"), S::vp ("tailTone", "CODA TONO"),
+                                       S::vp ("tzOn", "TAPZ ON"), S::vp ("tzTaps", "TAPS"), S::vp ("tzShape", "TAPZ SHAPE"), S::vp ("tzMix", "TAPZ MIX") });
+    P[P_Voice].banks.push_back (Bank { S::vp ("rpOn", "REPEAT ON"), S::vp ("rpDiv", "FETTA"), S::vp ("rpCount", "REPEATS"), S::vp ("rpGaps", "GAPS"),
+                                       S::vp ("rpRev", "REVERSE"), S::vp ("rpCrush", "CRUSH"), S::vp ("rpMix", "REPEAT MIX"), S::vp ("tzDiv", "TAPZ TEMPO") });
     P[P_Voice].bankNames[0] = "SINTESI"; P[P_Voice].bankNames[1] = "VOCE";
+    P[P_Voice].bankNames[2] = "LAZER 1"; P[P_Voice].bankNames[3] = "LAZER 2"; P[P_Voice].bankNames[4] = "CODA E TAPZ"; P[P_Voice].bankNames[5] = "REPEAT";
     P[P_Smpl].banks = {
         Bank { S::vt (T_SPitch, "PITCH"), S::vt (T_SP1, "SAMPLER 1"), S::vt (T_SP2, "SAMPLER 2"), S::vt (T_SP3, "SAMPLER 3"),
                S::vt (T_SP4, "SAMPLER 4"), S::vt (T_Start, "START"), S::vt (T_End, "END"), S::vt (T_Blend, "BLEND") },
@@ -113,8 +123,12 @@ inline std::vector<PageDef> makePages()
                S::pf (PF_Smp4, "SMP 4"), S::gp ("pf_depth", "DEPTH"), S::gp ("pf_rnd", "DADO DEPTH"), S::gp ("pf_enabled", "ATTIVA") },
         Bank { S::pf (PF_Steps, "STEPS"), S::pf (PF_Fill, "FILL"), S::pf (PF_Pattern, "PATTERN"), S::pf (PF_Density, "DENSITY"),
                S::pf (PF_Prob, "PROB"), S::pf (PF_Ratchet, "RATCHET"), S::gp ("rnd_depth", "RND DEPTH"), S::gp ("pf_depth", "DEPTH") } };
-    const char* pfNames[] = { "INVILUPPO E MACRO", "SINTESI", "SAMPLER", "SEQUENCER" };
-    for (int i = 0; i < 4; ++i) P[P_Perf].bankNames[i] = pfNames[i];
+    P[P_Perf].banks.push_back (Bank { S::pf (PF_LzLevel, "LZ LEVEL"), S::pf (PF_LzEngine, "LZ MOTORE"), S::pf (PF_LzTimbre, "LZ TIMBRE"), S::pf (PF_LzColor, "LZ COLOR"),
+                                      S::pf (PF_LzDensity, "LZ DENSITY"), S::pf (PF_LzDecay, "LZ DECAY"), S::pf (PF_TzMix, "TAPZ MIX"), S::pf (PF_TzShape, "TAPZ SHAPE") });
+    P[P_Perf].banks.push_back (Bank { S::pf (PF_RpMix, "REPEAT MIX"), S::pf (PF_RpGaps, "GAPS"), S::pf (PF_RpRev, "REVERSE"), S::pf (PF_RpCrush, "CRUSH"),
+                                      S::gp ("ps_on", "SEQ PERF"), S::gp ("ps_len", "SEQ PASSI"), S::gp ("ps_speed", "SEQ PASSO"), S::gp ("pf_depth", "DEPTH") });
+    const char* pfNames[] = { "INVILUPPO E MACRO", "SINTESI", "SAMPLER", "SEQUENCER", "GLITCH", "GLITCH E SEQ" };
+    for (int i = 0; i < 6; ++i) P[P_Perf].bankNames[i] = pfNames[i];
     return P;
 }
 

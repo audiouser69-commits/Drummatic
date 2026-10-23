@@ -12,6 +12,8 @@ enum Target
     T_E1Attack, T_E1Hold, T_E1Decay, T_E2Attack, T_E2Hold, T_E2Decay,
     T_L1Speed, T_L1Amp, T_L2Speed, T_L2Amp,
     T_Pan, T_Gain, T_DelaySend, T_RevSend,
+    // strato LAZER (0.4): le 12 manopole condivise dai 64 motori
+    T_LzTune, T_LzSweep, T_LzSTime, T_LzTimbre, T_LzColor, T_LzMod, T_LzRate, T_LzGrit, T_LzDensity, T_LzSpread, T_LzDecay, T_LzLevel,
     kNumTargets
 };
 // Sorgenti di modulazione
@@ -43,6 +45,13 @@ inline const Map& targetMap (int t)
         { -1, 1, Map::Lin, 0 },            // pan
         { -60, 12, Map::Lin, 0 },          // gain dB
         { 0, 1, Map::Lin, 0 }, { 0, 1, Map::Lin, 0 },        // mandate delay / reverb
+        { -24, 24, Map::Lin, 0 },          // LAZER tune (semitoni)
+        { -1, 1, Map::Lin, -0.6f },        // sweep (±4 ottave, negativo = verso il basso)
+        { 0.002f, 4, Map::Exp, 0.08f },    // tempo dello sweep (s)
+        { 0, 1, Map::Lin, 0.5f }, { 0, 1, Map::Lin, 0.5f }, { 0, 1, Map::Lin, 0.3f }, { 0, 1, Map::Lin, 0.4f },  // timbre color mod rate
+        { 0, 1, Map::Lin, 0 }, { 0, 1, Map::Lin, 0.5f }, { 0, 1, Map::Lin, 0.3f },                          // grit density spread
+        { 0.005f, 20, Map::Exp, 0.35f },   // decay (s)
+        { -60, 6, Map::Lin, -6 },          // level dB
     };
     return m[t];
 }

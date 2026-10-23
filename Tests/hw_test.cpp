@@ -59,8 +59,11 @@ int main (int argc, char** argv)
 
     // banchi con le frecce
     press (ctl, K_RIGHT); CHECK (ctl.bank[P_Voice] == 1);
-    press (ctl, K_RIGHT); CHECK (ctl.bank[P_Voice] == 1);       // non oltre l'ultimo
-    press (ctl, K_LEFT); CHECK (ctl.bank[P_Voice] == 0);
+    for (int k = 0; k < 4; ++k) press (ctl, K_RIGHT);
+    CHECK (ctl.bank[P_Voice] == 5);                               // LAZER 1/2, CODA E TAPZ, REPEAT (0.4)
+    press (ctl, K_RIGHT); CHECK (ctl.bank[P_Voice] == 5);       // non oltre l'ultimo
+    for (int k = 0; k < 5; ++k) press (ctl, K_LEFT);
+    CHECK (ctl.bank[P_Voice] == 0);
 
     // MAP: profondità di modulazione su PITCH dalla sorgente scelta
     press (ctl, K_MAP); CHECK (ctl.mapMode);

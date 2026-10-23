@@ -1,4 +1,4 @@
-# Drummatic 0.2.3 — drum synth a 8 voci
+# Drummatic 0.4.0 — drum synth a 8 voci
 
 Standalone per Windows (`Drummatic.exe` / `Drummatic.app`) e plugin VST3 (`Drummatic.vst3`) per Windows e macOS dallo stesso codice JUCE.
 Architettura modellata sulle funzioni di una drum machine ibrida synth/sampler con sequencer euclideo;
@@ -64,6 +64,43 @@ nome, grafica e codice sono originali.
 **Tastiera** (pulsante TASTI attivo e finestra a fuoco): Q suona la voce, W/S voce su/giù, A/D pagina (VOICE/SEQ/MIX/PERFORM);
 Spazio play/stop solo nello standalone. Nel DAW TASTI è spento di default, così spazio e tastiera MIDI del computer restano al DAW.
 Shift+clic o doppio clic su una voce a sinistra = ascolto.
+
+## Novità 0.4.0 — LAZER e performance di glitch programmate
+**Pagina LAZER** (nuova scheda, per la voce selezionata)
+- Terzo strato sonoro accanto a synth e sampler: **64 motori glitch in 16 famiglie** — FM Metals, Laser Sweeps,
+  Wavefold Zaps, Grain Clouds, Sub Thumps, Bit Zaps, Ring Mods, Noise Bursts, Comb Pings, Chirps, Formants,
+  Glitch Steps, Data Corrupt, Phase Distort, Shimmer Drones, Static & Radio (4 varianti ciascuna).
+- **12 manopole condivise** da tutti i motori (TUNE, SWEEP, S.TIME, TIMBRE, COLOR, MOD, RATE, GRIT, DENSITY, SPREAD,
+  DECAY, LEVEL): ogni motore le interpreta a modo suo. Sono modulabili con MAP come le altre (LFO, inviluppi, macro,
+  random, velocity), bloccabili e toccate da VARIATION e dal DADO.
+- **Tappeti di fondo**: Grain Clouds, Shimmer Drones, Static & Radio e il Bowed Ping non ripartono da zero a ogni
+  colpo; il tasto **ATMOSFERA** sceglie un motore di fondo con coda lunga e larga, da mettere sotto i glitch.
+- Inviluppo proprio (DECAY fino a 20 s) oppure ENV 1 / ENV 2 della voce. Lo strato passa nel TONE della voce.
+- **TAIL**: coda aggiunta a ogni colpo, 9 tipi (Bell, Metal, String, 808 Boom, Glass, Tube, Drone Pad, Noise Wash,
+  Reverse Swell) con LEVEL, DECAY, TONE.
+- **BRK TAPZ**: multi-tap fino a 32 ripetizioni; SHAPE accelera o rallenta i colpi (pallina che rimbalza), DECAY,
+  SPREAD stereo, MIX, tempo sincronizzato o in ms.
+- **BRK REPEAT**: stutter che registra una fetta del colpo e la ripete (REPEATS) con buchi casuali (GAPS), reverse
+  e bitcrush casuali (CRUSH): fill spezzati.
+- **KIT MODE**: sul canale MIDI della voce (2-9) ogni tasto suona un motore diverso (Do2/36 = motore 1).
+- **TRASCINA WAV**: trascina il colpo della voce direttamente nel DAW come file WAV (clic = salva in
+  `Documenti/Drummatic/Renders`).
+
+**Sequencer della Performance** (pagina PERFORM)
+- Fino a 64 passi a tempo col trasporto (durata del passo da 1/1 a 1/32T). Ogni passo può **bloccare** qualsiasi
+  controllo Performance su un valore: è una scena programmata che cambia battuta dopo battuta.
+- Nuovi controlli Performance per i glitch: LAZER (LEVEL, ENGINE, TIMBRE, COLOR, DENSITY, DECAY) e BRK (TZ MIX,
+  TZ SHAPE, RPT MIX, GAPS, REVERSE, CRUSH). Un valore positivo su LEVEL / TZ MIX / RPT MIX **accende lo strato**
+  anche nelle voci dove è spento: così un passo può far partire uno stutter o un laser solo lì.
+- Per passo: **GLIDE** (scivola dalla scena precedente) e **PROB** (probabilità che il passo scatti).
+- **REC**: in riproduzione i movimenti delle manopole vengono scritti nel passo che suona. **CATTURA** scrive le
+  manopole nel passo selezionato; **Disegna**: scegli un controllo e disegna i valori passo per passo (Alt+clic
+  toglie il blocco, tasto destro cancella il passo). **DADO GLITCH** genera una performance casuale (rispetta i
+  lucchetti delle manopole).
+- La sequenza si salva nel kit. Kit e preset delle versioni precedenti si caricano con lo strato LAZER spento.
+
+**Hardware (Raspberry Pi)**: pagina VOICE con 4 banchi in più (LAZER 1/2, CODA E TAPZ, REPEAT) e pagina PERF con i
+banchi GLITCH e GLITCH E SEQ. Il firmware FM-1 resta per ora alla versione precedente.
 
 ## Drummatic per M-VAVE FM-1
 La cartella [`fm1/`](fm1/README.md) contiene Drummatic come **firmware per l'M-VAVE FM-1** (tutto tranne il sampler e

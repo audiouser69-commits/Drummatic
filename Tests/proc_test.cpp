@@ -65,5 +65,49 @@ int main()
     for (int b = 0; b < 200; ++b) { p->processBlock (big, midi); for (int i = 0; i < 512; ++i) auxE += std::abs (big.getSample (2, i)); }
     const bool ok4 = lay && auxE > 1.0;
     std::printf ("multiout layout=%d auxEnergy=%.1f %s\n", (int) lay, auxE, ok4 ? "OK" : "FAIL");
-    return (rms > 0.01 && ok3 && ok4 && nans == 0 && ok1 && ok2) ? 0 : 1;
+    // ---- 0.4: strato LAZER, sequencer della Performance, WAV, kit vecchi ----
+    p->setParam (0, "route", 0);
+    p->setParam (1, "synthOn", 0); p->setParam (1, "lzOn", 1); p->setParam (1, "lzEng", 40); p->setParam (1, "fill", 4);
+    p->setParam (1, "tzOn", 1); p->setParam (1, "rpOn", 1);
+    double lzE = 0; int nans2 = 0;
+    for (int b = 0; b < 200; ++b) { p->processBlock (big, midi); for (int i = 0; i < 512; ++i) { const float x = big.getSample (0, i); lzE += std::abs (x); if (! std::isfinite (x)) ++nans2; } }
+    std::printf ("lazer energy=%.1f nans=%d\n", lzE, nans2);
+    // sequencer: 4 passi da 1/16, il passo 2 accende REPEAT con un blocco sul controllo REPEAT MIX della voce 3
+    p->setParam (2, "rpOn", 0);
+    p->apvts.getParameter ("ps_on")->setValueNotifyingHost (1.0f);
+    p->apvts.getParameter ("ps_len")->setValueNotifyingHost (p->apvts.getParameter ("ps_len")->convertTo0to1 (4));
+    p->apvts.getParameter ("ps_speed")->setValueNotifyingHost (p->apvts.getParameter ("ps_speed")->convertTo0to1 (4));
+    p->perfReset();
+    p->perfSeq.clearAll(); p->perfSeq.lock[2][mpp::PF_RpMix] = 0.9f;
+    int stepsSeen = 0, lastStep = -1; bool repOnSeen = false, repOffSeen = false;
+    for (int b = 0; b < 300; ++b)
+    {
+        p->processBlock (big, midi);
+        const int st = p->perfSeq.playStep.load(); if (st != lastStep) { ++stepsSeen; lastStep = st; }
+        if (st == 2) repOnSeen |= p->dm.vs[2].rpOn; else if (st == 0) repOffSeen |= ! p->dm.vs[2].rpOn;
+    }
+    const bool ok5 = stepsSeen > 8 && repOnSeen && repOffSeen;
+    std::printf ("perf seq steps=%d repeatOn@2=%d repeatOff@0=%d %s\n", stepsSeen, (int) repOnSeen, (int) repOffSeen, ok5 ? "OK" : "FAIL");
+    juce::MemoryBlock mb2; p->getStateInformation (mb2);
+    auto q2 = std::make_unique<ManipoloProcessor>();
+    q2->setStateInformation (mb2.getData(), (int) mb2.getSize());
+    const bool ok6 = std::abs (q2->perfSeq.lock[2][mpp::PF_RpMix].load() - 0.9f) < 1e-3f && ! q2->perfSeq.hasLock (1, mpp::PF_RpMix)
+                  && q2->param (1, "lzOn")->getValue() > 0.5f;
+    std::printf ("perf seq + lazer state %s\n", ok6 ? "OK" : "FAIL");
+    // kit di una versione precedente: niente parametri LAZER -> tornano ai predefiniti
+    {
+        auto xml = juce::AudioProcessor::getXmlFromBinary (mb2.getData(), (int) mb2.getSize());
+        juce::Array<juce::XmlElement*> drop;
+        for (auto* c : xml->getChildIterator()) if (c->hasTagName ("PARAM") && c->getStringAttribute ("id").contains ("_lz")) drop.add (c);
+        for (auto* c : drop) xml->removeChildElement (c, true);
+        juce::MemoryBlock old; juce::AudioProcessor::copyXmlToBinary (*xml, old);
+        q2->setStateInformation (old.getData(), (int) old.getSize());
+    }
+    const bool ok7 = q2->param (1, "lzOn")->getValue() < 0.5f;
+    std::printf ("old kit -> lazer off %s\n", ok7 ? "OK" : "FAIL");
+    auto wavFile = p->renderVoiceToFile (1);
+    const bool ok8 = wavFile.existsAsFile() && wavFile.getSize() > 2000;
+    std::printf ("render wav %s (%d bytes) %s\n", wavFile.getFileName().toRawUTF8(), (int) wavFile.getSize(), ok8 ? "OK" : "FAIL");
+    wavFile.deleteFile();
+    return (rms > 0.01 && ok3 && ok4 && nans == 0 && ok1 && ok2 && lzE > 1.0 && nans2 == 0 && ok5 && ok6 && ok7 && ok8) ? 0 : 1;
 }

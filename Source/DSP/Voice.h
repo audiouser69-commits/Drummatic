@@ -5,6 +5,7 @@
 #include "Tone.h"
 #include "SynthEngines.h"
 #include "Sampler.h"
+#include "Lazer.h"
 #include <atomic>
 #include <memory>
 
@@ -44,6 +45,11 @@ struct VoiceSettings
     int route = 0;                    // coppia d'uscita (0 = Main 1-2)
     float base[kNumTargets] {};       // valori base normalizzati 0..1
     float bpm = 120;
+    // ---- strato LAZER (0.4) ----
+    bool lzOn = false, lzKit = false; int lzEngine = 4, lzEnvSrc = 0 /*0 proprio, 1 env1, 2 env2*/;
+    int tail = 0; float tailLevel = 0.5f, tailDecay = 1.2f, tailTone = 0.5f;
+    bool tzOn = false; int tzTaps = 8; float tzFirst = 0.12f, tzShape = 0.5f, tzDecay = 0.6f, tzSpread = 0.5f, tzMix = 0.6f;
+    bool rpOn = false; float rpSlice = 0.0625f; int rpCount = 4; float rpGaps = 0.2f, rpRev = 0.2f, rpCrush = 0.0f, rpMix = 1.0f;
 };
 
 // Informazioni passate a ogni colpo (dal sequencer o dal MIDI)
@@ -57,6 +63,7 @@ struct TriggerInfo
     float sendDelay = 0, sendReverb = 0;
     float macro2 = -1;         // <0 = nessun override
     bool accent = false;       // VEL al massimo nel sequencer: spinta extra di distorsione
+    int lzEngine = -1;         // KIT MODE: motore LAZER scelto dalla nota (-1 = quello della voce)
 };
 
 class Voice
@@ -74,6 +81,8 @@ public:
         for (auto& f : filt) f.prepare (sr);
         for (int c = 0; c < 2; ++c) dist[c].prepare (sr, c);
         sampler.prepare (sr);
+        lz.prepare (sr); tail.prepare (sr); tapz.prepare (sr); rep.prepare (sr);
+        haas.init ((int) (sr * 0.02f));
         ctrlCounter = 0;
     }
 
@@ -97,6 +106,7 @@ public:
         }
         modMacro2 = ti.macro2;
         computeTargets (s);   // valori aggiornati prima del colpo
+        updateLazer (s);
         env1.attack = cur[T_E1Attack]; env1.hold = cur[T_E1Hold]; env1.decay = cur[T_E1Decay]; env1.curve = s.e1Curve;
         env2.attack = cur[T_E2Attack]; env2.hold = cur[T_E2Hold]; env2.decay = cur[T_E2Decay]; env2.curve = s.e2Curve;
         env1.timeScale = env2.timeScale = ti.envScale;
@@ -104,12 +114,19 @@ public:
         lfo[0].onTrigger (wasSilent); lfo[1].onTrigger (wasSilent);
         for (int c = 0; c < 2; ++c) engines[c][s.engine]->trigger (velVal);
         { const float sp[4] = { cur[T_SP1], cur[T_SP2], cur[T_SP3], cur[T_SP4] }; sampler.trigger (sample, cur[T_Start], cur[T_End], s.sampEngine, sp); }
+        if (s.lzOn)
+        {
+            lz.trigger (ti.lzEngine >= 0 ? ti.lzEngine : s.lzEngine, velVal);
+            lzStage = 1; lzVel = 0.35f + 0.65f * velVal;
+        }
+        if (s.tail > 0) tail.trigger (s.tail);
+        if (s.rpOn) rep.trigger (s.rpSlice, s.rpCount); else rep.reset();
         if (wasSilent) { for (auto& f : filt) f.reset(); for (auto& d : dist) d.reset(); }
         choking = false; chokeFade = 1.0f;   // un nuovo colpo annulla un choke in corso
         ctrlCounter = 0;
     }
 
-    void choke() { env1.choke(); env2.choke(); sampler.playing = false; chokeFade = 1.0f; choking = true; }
+    void choke() { env1.choke(); env2.choke(); sampler.playing = false; lzStage = 0; tail.on = false; rep.reset(); chokeFade = 1.0f; choking = true; }
     void onTransportStart() { lfo[0].onTransportStart(); lfo[1].onTransportStart(); }
     // Un valore non finito (o fuori misura) uscito dal motore, dal filtro o dalla distorsione: lo stato interno di
     // quel blocco può restare guasto e zittire la voce per sempre. Si azzera tutto il percorso della voce.
@@ -129,9 +146,11 @@ public:
             }
         lfo[0].phase = lfo[1].phase = 0;
         for (auto& x : lfoVal) x = 0;
+        lz = LazerEngine(); lz.prepare (sr); lzStage = 0; lzEnvVal = 0;
+        tail.on = false; tapz.reset(); tapzHold = 0; rep.reset(); haas.clear();
         recoveries.fetch_add (1, std::memory_order_relaxed);
     }
-    bool isActive() const { return env1.active() || env2.active() || sampler.playing; }
+    bool isActive() const { return env1.active() || env2.active() || sampler.playing || lzStage != 0 || tail.on || rep.active() || tapzHold > 0; }
 
     // Genera nSamples in outL/outR (sommati), più mandate effetto
     void render (const VoiceSettings& s, float* outL, float* outR, float* dlyL, float* dlyR, float* revL, float* revR, int n)
@@ -168,6 +187,36 @@ public:
                 const float amp = s.sampEnvSrc == 0 ? 1.0f : (s.sampEnvSrc == 1 ? a1 : a2);
                 L += sl * amp * sampG; R += srr * amp * sampG;
             }
+            // ---- strato LAZER + coda ----
+            if (s.lzOn && lzStage != 0)
+            {
+                float amp;
+                if (s.lzEnvSrc == 0)
+                {
+                    if (lzStage == 1) { lzEnvVal += 1.0f / (0.0008f * sr); if (lzEnvVal >= 1.0f) { lzEnvVal = 1.0f; lzStage = 2; } }
+                    else { lzEnvVal *= lzCoef; if (lzEnvVal < 1.0e-4f) { lzEnvVal = 0; lzStage = 0; } }
+                    amp = lzEnvVal * lzVel;
+                }
+                else
+                {
+                    amp = s.lzEnvSrc == 1 ? a1 : a2;
+                    if (! (s.lzEnvSrc == 1 ? env1.active() : env2.active())) lzStage = 0;
+                }
+                float xl, xr;
+                lz.process (lzFreq, lzP, xl, xr);
+                const float g = dbToGain (cur[T_LzLevel]) * amp;
+                haas.push (xr);
+                const float sp = cur[T_LzSpread];
+                xr = lerp (xr, haas.read (1.0f + sp * 0.009f * sr), sp * 0.7f);
+                L += xl * g; R += xr * g;
+            }
+            else if (! s.lzOn) lzStage = 0;
+            if (tail.on)
+            {
+                float tl, tr; tail.process (lzFreq, s.tailDecay, s.tailTone, tl, tr);
+                const float tg = s.tailLevel * s.tailLevel * 1.4f * lzVelTail;
+                L += tl * tg; R += tr * tg;
+            }
             // blocco della componente continua (alcuni motori a retroazione la generano)
             dcBlock[0].setCutoff (12.0f, sr); dcBlock[1].a = dcBlock[0].a;
             L = dcBlock[0].hp (L); R = dcBlock[1].hp (R);
@@ -182,6 +231,15 @@ public:
                 *ch[c] = v;
             }
             if (choking) { chokeFade *= 0.997f; L *= chokeFade; R *= chokeFade; if (chokeFade < 0.001f) { choking = false; for (auto& f : filt) f.reset(); } }
+            // ---- BRK REPEAT (stutter) e BRK TAPZ (multi-tap) ----
+            if (rep.active()) rep.process (L, R, s.rpGaps, s.rpRev, s.rpCrush, s.rpMix, L, R);
+            if (s.tzOn)
+            {
+                tapz.process (L, R, s.tzMix, L, R);
+                if (std::abs (L) + std::abs (R) > 1.0e-5f || env1.active() || env2.active()) tapzHold = tapz.span() + (int) (0.05f * sr);
+                else if (tapzHold > 0) --tapzHold;
+            }
+            else tapzHold = 0;
 
             const float g = dbToGain (cur[T_Gain]);
             const float pan = clampf (cur[T_Pan] + trig.pan, -1, 1);
@@ -201,6 +259,8 @@ public:
 
 private:
     std::unique_ptr<Engine> engines[2][kNumSynthEngines];
+    LazerEngine lz; TailGen tail; BrkTapz tapz; BrkRepeat rep; DelayLine haas;
+    LzParams lzP; float lzFreq = 130.81f, lzEnvVal = 0, lzCoef = 0.999f, lzVel = 1, lzVelTail = 1; int lzStage = 0, tapzHold = 0;
     SamplerVoice sampler;
     ToneFilter filt[2]; Distortion dist[2]; OnePole dcBlock[2];
     AhdEnvelope env1, env2; Lfo lfo[2];
@@ -249,6 +309,15 @@ private:
             lfoVal[k] = l.advance (dt, hz);
         }
         computeTargets (s);
+        updateLazer (s);
+    }
+    void updateLazer (const VoiceSettings& s)
+    {
+        for (int k = 0; k < kLzKnobs; ++k) lzP.k[k] = cur[T_LzTune + k];
+        lzFreq = 130.81f * semis (cur[T_LzTune] + trig.pitchSt);
+        lzCoef = std::exp (-6.9f / (std::max (0.005f, cur[T_LzDecay]) * sr));
+        lzVelTail = 0.35f + 0.65f * velVal;
+        if (s.tzOn) tapz.configure (s.tzTaps, s.tzFirst, s.tzShape, s.tzDecay, s.tzSpread);
     }
 };
 } // namespace mp

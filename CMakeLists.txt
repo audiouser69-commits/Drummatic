@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-project(Drummatic VERSION 0.2.4)
+project(Drummatic VERSION 0.4.0)
 set(CMAKE_CXX_STANDARD 17)
 
 if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/JUCE/CMakeLists.txt)
@@ -72,6 +72,19 @@ if (DRUMMATIC_HW)
     target_sources(DrummaticHWTest PRIVATE Tests/hw_test.cpp Source/Params.cpp Source/PluginProcessor.cpp Source/PluginEditor.cpp)
     target_compile_definitions(DrummaticHWTest PRIVATE JUCE_WEB_BROWSER=0 JUCE_USE_CURL=0 JucePlugin_Name="Drummatic")
     target_link_libraries(DrummaticHWTest PRIVATE juce::juce_audio_utils juce::juce_audio_formats juce::juce_recommended_config_flags)
+endif()
+
+if (MANIPOLO_TESTS)
+    # schermate dell'interfaccia (PNG) per controllare le pagine
+    juce_add_console_app(DrummaticLazerDemo PRODUCT_NAME "DrummaticLazerDemo")
+    target_sources(DrummaticLazerDemo PRIVATE Tests/lazer_demo.cpp Source/Params.cpp Source/PluginProcessor.cpp Source/PluginEditor.cpp)
+    target_compile_definitions(DrummaticLazerDemo PRIVATE JUCE_WEB_BROWSER=0 JUCE_USE_CURL=0 JucePlugin_Name="Drummatic")
+    target_link_libraries(DrummaticLazerDemo PRIVATE juce::juce_audio_utils juce::juce_audio_formats juce::juce_recommended_config_flags)
+
+    juce_add_console_app(DrummaticUiShots PRODUCT_NAME "DrummaticUiShots")
+    target_sources(DrummaticUiShots PRIVATE Tests/ui_shots.cpp Source/Params.cpp Source/PluginProcessor.cpp Source/PluginEditor.cpp)
+    target_compile_definitions(DrummaticUiShots PRIVATE JUCE_WEB_BROWSER=0 JUCE_USE_CURL=0 JucePlugin_Name="Drummatic")
+    target_link_libraries(DrummaticUiShots PRIVATE juce::juce_audio_utils juce::juce_audio_formats juce::juce_recommended_config_flags)
 endif()
 
 if (MANIPOLO_TESTS)

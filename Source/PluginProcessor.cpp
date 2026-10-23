@@ -50,6 +50,12 @@ void ManipoloProcessor::cacheParams()
         p.speed = r ("speed"); p.mult = r ("mult"); p.length = r ("length"); p.snap = r ("snap");
         p.resetOn = r ("resetOn"); p.resetLen = r ("resetLen");
         p.route = r ("route"); p.pfEnable = r ("pfEnable"); p.pfFlip = r ("pfFlip");
+        p.lzOn = r ("lzOn"); p.lzEng = r ("lzEng"); p.lzEnv = r ("lzEnv"); p.lzKit = r ("lzKit");
+        p.tail = r ("tail"); p.tailLvl = r ("tailLvl"); p.tailDec = r ("tailDec"); p.tailTone = r ("tailTone");
+        p.tzOn = r ("tzOn"); p.tzTaps = r ("tzTaps"); p.tzSync = r ("tzSync"); p.tzDiv = r ("tzDiv"); p.tzTime = r ("tzTime");
+        p.tzShape = r ("tzShape"); p.tzDecay = r ("tzDecay"); p.tzSpread = r ("tzSpread"); p.tzMix = r ("tzMix");
+        p.rpOn = r ("rpOn"); p.rpSync = r ("rpSync"); p.rpDiv = r ("rpDiv"); p.rpTime = r ("rpTime"); p.rpCount = r ("rpCount");
+        p.rpGaps = r ("rpGaps"); p.rpRev = r ("rpRev"); p.rpCrush = r ("rpCrush"); p.rpMix = r ("rpMix");
     }
     gp.dSync = g ("d_sync"); gp.dDiv = g ("d_div"); gp.dTime = g ("d_time"); gp.dFb = g ("d_fb"); gp.dGlitch = g ("d_glitch");
     gp.dFbTilt = g ("d_fbtilt"); gp.dDuck = g ("d_duck"); gp.dSRate = g ("d_srate"); gp.dGain = g ("d_gain");
@@ -59,6 +65,7 @@ void ManipoloProcessor::cacheParams()
     gp.mMax = g ("m_max"); gp.mLow = g ("m_low"); gp.mMid = g ("m_mid"); gp.mHigh = g ("m_high"); gp.mGain = g ("m_gain");
     gp.mClip = g ("m_clip"); gp.humanize = g ("humanize"); gp.bpm = g ("bpm");
     gp.pfDepth = g ("pf_depth"); gp.pfEnabled = g ("pf_enabled");
+    gp.psOn = g ("ps_on"); gp.psLen = g ("ps_len"); gp.psSpeed = g ("ps_speed");
     for (int i = 0; i < kNumPerf; ++i) gp.perf[i] = g (perfId (i));
 }
 
@@ -71,6 +78,7 @@ void ManipoloProcessor::pullSettings (double bpm)
 {
     auto b = [] (std::atomic<float>* x) { return x->load() > 0.5f; };
     auto i = [] (std::atomic<float>* x) { return juce::roundToInt (x->load()); };
+    updatePerfSeq();
     for (int v = 0; v < kNumVoices; ++v)
     {
         auto& p = vp[v]; auto& s = dm.vs[v];
@@ -92,6 +100,15 @@ void ManipoloProcessor::pullSettings (double bpm)
         q.speedIdx = i (p.speed); q.multIdx = i (p.mult); q.length = i (p.length); q.snap = b (p.snap);
         q.resetOn = b (p.resetOn); q.resetLen = i (p.resetLen);
         s.route = i (p.route);
+        // strato LAZER, coda, BRK
+        s.lzOn = b (p.lzOn); s.lzEngine = juce::jlimit (0, kNumLzEngines - 1, i (p.lzEng)); s.lzEnvSrc = i (p.lzEnv); s.lzKit = b (p.lzKit);
+        s.tail = i (p.tail); s.tailLevel = p.tailLvl->load(); s.tailDecay = p.tailDec->load(); s.tailTone = p.tailTone->load();
+        s.tzOn = b (p.tzOn); s.tzTaps = i (p.tzTaps);
+        s.tzFirst = b (p.tzSync) ? (float) (brkDivBeats (i (p.tzDiv)) * 60.0 / std::max (20.0, bpm)) : p.tzTime->load();
+        s.tzShape = p.tzShape->load(); s.tzDecay = p.tzDecay->load(); s.tzSpread = p.tzSpread->load(); s.tzMix = p.tzMix->load();
+        s.rpOn = b (p.rpOn); s.rpCount = i (p.rpCount);
+        s.rpSlice = b (p.rpSync) ? (float) (brkDivBeats (i (p.rpDiv)) * 60.0 / std::max (20.0, bpm)) : p.rpTime->load();
+        s.rpGaps = p.rpGaps->load(); s.rpRev = p.rpRev->load(); s.rpCrush = p.rpCrush->load(); s.rpMix = p.rpMix->load();
         s.modAmp = 1.0f; q.probOffset = 0; q.ratchOffset = 0;
         if (b (gp.pfEnabled) && b (p.pfEnable))
             applyPerformance (v, gp.pfDepth->load() * (b (p.pfFlip) ? -1.0f : 1.0f));
@@ -111,7 +128,7 @@ void ManipoloProcessor::pullSettings (double bpm)
 void ManipoloProcessor::applyPerformance (int v, float k)
 {
     auto& s = dm.vs[v]; auto& q = dm.ss[v]; auto& sh = dm.vshared[v];
-    auto pv = [&] (int i) { return gp.perf[i]->load() * k; };
+    auto pv = [&] (int i) { return perfValue (i) * k; };
     auto addT = [&] (int t, float d) { if (d != 0.0f && ! sh.locked[t].load()) s.base[t] = clamp01 (s.base[t] + d); };
     for (int i = 0; i < kNumPerf; ++i)
         if (const int t = perfTarget (i); t >= 0) addT (t, pv (i) * perfScale (i));
@@ -128,6 +145,148 @@ void ManipoloProcessor::applyPerformance (int v, float k)
     q.density = clampf (q.density + pv (PF_Density), -1, 1);
     q.probOffset = pv (PF_Prob);
     q.ratchOffset = juce::roundToInt (pv (PF_Ratchet) * 4);
+    // glitch: un valore positivo su LEVEL / MIX accende lo strato anche se nella voce è spento
+    if (const float d = pv (PF_LzLevel); d != 0.0f && ! sh.locked[T_LzLevel].load())
+    {
+        if (! s.lzOn) { if (d > 0) { s.lzOn = true; s.base[T_LzLevel] = clamp01 (0.6f + d * 0.4f); } }
+        else s.base[T_LzLevel] = clamp01 (s.base[T_LzLevel] + d);
+    }
+    if (const float d = pv (PF_LzEngine); d != 0.0f)
+        s.lzEngine = ((s.lzEngine + juce::roundToInt (d * 32.0f)) % kNumLzEngines + kNumLzEngines) % kNumLzEngines;
+    if (const float d = pv (PF_TzMix); d != 0.0f)
+    {
+        if (! s.tzOn) { if (d > 0) { s.tzOn = true; s.tzMix = d; } }
+        else s.tzMix = clamp01 (s.tzMix + d);
+    }
+    s.tzShape = clampf (s.tzShape + pv (PF_TzShape), -1.0f, 1.0f);
+    if (const float d = pv (PF_RpMix); d != 0.0f)
+    {
+        if (! s.rpOn) { if (d > 0) { s.rpOn = true; s.rpMix = d; } }
+        else s.rpMix = clamp01 (s.rpMix + d);
+    }
+    s.rpGaps = clamp01 (s.rpGaps + pv (PF_RpGaps)); s.rpRev = clamp01 (s.rpRev + pv (PF_RpRev)); s.rpCrush = clamp01 (s.rpCrush + pv (PF_RpCrush));
+}
+
+// valore effettivo di un controllo Performance: il blocco del passo del sequencer, se c'è, altrimenti la manopola
+float ManipoloProcessor::perfValue (int i) const
+{
+    const float o = perfSeq.out[i].load (std::memory_order_relaxed);
+    return std::isnan (o) ? gp.perf[i]->load() : o;
+}
+
+// Sequencer della Performance (thread audio, una volta per blocco)
+void ManipoloProcessor::updatePerfSeq()
+{
+    const float nan = std::numeric_limits<float>::quiet_NaN();
+    if (gp.psOn->load() < 0.5f || ! dm.running.load())
+    {
+        if (psCurStep != -1 || perfSeq.playStep.load() != -1) { for (auto& o : perfSeq.out) o = nan; perfSeq.playStep = -1; }
+        psCurStep = psPrevStep = psLastRaw = -1;
+        return;
+    }
+    const int len = juce::jlimit (1, kPerfSeqSteps, juce::roundToInt (gp.psLen->load()));
+    const double stepBeats = speedBeats (juce::jlimit (0, kNumSpeeds - 1, juce::roundToInt (gp.psSpeed->load())));
+    const double pos = std::max (0.0, dm.displayBeat.load()) / stepBeats;
+    const int raw = (int) std::floor (pos);
+    const int step = raw % len;
+    psFrac = (float) (pos - std::floor (pos));
+    if (raw != psLastRaw)
+    {
+        psLastRaw = raw;
+        if (psCurStep < 0) { psCurStep = psPrevStep = step; }
+        else if (psRng.uni() < perfSeq.prob[step].load()) { psPrevStep = psCurStep; psCurStep = step; }
+        perfSeq.playStep = step;
+    }
+    const float g = perfSeq.glide[psCurStep].load();
+    for (int i = 0; i < kNumPerf; ++i)
+    {
+        const float c = perfSeq.lock[psCurStep][i].load(), pr = perfSeq.lock[psPrevStep][i].load();
+        if (std::isnan (c) && std::isnan (pr)) { perfSeq.out[i].store (nan, std::memory_order_relaxed); continue; }
+        const float knob = gp.perf[i]->load();
+        const float vc = std::isnan (c) ? knob : c, vp = std::isnan (pr) ? knob : pr;
+        const float val = (g > 0.001f && psFrac < g && psPrevStep != psCurStep) ? lerp (vp, vc, psFrac / g) : vc;
+        perfSeq.out[i].store (val, std::memory_order_relaxed);
+    }
+}
+
+void ManipoloProcessor::perfSeqCapture (int step)
+{
+    if (step < 0 || step >= kPerfSeqSteps) return;
+    for (int i = 0; i < kNumPerf; ++i)
+    {
+        const float kv = apvts.getRawParameterValue (perfId (i))->load();
+        if (std::abs (kv) > 0.0005f) perfSeq.lock[step][i] = kv;
+    }
+}
+
+void ManipoloProcessor::perfSeqRandomGlitch()
+{
+    static const int glitch[] = { PF_LzLevel, PF_LzEngine, PF_LzTimbre, PF_LzColor, PF_LzDensity, PF_LzDecay,
+                                  PF_TzMix, PF_TzShape, PF_RpMix, PF_RpGaps, PF_RpRev, PF_RpCrush,
+                                  PF_Distort, PF_Cutoff, PF_Ratchet, PF_Macro1 };
+    juce::Array<int> pool;
+    for (int i : glitch) if (! perfLock[i].load()) pool.add (i);
+    if (pool.isEmpty()) return;
+    const int len = juce::roundToInt (apvts.getRawParameterValue ("ps_len")->load());
+    for (int st = 0; st < kPerfSeqSteps; ++st)
+    {
+        perfSeq.clearStep (st);
+        if (st >= len || random.nextFloat() > 0.55f) continue;
+        const int n = 1 + random.nextInt (4);
+        for (int k = 0; k < n; ++k)
+        {
+            const int i = pool[random.nextInt (pool.size())];
+            const bool positive = i == PF_LzLevel || i == PF_TzMix || i == PF_RpMix;
+            perfSeq.lock[st][i] = positive ? 0.3f + 0.7f * random.nextFloat() : random.nextFloat() * 2.0f - 1.0f;
+        }
+        perfSeq.glide[st] = random.nextFloat() < 0.3f ? 0.3f + 0.6f * random.nextFloat() : 0.0f;
+        perfSeq.prob[st] = random.nextFloat() < 0.7f ? 1.0f : 0.5f + 0.4f * random.nextFloat();
+    }
+}
+
+// rende un colpo della voce in un WAV (dry, senza mandate e master): per il drag & drop nel DAW
+juce::File ManipoloProcessor::renderVoiceToFile (int voice)
+{
+    const float srate = getSampleRate() > 0 ? (float) getSampleRate() : 48000.0f;
+    auto vsh = std::make_unique<VoiceShared>();
+    for (int s = 0; s < kNumSources; ++s) for (int t = 0; t < kNumTargets; ++t) vsh->depth[s][t] = dm.vshared[voice].depth[s][t].load();
+    for (int t = 0; t < kNumTargets; ++t) vsh->locked[t] = dm.vshared[voice].locked[t].load();
+    auto smp = getSample (voice);
+    auto v = std::make_unique<Voice>();
+    v->shared = vsh.get(); v->sample = smp.get(); v->prepare (srate);
+    VoiceSettings s = dm.vs[voice]; s.route = 0;
+    TriggerInfo ti; ti.velocity = 1.0f;
+    v->trigger (s, ti);
+    const int maxN = (int) (srate * 12.0f), blk = 512;
+    juce::AudioBuffer<float> out (2, maxN); out.clear();
+    std::vector<float> dl (blk), dr (blk), rl (blk), rr (blk);
+    int n = 0;
+    while (n < maxN)
+    {
+        const int len = std::min (blk, maxN - n);
+        v->render (s, out.getWritePointer (0) + n, out.getWritePointer (1) + n, dl.data(), dr.data(), rl.data(), rr.data(), len);
+        n += len;
+        if (! v->isActive()) break;
+    }
+    int last = 0;
+    for (int i = 0; i < n; ++i) if (std::abs (out.getSample (0, i)) > 1.0e-4f || std::abs (out.getSample (1, i)) > 1.0e-4f) last = i;
+    const int total = std::max (64, std::min (n, last + (int) (srate * 0.01f)));
+    const int fade = std::min (total / 4, (int) (srate * 0.005f));
+    for (int c = 0; c < 2; ++c) out.applyGainRamp (c, total - fade, fade, 1.0f, 0.0f);
+    for (int c = 0; c < 2; ++c) for (int i = 0; i < total; ++i) out.setSample (c, i, softClip (out.getSample (c, i)));
+
+    auto folder = userFolder().getChildFile ("Renders"); folder.createDirectory();
+    juce::String name = s.lzOn ? juce::String (lzEngineName (s.lzEngine)) : juce::String (engineInfo (s.engine).name);
+    name = juce::File::createLegalFileName ("Drummatic V" + juce::String (voice + 1) + " " + name + " " + juce::Time::getCurrentTime().formatted ("%H%M%S"));
+    auto f = folder.getNonexistentChildFile (name, ".wav");
+    juce::WavAudioFormat wav;
+    std::unique_ptr<juce::FileOutputStream> os (f.createOutputStream());
+    if (os == nullptr) return {};
+    std::unique_ptr<juce::AudioFormatWriter> w (wav.createWriterFor (os.get(), srate, 2, 24, {}, 0));
+    if (w == nullptr) return {};
+    os.release();
+    w->writeFromAudioSampleBuffer (out, 0, total);
+    return f;
 }
 
 void ManipoloProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midi)
@@ -213,6 +372,16 @@ void ManipoloProcessor::timerCallback()
         else if (a == A_PerfCommit) perfCommit();
         else if (a >= A_RandomizeVoice0 && a < A_RandomizeVoice0 + kNumVoices) randomizeVoice (a - A_RandomizeVoice0);
     }
+    // REC del sequencer Performance: i movimenti delle manopole diventano blocchi del passo che sta suonando
+    {
+        const int st = perfSeq.playStep.load();
+        for (int i = 0; i < kNumPerf; ++i)
+        {
+            const float kv = gp.perf[i]->load();
+            if (perfSeq.rec.load() && st >= 0 && std::abs (kv - psLastKnob[i]) > 1.0e-4f) perfSeq.lock[st][i] = kv;
+            psLastKnob[i] = kv;
+        }
+    }
     // libera i campioni sostituiti (il thread audio non li usa più dopo un blocco)
     const juce::SpinLock::ScopedLockType lock (sampleLock);
     const auto now = blockCount.load();
@@ -231,7 +400,8 @@ void ManipoloProcessor::randomizeVoice (int voice)
     const float depth = apvts.getRawParameterValue ("rnd_depth")->load();
     static const juce::StringArray skip { "synthOn", "sampOn", "gain", "dsend", "rsend", "choke", "link", "steps", "fill", "pattern",
                                           "rotate", "invert", "sshift", "swing", "shape", "density", "speed", "mult", "length", "snap",
-                                          "resetOn", "resetLen", "start", "end", "pan", "route", "pfEnable", "pfFlip" };
+                                          "resetOn", "resetLen", "start", "end", "pan", "route", "pfEnable", "pfFlip",
+                                          "lzOn", "lzKit", "tzOn", "rpOn", "tzSync", "rpSync" };
     const juce::String prefix = "v" + juce::String (voice + 1) + "_";
     for (auto* p : getParameters())
     {
@@ -314,6 +484,11 @@ void ManipoloProcessor::perfCommit()
         addN ("density", pv (PF_Density) * 0.5f, -1);
         addInt ("steps", juce::roundToInt (pv (PF_Steps) * 32)); addInt ("fill", juce::roundToInt (pv (PF_Fill) * 32));
         addInt ("pattern", juce::roundToInt (pv (PF_Pattern) * 32));
+        // glitch
+        addN ("lzlevel", pv (PF_LzLevel), T_LzLevel);
+        addInt ("lzEng", juce::roundToInt (pv (PF_LzEngine) * 32));
+        addN ("tzMix", pv (PF_TzMix), -1); addN ("tzShape", pv (PF_TzShape) * 0.5f, -1);
+        addN ("rpMix", pv (PF_RpMix), -1); addN ("rpGaps", pv (PF_RpGaps), -1); addN ("rpRev", pv (PF_RpRev), -1); addN ("rpCrush", pv (PF_RpCrush), -1);
         // MOD AMP: scala le profondità di modulazione
         const float amp = juce::jlimit (0.0f, 2.0f, 1.0f + pv (PF_ModAmp));
         if (amp != 1.0f)
@@ -380,6 +555,20 @@ juce::ValueTree ManipoloProcessor::extraToTree()
     for (int v = 0; v < kNumVoices; ++v) { ms.add (dm.mute[v].load() ? "1" : "0"); ss.add (dm.solo[v].load() ? "1" : "0"); }
     extra.setProperty ("mute", ms.joinIntoString (","), nullptr);
     extra.setProperty ("solo", ss.joinIntoString (","), nullptr);
+    // sequencer della Performance
+    juce::ValueTree ps ("PERFSEQ");
+    for (int st = 0; st < kPerfSeqSteps; ++st)
+    {
+        juce::StringArray items;
+        for (int i = 0; i < kNumPerf; ++i)
+            if (perfSeq.hasLock (st, i)) items.add (juce::String (perfId (i)) + "=" + juce::String (perfSeq.lock[st][i].load(), 4));
+        if (items.isEmpty() && perfSeq.glide[st].load() == 0.0f && perfSeq.prob[st].load() == 1.0f) continue;
+        juce::ValueTree s ("STEP");
+        s.setProperty ("i", st, nullptr); s.setProperty ("glide", perfSeq.glide[st].load(), nullptr);
+        s.setProperty ("prob", perfSeq.prob[st].load(), nullptr); s.setProperty ("locks", items.joinIntoString (";"), nullptr);
+        ps.addChild (s, -1, nullptr);
+    }
+    extra.addChild (ps, -1, nullptr);
     return extra;
 }
 
@@ -493,6 +682,8 @@ void ManipoloProcessor::setStateInformation (const void* data, int size)
         auto state = juce::ValueTree::fromXml (*xml);
         if (! state.hasType (apvts.state.getType())) return;
         auto extra = state.getChildWithName ("EXTRA");
+        juce::StringArray present;
+        for (auto c : state) if (c.hasType ("PARAM")) present.add (c.getProperty ("id").toString());
         apvts.replaceState (state);
         if (extra.isValid())
         {
@@ -508,6 +699,22 @@ void ManipoloProcessor::setStateInformation (const void* data, int size)
             auto ss = juce::StringArray::fromTokens (extra.getProperty ("solo").toString(), ",", "");
             for (int i = 0; i < kNumVoices; ++i) { dm.mute[i] = ms[i] == "1"; dm.solo[i] = ss[i] == "1"; }
         }
+        // sequencer della Performance
+        perfSeq.clearAll();
+        if (extra.isValid())
+            for (auto s : extra.getChildWithName ("PERFSEQ"))
+            {
+                const int st = (int) s.getProperty ("i", -1);
+                if (st < 0 || st >= kPerfSeqSteps) continue;
+                perfSeq.glide[st] = (float) s.getProperty ("glide", 0.0f); perfSeq.prob[st] = (float) s.getProperty ("prob", 1.0f);
+                for (auto& tok : juce::StringArray::fromTokens (s.getProperty ("locks").toString(), ";", ""))
+                    for (int i = 0; i < kNumPerf; ++i)
+                        if (tok.upToFirstOccurrenceOf ("=", false, false) == perfId (i)) perfSeq.lock[st][i] = tok.fromFirstOccurrenceOf ("=", false, false).getFloatValue();
+            }
+        // kit di versioni precedenti: i parametri che non contengono (strato LAZER, BRK…) tornano ai valori predefiniti
+        for (auto* p : getParameters())
+            if (auto* rp = dynamic_cast<juce::RangedAudioParameter*> (p))
+                if (! present.contains (rp->paramID)) rp->setValueNotifyingHost (rp->getDefaultValue());
     }
 }
 
@@ -555,6 +762,19 @@ bool ManipoloProcessor::loadVoicePreset (int voice, const juce::File& f)
                 data.setProperty (k + juce::String (l), cur.getProperty (k + juce::String (l)), nullptr);
     }
     voiceFromTree (voice, t);
+    // preset di versioni precedenti: strato LAZER e BRK ai valori predefiniti
+    if (auto params = t.getChildWithName ("PARAMS"); params.isValid())
+    {
+        const juce::String prefix = "v" + juce::String (voice + 1) + "_";
+        for (auto* p : getParameters())
+            if (auto* rp = dynamic_cast<juce::RangedAudioParameter*> (p))
+                if (rp->paramID.startsWith (prefix))
+                {
+                    const auto name = rp->paramID.fromFirstOccurrenceOf ("_", false, false);
+                    const bool isNew = name.startsWith ("lz") || name.startsWith ("tz") || name.startsWith ("rp") || name.startsWith ("tail");
+                    if (isNew && ! params.hasProperty (name)) rp->setValueNotifyingHost (rp->getDefaultValue());
+                }
+    }
     return true;
 }
 

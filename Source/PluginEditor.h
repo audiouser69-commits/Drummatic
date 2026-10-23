@@ -1,6 +1,7 @@
 #pragma once
 #include "PluginProcessor.h"
 #include "UI/VoicePage.h"
+#include "UI/LazerPage.h"
 #include "UI/SeqPage.h"
 #include "UI/MixerPage.h"
 #include "UI/PerfPage.h"
@@ -27,6 +28,7 @@ public:
             const bool syn = ctx.proc.param (v, "synthOn")->getValue() > 0.5f, smp = ctx.proc.param (v, "sampOn")->getValue() > 0.5f;
             juce::String name = syn ? eng->getCurrentValueAsText() : juce::String();
             if (smp) name += syn ? " + S" : "Sampler";
+            if (ctx.proc.param (v, "lzOn")->getValue() > 0.5f) name += name.isEmpty() ? juce::String ("Lazer") : juce::String (" + L");
             g.setColour (ui::col::dim); g.setFont (ui::font (10.5f));
             g.drawText (name, r.getX() + 6, r.getBottom() - 18, r.getWidth() - 10, 14, juce::Justification::centredLeft);
             // LED
@@ -68,6 +70,7 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
     bool keyPressed (const juce::KeyPress&) override;
+    void showPageForTest (int p) { showPage (p); }
 
 private:
     int lastRecoveries = 0; juce::uint32 recoveryShownAt = 0;
@@ -76,11 +79,12 @@ private:
     ui::Context ctx;
     VoiceColumn column;
     ui::VoicePage voicePage;
+    ui::LazerPage lazerPage;
     ui::SeqPage seqPage;
     ui::MixerPage mixerPage;
     ui::PerfPage perfPage;
     int page = 0;
-    juce::TextButton tabVoice { "VOICE" }, tabSeq { "SEQ" }, tabMix { "MIX / FX" }, tabPerf { "PERFORM" };
+    juce::TextButton tabVoice { "VOICE" }, tabLazer { "LAZER" }, tabSeq { "SEQ" }, tabMix { "MIX / FX" }, tabPerf { "PERFORM" };
     juce::TextButton playBtn { "PLAY" }, stopBtn { "STOP" };
     juce::TextButton keysBtn { "TASTI" };
     bool shortcutsOn() const

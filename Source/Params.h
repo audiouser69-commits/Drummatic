@@ -11,14 +11,16 @@ inline const char* targetId (int t)
 {
     static const char* ids[] = { "pitch", "p1", "p2", "p3", "p4", "spitch", "sp1", "sp2", "sp3", "sp4", "start", "end",
                                  "blend", "cutoff", "res", "distort", "e1a", "e1h", "e1d", "e2a", "e2h", "e2d",
-                                 "l1spd", "l1amp", "l2spd", "l2amp", "pan", "gain", "dsend", "rsend" };
+                                 "l1spd", "l1amp", "l2spd", "l2amp", "pan", "gain", "dsend", "rsend",
+                                 "lztune", "lzsweep", "lzstime", "lztimbre", "lzcolor", "lzmod", "lzrate", "lzgrit", "lzdens", "lzspread", "lzdecay", "lzlevel" };
     return ids[t];
 }
 inline const char* targetLabel (int t)
 {
     static const char* l[] = { "PITCH", "P1", "P2", "P3", "P4", "PITCH", "S1", "S2", "S3", "S4", "START", "END",
                                "BLEND", "CUTOFF", "RESONANCE", "DISTORT", "ATTACK", "HOLD", "DECAY", "ATTACK", "HOLD", "DECAY",
-                               "SPEED", "AMP", "SPEED", "AMP", "PAN", "VOICE GAIN", "DELAY", "REVERB" };
+                               "SPEED", "AMP", "SPEED", "AMP", "PAN", "VOICE GAIN", "DELAY", "REVERB",
+                               "TUNE", "SWEEP", "S.TIME", "TIMBRE", "COLOR", "MOD", "RATE", "GRIT", "DENSITY", "SPREAD", "DECAY", "LEVEL" };
     return l[t];
 }
 
@@ -30,7 +32,10 @@ inline juce::String formatTarget (int t, float v)
 {
     switch (t)
     {
-        case T_Pitch: case T_SPitch: return juce::String (juce::roundToInt (v)) + " st";
+        case T_Pitch: case T_SPitch: case T_LzTune: return juce::String (juce::roundToInt (v)) + " st";
+        case T_LzSTime: case T_LzDecay: return formatTime (v);
+        case T_LzLevel: return v <= -59.9f ? juce::String ("-inf dB") : juce::String (v, 1) + " dB";
+        case T_LzSweep: return (v > 0 ? "+" : "") + juce::String (v * 4.0f, 2) + " oct";
         case T_Cutoff: return v >= 1000 ? juce::String (v / 1000.0f, 2) + " kHz" : juce::String (juce::roundToInt (v)) + " Hz";
         case T_E1Attack: case T_E1Hold: case T_E1Decay: case T_E2Attack: case T_E2Hold: case T_E2Decay: return formatTime (v);
         case T_Pan: return std::abs (v) < 0.005f ? juce::String ("Center") : (v < 0 ? "L" : "R") + juce::String (juce::roundToInt (std::abs (v) * 100));
@@ -54,6 +59,12 @@ inline juce::StringArray engineNames()
 {
     juce::StringArray a; for (int i = 0; i < kNumSynthEngines; ++i) a.add (engineInfo (i).name); return a;
 }
+inline juce::StringArray lazerNames()
+{
+    juce::StringArray a; for (int i = 0; i < kNumLzEngines; ++i) a.add (juce::String (lzFamilyName (i / kLzVariants)) + " - " + lzEngineName (i)); return a;
+}
+inline juce::StringArray tailNames() { juce::StringArray a; for (int i = 0; i < kNumTails; ++i) a.add (tailName (i)); return a; }
+inline juce::StringArray brkDivs() { juce::StringArray a; for (int i = 0; i < kNumBrkDivs; ++i) a.add (brkDivName (i)); return a; }
 inline juce::StringArray samplerNames()
 {
     juce::StringArray a; for (int i = 0; i < kNumSamplerEngines; ++i) a.add (samplerInfo (i).name); return a;
@@ -71,20 +82,27 @@ enum Perf
     PF_Macro1, PF_Macro2, PF_Var, PF_ModAmp,
     PF_Distort, PF_Cutoff, PF_Res,
     PF_Steps, PF_Fill, PF_Pattern, PF_Density, PF_Prob, PF_Ratchet,
+    // 0.4: glitch (strato LAZER e BRK). Un valore positivo su LEVEL / MIX accende lo strato anche se è spento nella voce
+    PF_LzLevel, PF_LzEngine, PF_LzTimbre, PF_LzColor, PF_LzDensity, PF_LzDecay,
+    PF_TzMix, PF_TzShape, PF_RpMix, PF_RpGaps, PF_RpRev, PF_RpCrush,
     kNumPerf
 };
 inline const char* perfId (int i)
 {
     static const char* n[] = { "pf_enva", "pf_envh", "pf_envd", "pf_envc", "pf_spitch", "pf_s1", "pf_s2", "pf_s3", "pf_s4",
                                "pf_mpitch", "pf_m1", "pf_m2", "pf_m3", "pf_m4", "pf_macro1", "pf_macro2", "pf_var", "pf_modamp",
-                               "pf_distort", "pf_cutoff", "pf_res", "pf_steps", "pf_fill", "pf_pattern", "pf_density", "pf_prob", "pf_ratchet" };
+                               "pf_distort", "pf_cutoff", "pf_res", "pf_steps", "pf_fill", "pf_pattern", "pf_density", "pf_prob", "pf_ratchet",
+                               "pf_lzlevel", "pf_lzeng", "pf_lztimbre", "pf_lzcolor", "pf_lzdens", "pf_lzdecay",
+                               "pf_tzmix", "pf_tzshape", "pf_rpmix", "pf_rpgaps", "pf_rprev", "pf_rpcrush" };
     return n[i];
 }
 inline const char* perfLabel (int i)
 {
     static const char* n[] = { "ATTACK", "HOLD", "DECAY", "CURVE", "PITCH", "1", "2", "3", "4", "PITCH", "1", "2", "3", "4",
                                "MACRO 1", "MACRO 2", "VARIATION", "MOD AMP", "DISTORT", "CUTOFF", "RES",
-                               "STEPS", "FILL", "PATTERN", "DENSITY", "PROB", "RATCHET" };
+                               "STEPS", "FILL", "PATTERN", "DENSITY", "PROB", "RATCHET",
+                               "LEVEL", "ENGINE", "TIMBRE", "COLOR", "DENSITY", "DECAY",
+                               "TZ MIX", "TZ SHAPE", "RPT MIX", "GAPS", "REVERSE", "CRUSH" };
     return n[i];
 }
 // destinazione voce (Target) di un controllo Performance, o -1
@@ -95,10 +113,14 @@ inline int perfTarget (int i)
         case PF_SynPitch: return T_Pitch; case PF_Syn1: return T_P1; case PF_Syn2: return T_P2; case PF_Syn3: return T_P3; case PF_Syn4: return T_P4;
         case PF_SmpPitch: return T_SPitch; case PF_Smp1: return T_SP1; case PF_Smp2: return T_SP2; case PF_Smp3: return T_SP3; case PF_Smp4: return T_SP4;
         case PF_Distort: return T_Distort; case PF_Cutoff: return T_Cutoff; case PF_Res: return T_Res;
+        case PF_LzTimbre: return T_LzTimbre; case PF_LzColor: return T_LzColor; case PF_LzDensity: return T_LzDensity; case PF_LzDecay: return T_LzDecay;
         default: return -1;
     }
 }
 inline float perfScale (int i) { return (i == PF_SynPitch || i == PF_SmpPitch) ? 0.25f : 1.0f; }
+
+// ---- Sequencer della Performance: per ogni passo un "blocco" (lock) facoltativo su ogni controllo ----
+constexpr int kPerfSeqSteps = 64;
 
 juce::AudioProcessorValueTreeState::ParameterLayout createLayout();
 } // namespace mpp
