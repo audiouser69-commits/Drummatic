@@ -10,7 +10,8 @@ nome, grafica e codice sono originali.
 - **VST3 Windows**: copia `Drummatic.vst3` in `C:\Program Files\Common Files\VST3\` e riesegui la scansione in Ableton.
 - **macOS**: `Drummatic.vst3` in `~/Library/Audio/Plug-Ins/VST3/`, `Drummatic.app` in Applicazioni; al primo avvio
   `xattr -dr com.apple.quarantine ~/Library/Audio/Plug-Ins/VST3/Drummatic.vst3 /Applications/Drummatic.app`.
-- Preset e kit vengono salvati in `Documenti/Drummatic/` (`Kits`, `Voices`, `Samples`); i file di `Documenti/Manipolo` vengono copiati lì al primo avvio.
+- Preset, kit, campioni e WAV esportati vengono salvati in `Documenti/Drummatic/` (`Kits`, `Voices`, `Samples`, `Renders`); i file di `Documenti/Manipolo` vengono copiati lì al primo avvio.
+  Con il pulsante **CARTELLA** nella barra superiore puoi scegliere un'altra cartella (anche un disco esterno), con la copia facoltativa dei file esistenti.
 - Manuale completo: `docs/Drummatic-Manuale.pdf`.
 
 ## Funzioni
@@ -66,6 +67,8 @@ Spazio play/stop solo nello standalone. Nel DAW TASTI è spento di default, cos�
 Shift+clic o doppio clic su una voce a sinistra = ascolto.
 
 ## Novità 0.4.0 — LAZER e performance di glitch programmate
+**Cartella dei file selezionabile**: pulsante CARTELLA nella barra superiore (scegli, apri, torna a Documenti/Drummatic); copia facoltativa di kit, preset, campioni e WAV, con i percorsi dei campioni aggiornati nei kit copiati. Vale per standalone e plugin.
+
 **Pagina LAZER** (nuova scheda, per la voce selezionata)
 - Terzo strato sonoro accanto a synth e sampler: **64 motori glitch in 16 famiglie** — FM Metals, Laser Sweeps,
   Wavefold Zaps, Grain Clouds, Sub Thumps, Bit Zaps, Ring Mods, Noise Bursts, Comb Pings, Chirps, Formants,
@@ -83,8 +86,8 @@ Shift+clic o doppio clic su una voce a sinistra = ascolto.
 - **BRK REPEAT**: stutter che registra una fetta del colpo e la ripete (REPEATS) con buchi casuali (GAPS), reverse
   e bitcrush casuali (CRUSH): fill spezzati.
 - **KIT MODE**: sul canale MIDI della voce (2-9) ogni tasto suona un motore diverso (nota 36, C1 in Ableton = motore 1).
-- **TRASCINA WAV**: trascina il colpo della voce direttamente nel DAW come file WAV (clic = salva in
-  `Documenti/Drummatic/Renders`).
+- **TRASCINA WAV**: trascina il colpo della voce direttamente nel DAW come file WAV (clic = salva nella
+  cartella `Renders` di Drummatic).
 
 **Sequencer della Performance** (pagina PERFORM)
 - Fino a 64 passi a tempo col trasporto (durata del passo da 1/1 a 1/32T). Ogni passo può **bloccare** qualsiasi

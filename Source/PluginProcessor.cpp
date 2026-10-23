@@ -719,16 +719,100 @@ void ManipoloProcessor::setStateInformation (const void* data, int size)
 }
 
 // ---------------- preset ----------------
-juce::File ManipoloProcessor::userFolder()
+// preferenze dell'utente (comuni a standalone e plugin): AppData/Roaming/Drummatic, ~/Library/Application Support/Drummatic, ~/.config/Drummatic
+static std::unique_ptr<juce::PropertiesFile> openPrefs()
+{
+    juce::PropertiesFile::Options o;
+    o.applicationName = "Drummatic"; o.filenameSuffix = ".prefs"; o.folderName = "Drummatic";
+    o.osxLibrarySubFolder = "Application Support";
+    return std::make_unique<juce::PropertiesFile> (o);
+}
+static juce::CriticalSection folderLock;
+static juce::File cachedFolder; static bool folderLoaded = false;
+
+juce::File ManipoloProcessor::defaultUserFolder()
 {
     const auto docs = juce::File::getSpecialLocation (juce::File::userDocumentsDirectory);
     auto f = docs.getChildFile ("Drummatic");
     // migrazione: le versioni 0.1–0.2.1 salvavano in Documenti/Manipolo
     if (! f.exists() && docs.getChildFile ("Manipolo").isDirectory())
         docs.getChildFile ("Manipolo").copyDirectoryTo (f);
-    f.getChildFile ("Kits").createDirectory();
-    f.getChildFile ("Voices").createDirectory();
     return f;
+}
+
+static void makeSubfolders (const juce::File& f)
+{
+    for (auto n : { "Kits", "Voices", "Samples", "Renders" }) f.getChildFile (n).createDirectory();
+}
+
+juce::File ManipoloProcessor::userFolder()
+{
+    juce::File f;
+    {
+        const juce::ScopedLock sl (folderLock);
+        if (! folderLoaded)
+        {
+            folderLoaded = true;
+            const auto path = openPrefs()->getValue ("userFolder");
+            cachedFolder = juce::File::isAbsolutePath (path) ? juce::File (path) : juce::File();
+        }
+        f = cachedFolder;
+    }
+    // cartella scelta non raggiungibile (disco esterno scollegato, permessi): si usa quella predefinita
+    if (f != juce::File() && ! (f.isDirectory() || f.createDirectory().wasOk()))
+        f = juce::File();
+    if (f == juce::File()) f = defaultUserFolder();
+    makeSubfolders (f);
+    return f;
+}
+
+bool ManipoloProcessor::userFolderIsCustom()
+{
+    const juce::ScopedLock sl (folderLock);
+    if (! folderLoaded) { folderLoaded = true; const auto p = openPrefs()->getValue ("userFolder"); cachedFolder = juce::File::isAbsolutePath (p) ? juce::File (p) : juce::File(); }
+    return cachedFolder != juce::File();
+}
+
+bool ManipoloProcessor::setUserFolder (const juce::File& folder, bool copyExisting)
+{
+    const auto oldF = userFolder();
+    const auto newF = folder == juce::File() ? defaultUserFolder() : folder;
+    if (! (newF.isDirectory() || newF.createDirectory().wasOk())) return false;
+    // prova di scrittura
+    auto probe = newF.getNonexistentChildFile (".drummatic_prova", ".tmp");
+    if (! probe.replaceWithText ("ok")) return false;
+    probe.deleteFile();
+    makeSubfolders (newF);
+    if (copyExisting && newF != oldF && ! newF.isAChildOf (oldF))
+    {
+        for (auto n : { "Kits", "Voices", "Samples", "Renders" })
+        {
+            const auto src = oldF.getChildFile (n);
+            for (auto& file : src.findChildFiles (juce::File::findFiles, true))
+            {
+                const auto dst = newF.getChildFile (n).getChildFile (file.getRelativePathFrom (src));
+                if (dst.exists()) continue;
+                dst.getParentDirectory().createDirectory();
+                if (file.hasFileExtension ("mkit;mvoice"))
+                {
+                    // i campioni copiati: il kit punta alla nuova posizione
+                    auto txt = file.loadFileAsString();
+                    txt = txt.replace (oldF.getChildFile ("Samples").getFullPathName(), newF.getChildFile ("Samples").getFullPathName());
+                    dst.replaceWithText (txt);
+                }
+                else file.copyFileTo (dst);
+            }
+        }
+    }
+    {
+        const juce::ScopedLock sl (folderLock);
+        folderLoaded = true;
+        cachedFolder = folder == juce::File() ? juce::File() : newF;
+    }
+    auto prefs = openPrefs();
+    if (folder == juce::File()) prefs->removeValue ("userFolder"); else prefs->setValue ("userFolder", newF.getFullPathName());
+    prefs->saveIfNeeded();
+    return true;
 }
 
 bool ManipoloProcessor::saveVoicePreset (int voice, const juce::File& f)

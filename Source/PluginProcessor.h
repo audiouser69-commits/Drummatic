@@ -78,7 +78,14 @@ public:
     bool saveKit (const juce::File& f);
     bool loadKit (const juce::File& f);
     void stepKit (int dir);          // preset precedente/successivo (cartella Kits)
+    // Cartella in cui Drummatic salva tutto (Kits, Voices, Samples, Renders). Predefinita: Documenti/Drummatic;
+    // si può scegliere un'altra cartella (vale per standalone e plugin, salvata nelle preferenze dell'utente)
     static juce::File userFolder();
+    static juce::File defaultUserFolder();
+    static bool userFolderIsCustom();
+    // imposta la cartella (File() = torna alla predefinita); con copyExisting copia kit, preset, campioni e WAV
+    // senza sovrascrivere e aggiorna nei kit/preset copiati i percorsi dei campioni. Restituisce false se non è scrivibile
+    static bool setUserFolder (const juce::File& folder, bool copyExisting);
     juce::File currentKit;
 
     std::atomic<bool> hostDrivesTransport { false }, hostPlaying { false };

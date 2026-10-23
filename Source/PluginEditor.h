@@ -89,7 +89,9 @@ private:
     int page = 0;
     juce::TextButton tabVoice { "VOICE" }, tabLazer { "LAZER" }, tabSeq { "SEQ" }, tabMix { "MIX / FX" }, tabPerf { "PERFORM" };
     juce::TextButton playBtn { "PLAY" }, stopBtn { "STOP" };
-    juce::TextButton keysBtn { "TASTI" };
+    juce::TextButton keysBtn { "TASTI" }, folderBtn { "CARTELLA" };
+    void showFolderMenu();
+    void chooseFolder();
     bool shortcutsOn() const
     {
         return (bool) proc.apvts.state.getProperty ("kbShortcuts", proc.wrapperType == juce::AudioProcessor::wrapperType_Standalone);

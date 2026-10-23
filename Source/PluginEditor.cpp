@@ -33,6 +33,9 @@ ManipoloEditor::ManipoloEditor (ManipoloProcessor& p)
 
     for (auto* b : { &kitPrev, &kitNext, &kitSave, &kitLoad, &rndAll }) addAndMakeVisible (*b);
     addAndMakeVisible (keysBtn);
+    addAndMakeVisible (folderBtn);
+    folderBtn.onClick = [this] { showFolderMenu(); };
+    folderBtn.setTooltip ("Cartella dove Drummatic salva kit, preset di voce, campioni e WAV esportati");
     keysBtn.setClickingTogglesState (true);
     keysBtn.setToggleState (shortcutsOn(), juce::dontSendNotification);
     keysBtn.setTooltip ("Scorciatoie da tastiera (Q W A S D). Nel DAW sono spente di default per lasciare i tasti al DAW");
@@ -150,12 +153,13 @@ void ManipoloEditor::resized()
     playBtn.setBounds (header.removeFromLeft (56)); header.removeFromLeft (3);
     stopBtn.setBounds (header.removeFromLeft (56)); header.removeFromLeft (10);
     bpm.setBounds (header.removeFromLeft (110)); header.removeFromLeft (10);
-    for (auto* b : { &tabVoice, &tabLazer, &tabSeq, &tabMix, &tabPerf }) { b->setBounds (header.removeFromLeft (72)); header.removeFromLeft (3); }
+    for (auto* b : { &tabVoice, &tabLazer, &tabSeq, &tabMix, &tabPerf }) { b->setBounds (header.removeFromLeft (68)); header.removeFromLeft (3); }
     header.removeFromLeft (10);
     rndAll.setBounds (header.removeFromRight (72)); header.removeFromRight (6);
     keysBtn.setBounds (header.removeFromRight (52)); header.removeFromRight (6);
-    kitSave.setBounds (header.removeFromRight (84)); header.removeFromRight (3);
-    kitLoad.setBounds (header.removeFromRight (90)); header.removeFromRight (6);
+    folderBtn.setBounds (header.removeFromRight (72)); header.removeFromRight (6);
+    kitSave.setBounds (header.removeFromRight (76)); header.removeFromRight (3);
+    kitLoad.setBounds (header.removeFromRight (80)); header.removeFromRight (6);
     kitNext.setBounds (header.removeFromRight (26)); header.removeFromRight (2);
     kitName.setBounds (header.removeFromRight (std::max (80, std::min (220, header.getWidth() - 30))));
     header.removeFromRight (2);
@@ -175,6 +179,54 @@ void ManipoloEditor::resized()
     }
     column.setBounds (r.removeFromLeft (150).reduced (4, 0));
     for (auto* p : { (juce::Component*) &voicePage, (juce::Component*) &lazerPage, (juce::Component*) &seqPage, (juce::Component*) &mixerPage, (juce::Component*) &perfPage }) p->setBounds (r);
+}
+
+// ---------------- cartella dei file ----------------
+void ManipoloEditor::showFolderMenu()
+{
+    const auto cur = ManipoloProcessor::userFolder();
+    juce::PopupMenu m;
+    m.addSectionHeader ("Cartella di Drummatic");
+    m.addItem (99, cur.getFullPathName(), false, false);
+    m.addSeparator();
+    m.addItem (1, "Scegli un'altra cartella...");
+    m.addItem (2, "Apri la cartella");
+    m.addItem (3, "Torna a Documenti/Drummatic", ManipoloProcessor::userFolderIsCustom());
+    m.showMenuAsync (juce::PopupMenu::Options().withTargetComponent (&folderBtn), [this, cur] (int r)
+    {
+        if (r == 1) chooseFolder();
+        else if (r == 2) cur.startAsProcess();
+        else if (r == 3)
+        {
+            ManipoloProcessor::setUserFolder ({}, false);
+            juce::AlertWindow::showMessageBoxAsync (juce::MessageBoxIconType::InfoIcon, "Cartella di Drummatic",
+                "Kit, preset, campioni e WAV vengono di nuovo salvati in\n" + ManipoloProcessor::userFolder().getFullPathName());
+        }
+    });
+}
+
+void ManipoloEditor::chooseFolder()
+{
+    chooser = std::make_unique<juce::FileChooser> ("Scegli la cartella di Drummatic", ManipoloProcessor::userFolder().getParentDirectory());
+    chooser->launchAsync (juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectDirectories, [this] (const juce::FileChooser& fc)
+    {
+        auto dir = fc.getResult();
+        if (dir == juce::File()) return;
+        if (dir == ManipoloProcessor::userFolder()) return;
+        auto apply = [dir] (bool copy)
+        {
+            const bool ok = ManipoloProcessor::setUserFolder (dir, copy);
+            juce::AlertWindow::showMessageBoxAsync (ok ? juce::MessageBoxIconType::InfoIcon : juce::MessageBoxIconType::WarningIcon, "Cartella di Drummatic",
+                ok ? "D'ora in poi kit, preset di voce, campioni e WAV esportati vengono salvati in\n" + dir.getFullPathName()
+                     + (copy ? "\n\nI file esistenti sono stati copiati (quelli gia' presenti non sono stati sovrascritti)." : juce::String())
+                   : "Non riesco a scrivere in\n" + dir.getFullPathName() + "\nScegli un'altra cartella.");
+        };
+        auto opts = juce::MessageBoxOptions().withIconType (juce::MessageBoxIconType::QuestionIcon).withTitle ("Cartella di Drummatic")
+                        .withMessage ("Vuoi copiare nella nuova cartella i kit, i preset di voce, i campioni e i WAV esportati che hai adesso?\n\n"
+                                      "I file originali restano dove sono.")
+                        .withButton ("Copia").withButton ("Non copiare").withButton ("Annulla").withAssociatedComponent (this);
+        juce::AlertWindow::showAsync (opts, [apply] (int b) { if (b == 1) apply (true); else if (b == 2) apply (false); });
+    });
 }
 
 bool ManipoloEditor::keyPressed (const juce::KeyPress& k)

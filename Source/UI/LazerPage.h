@@ -38,7 +38,7 @@ class DragWav : public juce::Component, public juce::DragAndDropContainer, publi
 {
 public:
     explicit DragWav (Context& c) : ctx (c) { setMouseCursor (juce::MouseCursor::DraggingHandCursor);
-        setTooltip ("Trascina nel DAW il colpo della voce come file WAV (clic: lo salva in Documenti/Drummatic/Renders)"); }
+        setTooltip ("Trascina nel DAW il colpo della voce come file WAV (clic: lo salva nella cartella Renders di Drummatic)"); }
     void paint (juce::Graphics& g) override
     {
         auto r = getLocalBounds().toFloat().reduced (1);

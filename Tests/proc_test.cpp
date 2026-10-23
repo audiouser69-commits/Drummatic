@@ -109,5 +109,29 @@ int main()
     const bool ok8 = wavFile.existsAsFile() && wavFile.getSize() > 2000;
     std::printf ("render wav %s (%d bytes) %s\n", wavFile.getFileName().toRawUTF8(), (int) wavFile.getSize(), ok8 ? "OK" : "FAIL");
     wavFile.deleteFile();
-    return (rms > 0.01 && ok3 && ok4 && nans == 0 && ok1 && ok2 && lzE > 1.0 && nans2 == 0 && ok5 && ok6 && ok7 && ok8) ? 0 : 1;
+    // cartella dei file selezionabile: copia senza sovrascrivere, il kit copiato punta ai campioni copiati
+    bool ok9;
+    {
+        const auto oldRoot = ManipoloProcessor::userFolder();
+        const bool wasCustom = ManipoloProcessor::userFolderIsCustom();
+        auto smp = oldRoot.getChildFile ("Samples").getChildFile ("prova_cartella.wav");
+        juce::AudioBuffer<float> one (1, 4800); one.clear(); one.setSample (0, 0, 0.5f);
+        { juce::WavAudioFormat w; std::unique_ptr<juce::AudioFormatWriter> wr (w.createWriterFor (new juce::FileOutputStream (smp), 48000, 1, 16, {}, 0)); wr->writeFromAudioSampleBuffer (one, 0, 4800); }
+        p->loadSample (3, smp);
+        auto kit = oldRoot.getChildFile ("Kits").getChildFile ("prova_cartella.mkit"); p->saveKit (kit);
+        auto dest = juce::File::getSpecialLocation (juce::File::tempDirectory).getChildFile ("DrummaticCartellaProva");
+        dest.deleteRecursively();
+        const bool set = ManipoloProcessor::setUserFolder (dest, true);
+        const auto copiedKit = dest.getChildFile ("Kits").getChildFile ("prova_cartella.mkit");
+        ok9 = set && ManipoloProcessor::userFolder() == dest && copiedKit.existsAsFile()
+              && dest.getChildFile ("Samples").getChildFile ("prova_cartella.wav").existsAsFile()
+              && copiedKit.loadFileAsString().contains (dest.getChildFile ("Samples").getFullPathName())
+              && dest.getChildFile ("Renders").isDirectory();
+        // ripristina
+        ManipoloProcessor::setUserFolder (wasCustom ? oldRoot : juce::File(), false);
+        ok9 = ok9 && ManipoloProcessor::userFolder() == oldRoot;
+        kit.deleteFile(); smp.deleteFile(); dest.deleteRecursively();
+    }
+    std::printf ("cartella selezionabile %s\n", ok9 ? "OK" : "FAIL");
+    return (rms > 0.01 && ok3 && ok4 && nans == 0 && ok1 && ok2 && lzE > 1.0 && nans2 == 0 && ok5 && ok6 && ok7 && ok8 && ok9) ? 0 : 1;
 }

@@ -221,6 +221,7 @@ table.fam td:nth-child(3) { font-size: 8.2pt; }
   <div class="tip"><b>Latenza su Windows</b>Lo standalone non include il driver ASIO. Per una latenza bassa scegli <strong>Windows Audio (Exclusive Mode)</strong>, oppure usa il plugin VST3 dentro Ableton, che sfrutta il driver ASIO del DAW.</div>
 
   <h2>Dove vengono salvati i file</h2>
+  <p>Questa è la cartella predefinita; puoi sceglierne un'altra con il pulsante CARTELLA (vedi sotto).</p>
   <table>
     <thead><tr><th>Contenuto</th><th>Cartella</th></tr></thead>
     <tbody>
@@ -231,6 +232,17 @@ table.fam td:nth-child(3) { font-size: 8.2pt; }
     </tbody>
   </table>
   <p class="small">Se avevi già salvato kit con le versioni precedenti (cartella <code>Documenti/Manipolo</code>), al primo avvio vengono copiati automaticamente nella nuova cartella.</p>
+  <h2>Scegliere un'altra cartella</h2>
+  <p>La cartella <code>Documenti/Drummatic</code> è solo quella predefinita. Il pulsante <span class="ctl">CARTELLA</span> nella barra superiore mostra dove Drummatic sta salvando e apre un menu:</p>
+  <table>
+    <thead><tr><th>Voce del menu</th><th>Funzione</th></tr></thead>
+    <tbody>
+      <tr><td>Scegli un'altra cartella…</td><td>Scegli una cartella qualsiasi: un disco esterno, una cartella sincronizzata, la cartella dei tuoi progetti. Drummatic chiede se <strong>copiare</strong> lì kit, preset di voce, campioni e WAV esportati: i file originali restano dove sono, quelli già presenti nella nuova cartella non vengono sovrascritti e nei kit copiati i campioni puntano alle copie.</td></tr>
+      <tr><td>Apri la cartella</td><td>La apre in Esplora risorse o nel Finder.</td></tr>
+      <tr><td>Torna a Documenti/Drummatic</td><td>Ripristina la cartella predefinita.</td></tr>
+    </tbody>
+  </table>
+  <p>Dentro la cartella scelta Drummatic crea le sottocartelle <code>Kits</code>, <code>Voices</code>, <code>Samples</code> e <code>Renders</code>. La scelta vale per lo standalone e per il plugin in tutti i progetti, ed è memorizzata nelle preferenze dell'utente. Se la cartella non è raggiungibile (per esempio il disco esterno è scollegato), Drummatic usa temporaneamente <code>Documenti/Drummatic</code>.</p>
 </section>
 
 <!-- ================= 3 INTERFACCIA ================= -->
@@ -239,7 +251,7 @@ table.fam td:nth-child(3) { font-size: 8.2pt; }
   <figure class="s"><img src="img/p_voice.jpg" alt=""><figcaption><b>Pagina VOICE.</b> A sinistra le otto voci, al centro la voce selezionata (qui la 7: Scrapyard più un campione in Granular), a destra il bus master.</figcaption></figure>
   <p><span data-mark="c3"></span>La finestra è divisa in quattro zone fisse e in un'area centrale che cambia con la pagina scelta.</p>
   <div class="callouts">
-    <div><b>Barra superiore</b>PLAY e STOP, tempo (solo standalone), le cinque pagine, il browser dei kit, TASTI e RANDOM.</div>
+    <div><b>Barra superiore</b>PLAY e STOP, tempo (solo standalone), le cinque pagine, il browser dei kit, CARTELLA (dove salvare i file), TASTI e RANDOM.</div>
     <div><b>Colonna voci</b>Clic per selezionare. Sotto il numero il motore attivo (+ S con il sampler, + L con il LAZER). Il LED si accende quando la voce suona. M e S per mute e solo. Shift+clic o doppio clic per ascoltarla.</div>
     <div><b>Master</b>MAXIMIZE, equalizzatore a tre bande, tipo di clipping, GAIN finale e profondità della randomizzazione.</div>
   </div>
@@ -747,7 +759,7 @@ table.fam td:nth-child(3) { font-size: 8.2pt; }
   <p>Con <span class="ctl">KIT MODE</span> acceso, le note del canale MIDI della voce (canale 2 per la voce 1, … canale 9 per la voce 8) non traspongono più: ogni tasto suona un motore diverso. La nota 36 (C1 in Ableton, la prima nota del Drum Rack) suona il motore 1, la nota 37 il motore 2 e così via fino alla nota 99 (motore 64); oltre si ricomincia. Così puoi suonare i 64 motori da una tastiera o scriverli in una clip MIDI, mentre le 12 manopole restano quelle della voce.</p>
 
   <h2>Trascinare un colpo nel DAW</h2>
-  <p>Premi e trascina <span class="ctl">TRASCINA WAV</span> su una traccia audio di Ableton: Drummatic rende un colpo della voce a piena velocity (synth, sampler, LAZER, coda, TONE, BRK TAPZ e BRK REPEAT, senza delay, riverbero e master) e lo deposita come file WAV a 24 bit. Un semplice clic salva il file senza trascinarlo e apre la cartella <code>Documenti/Drummatic/Renders</code>.</p>
+  <p>Premi e trascina <span class="ctl">TRASCINA WAV</span> su una traccia audio di Ableton: Drummatic rende un colpo della voce a piena velocity (synth, sampler, LAZER, coda, TONE, BRK TAPZ e BRK REPEAT, senza delay, riverbero e master) e lo deposita come file WAV a 24 bit. Un semplice clic salva il file senza trascinarlo e apre la cartella <code>Renders</code> dentro la cartella di Drummatic (capitolo 2).</p>
 </section>
 
 <!-- ================= 6 MIXER ================= -->
@@ -958,6 +970,7 @@ table.fam td:nth-child(3) { font-size: 8.2pt; }
       <tr><td>Il campione caricato non si sente</td><td>BLEND è a 0% (solo synth): portalo a destra. Controlla anche che SAMPLER sia acceso e che START ed END non siano sovrapposti.</td></tr>
       <tr><td>Il campione si interrompe presto</td><td>L'inviluppo del sampler (Env 2 di default) finisce prima del campione: scegli <em>Off</em> o allunga il DECAY.</td></tr>
       <tr><td>Il campione non si carica</td><td>Il kit ricorda il percorso del file: se lo hai spostato o rinominato, ricaricalo con CARICA e salva di nuovo il kit.</td></tr>
+      <tr><td>Non trovo più i miei kit</td><td>Guarda nel menu CARTELLA dove Drummatic sta salvando: se hai scelto un disco esterno scollegato usa la cartella predefinita finché non lo ricolleghi.</td></tr>
       <tr><td>Il plugin non compare in Ableton</td><td>Verifica la cartella di installazione (capitolo 2) e riesegui la scansione. Su macOS rimuovi la quarantena con il comando <code>xattr</code>.</td></tr>
       <tr><td>macOS dice che l'app è danneggiata</td><td>È il blocco di Gatekeeper per software non notarizzato: esegui il comando <code>xattr</code> del capitolo 2.</td></tr>
       <tr><td>Crepitii o interruzioni</td><td>Aumenta la dimensione del buffer audio. Su Windows usa il driver ASIO del DAW o WASAPI esclusivo.</td></tr>
@@ -991,7 +1004,7 @@ table.fam td:nth-child(3) { font-size: 8.2pt; }
   <table>
     <thead><tr><th>Versione</th><th>Novità</th></tr></thead>
     <tbody>
-      <tr><td>0.4.0</td><td>Strato LAZER: 64 motori glitch in 16 famiglie con 12 manopole condivise, 9 code, BRK TAPZ, BRK REPEAT, KIT MODE e TRASCINA WAV; nuova pagina LAZER. Sequencer della Performance con blocchi per passo, GLIDE, PROB, REC e DADO GLITCH; 12 nuovi controlli Performance per i glitch. Banchi LAZER e GLITCH sulla macchina hardware.</td></tr>
+      <tr><td>0.4.0</td><td>Cartella dei file selezionabile (pulsante CARTELLA). Strato LAZER: 64 motori glitch in 16 famiglie con 12 manopole condivise, 9 code, BRK TAPZ, BRK REPEAT, KIT MODE e TRASCINA WAV; nuova pagina LAZER. Sequencer della Performance con blocchi per passo, GLIDE, PROB, REC e DADO GLITCH; 12 nuovi controlli Performance per i glitch. Banchi LAZER e GLITCH sulla macchina hardware.</td></tr>
       <tr><td>0.3.0</td><td>App per la macchina hardware Drummatic (Raspberry Pi 5 + circuito di controllo).</td></tr>
       <tr><td>0.2.4</td><td>L'audio non sparisce più dopo aver avviato Drummatic con il suo PLAY; autoriparazione dei blocchi audio; il motivo dello stop compare al posto del nome del kit.</td></tr>
       <tr><td>0.2.3</td><td>START ed END modulabili in modalità MAP direttamente sulla forma d'onda; nuovo capitolo sul sampler; formato dei tempi corretto (es. "50 ms").</td></tr>
