@@ -22,17 +22,18 @@ public:
         const int tx = 24, ty = 88, tw = (W - 48 - 3 * 16) / 4, th = 196;
         for (int i = 0; i < 8; ++i)
             paintTile (g, { tx + (i % 4) * (tw + 16), ty + (i / 4) * (th + 16), tw, th }, bank[(size_t) i], i);
-        juce::Rectangle<int> bottom (24, ty + 2 * th + 32, W - 48, H - (ty + 2 * th + 32) - 18);
+        juce::Rectangle<int> bottom (24, ty + 2 * th + 32, W - 48, H - (ty + 2 * th + 32) - 18 - kFooterH);
         if (ctl.page == P_Smpl) paintWave (g, bottom.removeFromLeft (860));
         else if (ctl.page == P_Mix) paintMixer (g, bottom.removeFromLeft (860));
         else paintSteps (g, bottom.removeFromLeft (860));
         bottom.removeFromLeft (16);
         paintMeters (g, bottom);
+        paintFooter (g, { 0, H - kFooterH, W, kFooterH });
         if (ctl.showToast()) paintToast (g);
         if (! panelConnected)
         {
             g.setColour (col::warn); g.setFont (font (15, true));
-            g.drawText ("CIRCUITO DI CONTROLLO NON COLLEGATO", 0, H - 18, W, 16, juce::Justification::centred);
+            g.drawText ("CIRCUITO DI CONTROLLO NON COLLEGATO", 0, H - kFooterH - 18, W, 16, juce::Justification::centred);
         }
     }
 
@@ -43,6 +44,34 @@ private:
     Controller& ctl;
 
     void timerCallback() override { if (onFrame) onFrame(); repaint(); }
+
+    // la riga dei tasti senza scritta sul pannello (revisione 26/10/2026: sul pannello restano solo numeri, trasporto,
+    // FUNC e frecce): le 8 pagine e i tasti funzione, nello stesso ordine della fila di tasti sotto il display
+    static constexpr int kFooterH = 40;
+    void paintFooter (juce::Graphics& g, juce::Rectangle<int> r)
+    {
+        using namespace ui;
+        g.setColour (col::panel); g.fillRect (r);
+        g.setColour (col::line); g.fillRect (r.removeFromTop (2));
+        static const char* funcNames[] = { "FUNC", "MAP", "LOCK", "DADO", "COMMIT", "KIT", "COPY" };
+        const float w = r.getWidth() / 15.0f;
+        for (int i = 0; i < 15; ++i)
+        {
+            auto c = juce::Rectangle<float> (r.getX() + i * w, (float) r.getY(), w, (float) r.getHeight()).reduced (3, 5);
+            bool on = false; juce::String name;
+            if (i < kNumPages) { name = pageName (i); on = i == ctl.page; }
+            else
+            {
+                const int f = i - kNumPages; name = funcNames[f];
+                on = (f == 0 && ctl.func) || (f == 1 && ctl.mapMode) || (f == 2 && ctl.lastSlotLocked());
+            }
+            if (on) { g.setColour (i < kNumPages ? col::accent : col::accent2); g.fillRoundedRectangle (c, 5); }
+            else if (i == kNumPages) { g.setColour (col::line); g.fillRect (c.getX() - 3.0f, c.getY(), 1.0f, c.getHeight()); }
+            g.setColour (on ? juce::Colours::black : (i < kNumPages ? col::text : col::dim));
+            g.setFont (font (15, true));
+            g.drawFittedText (name, c.toNearestInt(), juce::Justification::centred, 1);
+        }
+    }
 
     void paintHeader (juce::Graphics& g, juce::Rectangle<int> r)
     {
