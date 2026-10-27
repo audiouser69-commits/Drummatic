@@ -6,6 +6,9 @@
  * In ingresso (canale 16): Note On n, velocity v -> colore del LED del tasto n dalla tavolozza
  *   (0 spento; 1..15 colori pieni; +16 = metà luminosità); CC 119 = luminosità generale 0..127;
  *   CC 121 = tutti i LED spenti. Finché il Pi non manda nulla i tasti si illuminano quando premuti.
+ * Aggiornamento senza aprire la macchina (SysEx):
+ *   F0 7D 44 52 55 50 F7 ("DRUP") -> il Pico si riavvia nel caricatore USB (disco RP2350, come col pulsante BOOTSEL)
+ *   F0 7D 44 52 56 F7    ("DRV")  -> risponde F0 7D 44 52 56 <versione> F7
  * Collegamenti: righe GP0-GP6, colonne GP7-GP14, LED GP15, 74HC165 LOAD GP16 / CLK GP17 / DATA GP18, volume GP26.
  */
 #include <string.h>
@@ -13,11 +16,13 @@
 #include "pico/stdlib.h"
 #include "hardware/pio.h"
 #include "hardware/adc.h"
+#include "pico/bootrom.h"
 #include "tusb.h"
 #include "ws2812.pio.h"
 #include "keymap.h"
 
 #define MIDI_CH      15          /* canale 16 */
+#define FW_VERSION   2           /* 1 = 26/10/2026; 2 = 27/10/2026, aggiornabile via SysEx */
 #define PIN_ROW0     0
 #define PIN_COL0     7
 #define PIN_LED      15
@@ -156,11 +161,41 @@ static void pot_scan(void) {
 }
 
 /* ---------------------------------------------------------------- MIDI in */
+static uint8_t sx[16];
+static int sx_len = -1;                /* -1 = fuori da un SysEx */
+
+static void sysex_done(void) {
+    static const uint8_t UPD[] = {0x7D, 0x44, 0x52, 0x55, 0x50}, VER[] = {0x7D, 0x44, 0x52, 0x56};
+    if (sx_len == (int)sizeof UPD && !memcmp(sx, UPD, sizeof UPD)) {
+        /* caricatore USB: compare il disco RP2350 e il Pi ci copia il nuovo .uf2 */
+        uint32_t t0 = time_us_32();
+        while (time_us_32() - t0 < 50000) tud_task();      /* lascia uscire i pacchetti USB in coda */
+        reset_usb_boot(0, 0);
+    } else if (sx_len == (int)sizeof VER && !memcmp(sx, VER, sizeof VER) && tud_midi_mounted()) {
+        uint8_t r[] = {0xF0, 0x7D, 0x44, 0x52, 0x56, FW_VERSION, 0xF7};
+        tud_midi_stream_write(0, r, sizeof r);
+    }
+}
+
+static void sysex_bytes(const uint8_t *b, int n) {
+    for (int i = 0; i < n; i++) {
+        if (b[i] == 0xF0) { sx_len = 0; continue; }
+        if (sx_len < 0) continue;
+        if (b[i] == 0xF7) { sysex_done(); sx_len = -1; continue; }
+        if (b[i] & 0x80 || sx_len >= (int)sizeof sx) { sx_len = -1; continue; }
+        sx[sx_len++] = b[i];
+    }
+}
+
 static bool midi_in(void) {
     bool changed = false;
     uint8_t pkt[4];
     while (tud_midi_available() && tud_midi_packet_read(pkt)) {
         uint8_t cin = pkt[0] & 0x0F, st = pkt[1] & 0xF0, ch = pkt[1] & 0x0F, d1 = pkt[2], d2 = pkt[3];
+        /* USB-MIDI: CIN 4 = SysEx 3 byte che continua; 5/6/7 = SysEx che finisce con 1/2/3 byte */
+        if (cin == 0x4 || cin == 0x7) { sysex_bytes(pkt + 1, 3); continue; }
+        if (cin == 0x6) { sysex_bytes(pkt + 1, 2); continue; }
+        if (cin == 0x5) { sysex_bytes(pkt + 1, 1); continue; }
         if ((cin != 0x8 && cin != 0x9 && cin != 0xB) || ch != MIDI_CH) continue;
         if ((st == 0x90 || st == 0x80) && d1 < NUM_KEYS) {
             key_color[d1] = st == 0x90 ? (d2 & 31) : 0; host_drives_leds = true; changed = true;

@@ -121,7 +121,7 @@ ExecStart=/opt/drummatic/usb.sh /dev/%I
 TimeoutStartSec=15min
 UNIT
 cat > /etc/udev/rules.d/99-drummatic-usb.rules <<'RULE'
-ACTION=="add", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", ENV{ID_FS_USAGE}=="filesystem", TAG+="systemd", ENV{SYSTEMD_WANTS}+="drummatic-usb@%k.service"
+ACTION=="add", SUBSYSTEM=="block", ENV{ID_BUS}=="usb", ENV{ID_FS_USAGE}=="filesystem", ENV{ID_FS_LABEL}!="RP2350", TAG+="systemd", ENV{SYSTEMD_WANTS}+="drummatic-usb@%k.service"
 RULE
 
 systemctl daemon-reload

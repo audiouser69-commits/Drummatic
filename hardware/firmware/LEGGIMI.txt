@@ -1,9 +1,15 @@
-DRUMMATIC CONTROL — firmware del Raspberry Pi Pico 2 (rev. A)
+DRUMMATIC CONTROL — firmware del Raspberry Pi Pico 2 (rev. A), versione 2 del 27/10/2026
 
-Caricarlo (una volta sola, 1 minuto):
+Caricarlo la prima volta (prima di montare il pannello, 1 minuto):
 1. Tieni premuto il pulsantino BOOTSEL sul Pico e collega il cavo USB al computer; poi rilascia.
 2. Compare un disco chiamato RP2350.
 3. Trascina Drummatic-Control-firmware.uf2 dentro quel disco: il Pico si riavvia da solo e i tasti fanno un'onda arancione.
+
+Gli aggiornamenti successivi NON richiedono di aprire la macchina: metti il nuovo Drummatic-Control-firmware.uf2
+nella cartella omb-update della chiavetta USB e infilala nella presa USB HOST sul retro. Il Raspberry Pi manda al
+circuito il comando di aggiornamento, il Pico si riavvia come disco RP2350, il Pi ci copia il file e il Pico riparte
+(lo schermo scrive "Circuito dei tasti aggiornato"). Serve che sul Pico ci sia almeno questa versione 2: la versione 1
+del 26/10 non conosce il comando e va sostituita una volta col pulsante BOOTSEL.
 
 Cosa fa: il circuito si presenta come dispositivo USB-MIDI "Drummatic Control", canale 16.
 - Tasti: Note On/Off 0..45 (VOICE..PERF = 0..7, FUNC..COPY = 8..14, VOICE1..8 = 15..22, REC/PLAY/STOP = 23..25,
@@ -12,6 +18,8 @@ Cosa fa: il circuito si presenta come dispositivo USB-MIDI "Drummatic Control", 
 - LED: Note On (canale 16) nota = tasto, velocity = colore (0 spento, 1 bianco, 2 rosso, 3 arancio, 5 giallo, 7 verde,
   9 azzurro, 11 blu, 13 magenta; +16 = metà luce). CC 119 = luminosità generale, CC 121 = spegne tutto.
   Finché nessuno manda colori, ogni tasto si accende di arancio mentre lo premi.
+- SysEx: F0 7D 44 52 55 50 F7 = riavvio nel caricatore USB (come BOOTSEL);
+  F0 7D 44 52 56 F7 = chiede la versione, risposta F0 7D 44 52 56 <versione> F7.
 - Luminosità massima limitata al 20 %: LED + display restano sotto 1 A dalla porta USB del Pi (serve l'alimentatore ufficiale da 27 W).
 
 Si può provare anche col plugin sul PC: in Ableton/MIDI monitor si vedono note e CC del canale 16.

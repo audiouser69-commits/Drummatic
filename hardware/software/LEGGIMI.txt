@@ -38,6 +38,8 @@ CHIAVETTA USB (presa USB HOST sul retro) — FAT32, exFAT o NTFS
   nella macchina e si scelgono dalla pagina SMPL (banco 2, encoder 1).
 - Kit: cartella  Kits  con file .mkit.
 - Aggiornare il programma: metti il nuovo file  drummatic-hw  in una cartella  drummatic-update .
+- Aggiornare il circuito dei tasti (senza aprire): il nuovo  Drummatic-Control-firmware.uf2  nella stessa cartella
+  drummatic-update  (serve sul Pico il firmware versione 2 o successivo, vedi firmware/LEGGIMI.txt).
 - A ogni inserimento la macchina scrive sulla chiavetta la cartella  Drummatic-backup  con kit e stato.
   Lo schermo dice quando puoi togliere la chiavetta.
 
